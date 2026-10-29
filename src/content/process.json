@@ -1,0 +1,42 @@
+{
+  "ordinalName": "Método de trabajo",
+  "ordinals": [
+    { "key": "A", "title": "Tu forma de vida", "text": "Las actividades que tu vivienda tiene que sostener: cocinar, reunir, trabajar, descansar. Pendiente de redactar con el contenido real del estudio." },
+    { "key": "B", "title": "El recorrido interior", "text": "Cómo se conectan los pasos, las aperturas y la ubicación de los elementos entre estancias. Pendiente de redactar." },
+    { "key": "C", "title": "Las sensaciones", "text": "Lo que transmiten esas relaciones: luz, proporción, materiales y orden. Pendiente de redactar." },
+    { "key": "D", "title": "La conexión exterior", "text": "Cómo la vivienda se relaciona con el exterior a través de ventanas, accesos y vistas. Pendiente de redactar." }
+  ],
+  "steps": [
+    {
+      "code": "01",
+      "title": "Primera consulta",
+      "text": "Revisión de lo que funciona y de lo que no, de tu lista de deseos y de cómo te gustaría que se sintiera el espacio. Sin compromiso de continuidad.",
+      "detail": "Duración y condiciones se confirman para cada caso."
+    },
+    {
+      "code": "02",
+      "title": "Evaluación del espacio",
+      "text": "Lectura del inmueble desde un punto de vista nuevo, con atención a vistas, luz y recorridos de las personas.",
+      "detail": "Se acuerda el alcance según la vivienda y el proyecto."
+    },
+    {
+      "code": "03",
+      "title": "Anteproyecto",
+      "text": "Exploración de cómo reorganizar y redistribuir la vivienda para dar soporte a las actividades de cada día.",
+      "detail": "Entregables y plazos se definen en la propuesta."
+    },
+    {
+      "code": "04",
+      "title": "Presupuesto orientativo",
+      "text": "Revisión conjunta de las principales partidas de coste para decidir qué mejoras tienen sentido y en qué orden.",
+      "detail": "Cada coste se confirma con proveedores para el caso concreto."
+    },
+    {
+      "code": "05",
+      "title": "Desarrollo y acompañamiento",
+      "text": "Planificación de acabados, mobiliario a medida y, si se desea, seguimiento durante la obra.",
+      "detail": "El alcance final, honorarios y calendario se detallan en el contrato."
+    }
+  ],
+  "note": "Este contenido es una estructura de muestra. Sustitúyelo por la descripción real de tu método de trabajo, con sus nombres y fases verificables."
+}

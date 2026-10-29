@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="410" height="100" viewBox="0 0 410 100" role="img" aria-labelledby="logoTitle">
+  <title id="logoTitle">TusPlanos3D — inicio</title>
+
+  <!-- Marca: estancia en isometría con la planta marcada en el suelo -->
+  <g>
+    <!-- suelo -->
+    <polygon points="50,74 88,52 50,30 12,52" fill="#1c1f24" />
+    <!-- retícula de plano -->
+    <path d="M31 63 L69 41 M31 41 L69 63" stroke="#f6821f" stroke-width="2" stroke-linecap="round" opacity="0.85" />
+    <!-- pared izquierda -->
+    <polygon points="12,52 50,30 50,10 12,32" fill="#f6821f" />
+    <!-- pared derecha -->
+    <polygon points="50,30 88,52 88,32 50,10" fill="#c2410c" />
+    <!-- canto superior -->
+    <path d="M12 32 L50 10 L88 32" fill="none" stroke="#1c1f24" stroke-width="3" stroke-linejoin="round" />
+  </g>
+
+  <!-- Wordmark -->
+  <text x="112" y="66" font-family="'Segoe UI', Helvetica, Arial, sans-serif" font-size="46" letter-spacing="-1">
+    <tspan font-weight="400" fill="#1c1f24">Tus</tspan><tspan font-weight="700" fill="#1c1f24">Planos</tspan><tspan font-weight="700" fill="#c2410c">3D</tspan>
+  </text>
+</svg>

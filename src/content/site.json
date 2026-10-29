@@ -1,0 +1,19 @@
+{
+  "siteName": "TusPlanos3D",
+  "siteFullName": "TusPlanos3D · Planos y visualización 3D",
+  "tagline": "Mira tu espacio en 3D antes de empezar.",
+  "description": "Planos y visualización en 3D para reformas, obra nueva y diseño de interiores: comprueba cómo quedará tu vivienda antes de tomar decisiones.",
+  "phone": "+34 600 000 000",
+  "phoneHref": "+34600000000",
+  "email": "msoft.es1@gmail.com",
+  "address": ["Nombre del estudio, S.L.", "C/ Pendiente de confirmar, 0", "00000 Ciudad"],
+  "social": [
+    { "label": "Facebook", "href": "https://www.facebook.com/" },
+    { "label": "LinkedIn", "href": "https://www.linkedin.com/" },
+    { "label": "Instagram", "href": "https://www.instagram.com/" }
+  ],
+  "channels": [
+    { "label": "Canal de vídeo", "note": "Sustituir por el enlace real", "href": "#" },
+    { "label": "Casos de estudio", "note": "Sustituir por el enlace real", "href": "#" }
+  ]
+}

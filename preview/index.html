@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Maqueta — TusPlanos3D</title>
+<style>
+  :root{
+    --paper:#faf9f7; --paper2:#f2efe9; --ink:#1c1f24; --ink-soft:#4a4741;
+    --muted:#6b675f; --accent:#c2410c; --accent-bright:#f6821f; --accent-soft:#fbad41; --line:#e3ded4;
+    --serif:Georgia,"Times New Roman",Times,serif;
+    --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  .wrap{max-width:1152px;margin:0 auto;padding:0 24px}
+
+  .topbar{background:var(--ink);color:var(--paper);font-size:12px}
+  .topbar .wrap{display:flex;justify-content:space-between;gap:16px;padding-top:8px;padding-bottom:8px}
+  .topbar .tag{letter-spacing:.16em;text-transform:uppercase;color:rgba(250,249,247,.7)}
+  .topbar a:hover{color:var(--accent-soft)}
+
+  header.site{position:sticky;top:0;z-index:40;background:rgba(250,249,247,.95);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  .headrow{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:16px 0}
+  .logo{height:40px;width:auto}
+  nav.main{display:flex;gap:2px;overflow-x:auto}
+  nav.main a{padding:8px 12px;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap;border-radius:4px}
+  nav.main a:hover{background:var(--paper2);color:var(--ink)}
+
+  .hero{background:var(--paper2);border-bottom:1px solid var(--line)}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center;padding-top:56px;padding-bottom:56px}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+  h1{font-size:44px;line-height:1.15;margin-top:16px;text-wrap:balance}
+  .lead{margin-top:18px;max-width:34rem;color:var(--ink-soft);line-height:1.65;font-size:16px}
+  .btnrow{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+  .btn{display:inline-block;padding:13px 24px;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border-radius:4px;border:1px solid var(--ink);transition:.15s}
+  .btn.primary{background:var(--ink);color:var(--paper)}
+  .btn.primary:hover{background:var(--accent);border-color:var(--accent)}
+  .btn.ghost:hover{border-color:var(--accent-bright);color:var(--accent)}
+  .note{margin-top:22px;font-size:12px;color:var(--muted)}
+
+  section{padding:56px 0}
+  .sechead{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:32px}
+  h2{font-size:30px}
+  .secsub{margin-top:8px;font-size:14px;color:var(--muted);max-width:44rem}
+  .more{font-size:14px;font-weight:500;color:var(--accent)}
+  .more:hover{text-decoration:underline}
+
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .card{border:1px solid var(--line);background:var(--paper);overflow:hidden}
+  .card .ph{aspect-ratio:3/2;overflow:hidden}
+  .card .ph img{width:100%;height:100%;object-fit:cover;transition:.5s}
+  .card:hover .ph img{transform:scale(1.03)}
+  .card .body{border-top:1px solid var(--line);padding:12px 16px}
+  .card .body p{margin:0;font-family:var(--serif);font-size:16px}
+  .card .body span{display:block;margin-top:4px;font-size:13px;color:var(--muted)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:24px}
+  .chip{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:7px 16px;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);cursor:pointer}
+  .chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+  .method{background:var(--paper2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .method .wrap{display:grid;grid-template-columns:1fr 1.2fr;gap:40px;align-items:start}
+  .steps{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:0;margin:0;list-style:none}
+  .steps li{border:1px solid var(--line);background:var(--paper);padding:20px}
+  .steps .code{font-size:12px;font-weight:700;letter-spacing:.16em;color:var(--accent)}
+  .steps h3{font-size:18px;margin-top:8px}
+  .steps p{margin:8px 0 0;font-size:13px;color:var(--muted);line-height:1.55}
+
+  .ordinals{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:0;margin:28px 0 0;list-style:none}
+  .ordinals li{border:1px solid var(--line);background:var(--paper2);padding:20px}
+  .ordinals .b{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:999px;background:var(--ink);color:var(--paper);font-family:var(--serif)}
+  .ordinals h3{font-size:17px;margin-top:12px}
+  .ordinals p{margin:8px 0 0;font-size:13px;color:var(--muted);line-height:1.55}
+
+  .cta{text-align:center}
+  .cta p{margin:12px auto 0;max-width:36rem;font-size:14px;color:var(--muted)}
+
+  .contactgrid{display:grid;grid-template-columns:1fr 1.15fr;gap:40px;align-items:start}
+  .infobox{border:1px solid var(--line);background:var(--paper2);padding:20px;margin-bottom:16px}
+  .infobox .lbl{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .infobox .val{font-family:var(--serif);font-size:20px;margin-top:6px;display:block}
+  .infobox .val:hover{color:var(--accent)}
+  .infobox address{font-style:normal;font-size:14px;color:var(--ink-soft);margin-top:6px;line-height:1.5}
+
+  form{border:1px solid var(--line);background:var(--paper);padding:28px}
+  .fld{margin-bottom:18px}
+  label{display:block;font-size:14px;font-weight:500;margin-bottom:6px}
+  .req{color:var(--accent)}
+  .opt{color:var(--muted);font-weight:400;font-size:12px}
+  input,select,textarea{width:100%;border:1px solid var(--line);background:#fff;border-radius:4px;padding:11px 12px;font-size:14px;font-family:inherit;color:var(--ink)}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent-bright);box-shadow:0 0 0 2px rgba(246,130,31,.28)}
+  input[aria-invalid="true"],textarea[aria-invalid="true"]{border-color:#dc2626}
+  .hint{font-size:12px;color:var(--muted);margin-top:4px}
+  .err{font-size:13px;color:#b91c1c;margin-top:4px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .privacy{font-size:12px;color:var(--muted);line-height:1.6;margin:4px 0 18px}
+  .privacy a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+  .alert{border-radius:4px;padding:12px 16px;font-size:14px;margin-bottom:16px}
+  .alert.ok{border:1px solid #86efac;background:#f0fdf4;color:#14532d}
+  .alert.bad{border:1px solid #fca5a5;background:#fef2f2;color:#7f1d1d}
+  .submit{background:var(--ink);color:var(--paper);border:0;border-radius:4px;padding:14px 28px;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+  .submit:hover{background:var(--accent)}
+
+  .rail{position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:30;display:none;flex-direction:column;gap:8px;background:var(--paper2);border:1px solid var(--line);border-right:0;padding:16px 8px}
+  .rail a{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border:1px solid var(--line);background:var(--paper);border-radius:999px;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--ink-soft)}
+  .rail a:hover{border-color:var(--accent-bright);color:var(--accent)}
+  .rail .sep{width:24px;height:1px;background:var(--line);margin:4px auto}
+  @media(min-width:1280px){.rail{display:flex}}
+
+  footer.site{background:var(--ink);color:var(--paper)}
+  footer.site .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;padding-top:48px;padding-bottom:48px}
+  footer.site h4{font-size:12px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px;font-weight:600}
+  footer.site p,footer.site li{font-size:14px;color:rgba(250,249,247,.75);margin:0 0 6px}
+  footer.site ul{list-style:none;padding:0;margin:0}
+  footer.site a:hover{color:var(--accent-soft)}
+  footer.site .bottom{border-top:1px solid rgba(250,249,247,.15);padding:16px;text-align:center;font-size:12px;color:rgba(250,249,247,.6)}
+
+  @media(max-width:900px){
+    .hero .wrap,.method .wrap,.contactgrid{grid-template-columns:1fr}
+    .grid3{grid-template-columns:repeat(2,1fr)}
+    .ordinals{grid-template-columns:repeat(2,1fr)}
+    footer.site .cols{grid-template-columns:1fr}
+    h1{font-size:34px}
+    .topbar .tag{display:none}
+    section{padding:40px 0}
+  }
+  @media(max-width:560px){
+    .grid3,.steps,.ordinals,.row2{grid-template-columns:1fr}
+    .btnrow .btn{width:100%;text-align:center}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div style="display:flex;gap:24px"><a href="tel:+34600000000">+34 600 000 000</a><a href="mailto:hola@ejemplo.es">hola@ejemplo.es</a></div>
+    <span class="tag">Mira tu espacio en 3D antes de empezar.</span>
+  </div>
+</div>
+
+<header class="site">
+  <div class="wrap headrow">
+    <a href="#"><img class="logo" src="../public/img/logo.svg" alt="TusPlanos3D — inicio" /></a>
+    <nav class="main">
+      <a href="#">Inicio</a><a href="#">Método de trabajo</a><a href="#">Proyectos</a><a href="#">Credenciales</a><a href="#contacto">Contacto</a>
+    </nav>
+  </div>
+</header>
+
+<aside class="rail" aria-label="Redes y canales">
+  <a href="#" title="Facebook">FA</a><a href="#" title="LinkedIn">LI</a><a href="#" title="Instagram">IN</a>
+  <span class="sep"></span>
+  <a href="#" title="Canal de vídeo">YT</a><a href="#" title="Casos de estudio">CS</a>
+</aside>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Planos y visualización 3D</p>
+      <h1>Mira tu espacio en 3D antes de empezar.</h1>
+      <p class="lead">Planos y visualización en 3D para reformas, obra nueva y diseño de interiores: comprueba cómo quedará tu vivienda antes de tomar decisiones. Cada proyecto parte de cómo quieres vivir el espacio, no de una plantilla repetida.</p>
+      <div class="btnrow">
+        <a class="btn primary" href="#contacto">Solicitar valoración</a>
+        <a class="btn ghost" href="#">Ver proyectos</a>
+      </div>
+      <p class="note">Disponibilidad, honorarios y plazos se confirman para cada proyecto.</p>
+    </div>
+    <div><img src="../public/img/cocina-01.svg" alt="Cocina 01" style="aspect-ratio:4/3;object-fit:cover;width:100%;border:1px solid var(--line)" /></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sechead">
+      <div>
+        <h2>Proyectos destacados</h2>
+        <p class="secsub">Una selección de trabajos recientes. El contenido definitivo se cargará desde los datos del estudio.</p>
+      </div>
+      <a class="more" href="#">Ver la galería completa →</a>
+    </div>
+
+    <div class="chips">
+      <button class="chip on">Todo</button><button class="chip">Cocinas</button><button class="chip">Baños</button><button class="chip">Otras estancias</button>
+    </div>
+
+    <div class="grid3">
+      <article class="card"><div class="ph"><img src="../public/img/cocina-01.svg" alt="Cocina 01" /></div><div class="body"><p>Cocina 01</p><span>Descripción pendiente del proyecto (texto de muestra).</span></div></article>
+      <article class="card"><div class="ph"><img src="../public/img/cocina-02.svg" alt="Cocina 02" /></div><div class="body"><p>Cocina 02</p><span>Descripción pendiente del proyecto (texto de muestra).</span></div></article>
+      <article class="card"><div class="ph"><img src="../public/img/cocina-03.svg" alt="Cocina 03" /></div><div class="body"><p>Cocina 03</p><span>Descripción pendiente del proyecto (texto de muestra).</span></div></article>
+      <article class="card"><div class="ph"><img src="../public/img/bano-01.svg" alt="Baño 01" /></div><div class="body"><p>Baño 01</p><span>Descripción pendiente del proyecto (texto de muestra).</span></div></article>
+      <article class="card"><div class="ph"><img src="../public/img/bano-02.svg" alt="Baño 02" /></div><div class="body"><p>Baño 02</p><span>Descripción pendiente del proyecto (texto de muestra).</span></div></article>
+      <article class="card"><div class="ph"><img src="../public/img/estancia-01.svg" alt="Estancia 01" /></div><div class="body"><p>Estancia 01</p><span>Descripción pendiente del proyecto (texto de muestra).</span></div></article>
+    </div>
+  </div>
+</section>
+
+<section class="method">
+  <div class="wrap">
+    <div>
+      <h2>Cómo trabajamos</h2>
+      <p class="secsub">Este contenido es una estructura de muestra. Sustitúyelo por la descripción real de tu método de trabajo, con sus nombres y fases verificables.</p>
+      <a class="btn ghost" href="#" style="margin-top:20px">Conocer el método</a>
+      <ul class="ordinals">
+        <li><span class="b">A</span><h3>Tu forma de vida</h3><p>Las actividades que tu vivienda tiene que sostener.</p></li>
+        <li><span class="b">B</span><h3>El recorrido interior</h3><p>Cómo se conectan pasos, aperturas y elementos.</p></li>
+        <li><span class="b">C</span><h3>Las sensaciones</h3><p>Luz, proporción, materiales y orden.</p></li>
+        <li><span class="b">D</span><h3>La conexión exterior</h3><p>Ventanas, accesos y vistas hacia fuera.</p></li>
+      </ul>
+    </div>
+    <ol class="steps">
+      <li><span class="code">01</span><h3>Primera consulta</h3><p>Revisión de lo que funciona y de lo que no. Duración y condiciones se confirman para cada caso.</p></li>
+      <li><span class="code">02</span><h3>Evaluación del espacio</h3><p>Lectura del inmueble con atención a vistas, luz y recorridos.</p></li>
+      <li><span class="code">03</span><h3>Anteproyecto</h3><p>Exploración de cómo reorganizar la vivienda. Entregables y plazos se definen en la propuesta.</p></li>
+      <li><span class="code">04</span><h3>Presupuesto orientativo</h3><p>Revisión de partidas de coste. Cada coste se confirma con proveedores.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <h2>¿Empezamos por contar tu proyecto?</h2>
+    <p>Escríbenos y valoramos juntos el alcance, los tiempos y el presupuesto orientativo.</p>
+    <a class="btn primary" href="#contacto" style="margin-top:24px">Contactar</a>
+  </div>
+</section>
+
+<section id="contacto">
+  <div class="wrap">
+    <p class="eyebrow">Contacto</p>
+    <h2 style="margin-top:10px">Hablemos de tu proyecto</h2>
+    <div class="contactgrid" style="margin-top:32px">
+      <div>
+        <div class="infobox"><span class="lbl">Teléfono</span><a class="val" href="tel:+34600000000">+34 600 000 000</a></div>
+        <div class="infobox"><span class="lbl">Email</span><a class="val" href="mailto:hola@ejemplo.es">hola@ejemplo.es</a></div>
+        <div class="infobox"><span class="lbl">Dirección postal</span><address>Nombre del estudio, S.L.<br />C/ Pendiente de confirmar, 0<br />00000 Ciudad</address></div>
+        <div class="infobox"><span class="lbl">Sobre los plazos</span><p style="font-size:14px;color:var(--ink-soft);margin:8px 0 0;line-height:1.6">La disponibilidad de agenda, el coste de la primera visita y los plazos de ejecución se confirman para cada proyecto tras revisar el alcance.</p></div>
+      </div>
+
+      <form onsubmit="event.preventDefault();document.getElementById('demo').className='alert ok';document.getElementById('demo').textContent='Solicitud enviada (maqueta: sin backend conectado).';document.getElementById('demo').style.display='block';">
+        <div class="alert ok" id="demo" style="display:none"></div>
+        <h2 style="font-size:24px">Solicitud de información</h2>
+        <p class="hint" style="margin:8px 0 20px">Los campos marcados con <span class="req">*</span> son obligatorios.</p>
+
+        <div class="fld">
+          <label for="name">Nombre <span class="req">*</span></label>
+          <input id="name" name="name" type="text" maxlength="100" required aria-invalid="true" aria-describedby="name-error" />
+          <p class="err" id="name-error" role="alert">Indica tu nombre (mínimo 2 caracteres).</p>
+        </div>
+
+        <div class="row2">
+          <div class="fld">
+            <label for="email">Email <span class="req">*</span></label>
+            <input id="email" name="email" type="email" maxlength="255" required aria-invalid="true" aria-describedby="email-hint email-error" />
+            <p class="hint" id="email-hint">Máximo 255 caracteres.</p>
+            <p class="err" id="email-error" role="alert">Introduce un email válido, por ejemplo nombre@dominio.com.</p>
+          </div>
+          <div class="fld">
+            <label for="phone">Teléfono <span class="opt">(opcional)</span></label>
+            <input id="phone" name="phone" type="tel" maxlength="30" />
+          </div>
+        </div>
+
+        <div class="fld">
+          <label for="projectType">Tipo de proyecto <span class="opt">(opcional)</span></label>
+          <select id="projectType"><option>Selecciona una opción</option><option>Cocina</option><option>Baño</option><option>Otra estancia</option><option>Vivienda completa</option></select>
+        </div>
+
+        <div class="fld">
+          <label for="message">Cuéntanos tu proyecto <span class="req">*</span></label>
+          <textarea id="message" rows="6" minlength="10" maxlength="2000" required></textarea>
+          <p class="hint">Entre 10 y 2000 caracteres.</p>
+        </div>
+
+        <p class="privacy">Usaremos tus datos únicamente para responder a esta solicitud. Consulta la <a href="#">información sobre privacidad</a>.</p>
+        <button class="submit" type="submit">Enviar solicitud</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <p style="font-family:var(--serif);font-size:20px;color:var(--paper)">TusPlanos3D</p>
+      <p style="margin-top:8px">Mira tu espacio en 3D antes de empezar.</p>
+      <p style="margin-top:16px">Nombre del estudio, S.L. · C/ Pendiente de confirmar, 0 · 00000 Ciudad</p>
+    </div>
+    <div>
+      <h4>Navegación</h4>
+      <ul><li>Inicio</li><li>Método de trabajo</li><li>Proyectos</li><li>Credenciales</li><li>Contacto</li><li>Privacidad</li></ul>
+    </div>
+    <div>
+      <h4>Contacto</h4>
+      <ul><li>+34 600 000 000</li><li>hola@ejemplo.es</li><li style="margin-top:10px">Facebook · LinkedIn · Instagram</li></ul>
+    </div>
+  </div>
+  <div class="bottom">© 2026 TusPlanos3D. Todos los derechos reservados.</div>
+</footer>
+
+</body>
+</html>

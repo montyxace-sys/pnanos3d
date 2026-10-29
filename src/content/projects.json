@@ -1,0 +1,32 @@
+{
+  "categories": [
+    { "id": "cocinas", "label": "Cocinas" },
+    { "id": "banos", "label": "Baños" },
+    { "id": "estancias", "label": "Otras estancias" }
+  ],
+  "projects": [
+    { "id": "cocina-01", "title": "Cocina 01", "category": "cocinas", "image": "cocina-01.svg", "summary": "Descripción pendiente del proyecto (texto de muestra)." },
+    { "id": "cocina-02", "title": "Cocina 02", "category": "cocinas", "image": "cocina-02.svg", "summary": "Descripción pendiente del proyecto (texto de muestra)." },
+    { "id": "cocina-03", "title": "Cocina 03", "category": "cocinas", "image": "cocina-03.svg", "summary": "Descripción pendiente del proyecto (texto de muestra)." },
+    { "id": "cocina-04", "title": "Cocina 04", "category": "cocinas", "image": "cocina-04.svg", "summary": "Descripción pendiente del proyecto (texto de muestra)." },
+    { "id": "cocina-05", "title": "Cocina 05", "category": "cocinas", "image": "cocina-05.svg", "summary": "Descripción pendiente del proyecto (texto de muestra)." },
+    { "id": "cocina-06", "title": "Cocina 06", "category": "cocinas", "image": "cocina-06.svg", "summary": "Descripción pendiente del proyecto (texto de muestra)." },
+    { "id": "bano-01", "title": "Baño 01", "category": "banos", "image": "bano-01.svg", "summary": "Descripción pendiente del proyecto (texto de muestra)." },
+    { "id": "bano-02", "title": "Baño 02", "category": "banos", "image": "bano-02.svg", "summary": "Descripción pendiente del proyecto (texto de muestra)." },
+    { "id": "bano-03", "title": "Baño 03", "category": "banos", "image": "bano-03.svg", "summary": "Descripción pendiente del proyecto (texto de muestra)." },
+    { "id": "bano-04", "title": "Baño 04", "category": "banos", "image": "bano-04.svg", "summary": "Descripción pendiente del proyecto (texto de muestra)." },
+    { "id": "estancia-01", "title": "Estancia 01", "category": "estancias", "image": "estancia-01.svg", "summary": "Descripción pendiente del proyecto (texto de muestra)." },
+    { "id": "estancia-02", "title": "Estancia 02", "category": "estancias", "image": "estancia-02.svg", "summary": "Descripción pendiente del proyecto (texto de muestra)." },
+    { "id": "estancia-03", "title": "Estancia 03", "category": "estancias", "image": "estancia-03.svg", "summary": "Descripción pendiente del proyecto (texto de muestra)." }
+  ],
+  "boards": [
+    { "id": "board-01", "title": "Board 01", "image": "board-01.svg" },
+    { "id": "board-02", "title": "Board 02", "image": "board-02.svg" },
+    { "id": "board-03", "title": "Board 03", "image": "board-03.svg" },
+    { "id": "board-04", "title": "Board 04", "image": "board-04.svg" },
+    { "id": "board-05", "title": "Board 05", "image": "board-05.svg" },
+    { "id": "board-06", "title": "Board 06", "image": "board-06.svg" },
+    { "id": "board-07", "title": "Board 07", "image": "board-07.svg" },
+    { "id": "board-08", "title": "Board 08", "image": "board-08.svg" }
+  ]
+}

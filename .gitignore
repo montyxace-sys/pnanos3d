@@ -1,0 +1,27 @@
+/node_modules
+/.next
+/out
+/dist
+/build
+
+# dependencias y logs
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# entorno
+.env
+.env*.local
+
+# tipos generados
+next-env.d.ts
+*.tsbuildinfo
+
+# sistema
+.DS_Store
+Thumbs.db
+
+# editors
+.vscode/*
+!.vscode/extensions.json
+.idea
