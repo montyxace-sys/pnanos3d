@@ -1,20 +1,19 @@
-import type { MetadataRoute } from "next";
+﻿import type { MetadataRoute } from "next";
 
-// Con output: "export" estas rutas de metadatos deben resolverse en build.
 export const dynamic = "force-static";
 
 export function siteUrl() {
-  return (process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com").replace(/\/$/, "");
+  return (process.env.NEXT_PUBLIC_SITE_URL ?? "https://montyxace-sys.github.io/pnanos3d").replace(/\/$/, "");
 }
 
-const routes = ["/"];
+const routes = ["/", "/electricidad/"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
-  return routes.map((route) => ({
+  return routes.map((route, index) => ({
     url: `${siteUrl()}${route}`,
     lastModified: now,
     changeFrequency: "weekly",
-    priority: 1,
+    priority: index === 0 ? 1 : 0.8,
   }));
 }
