@@ -1,7 +1,3 @@
-/**
- * Servidor estático mínimo para revisar el export de Next (out/).
- *   node scripts/preview-server.mjs   →  http://localhost:4173
- */
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { join, extname } from "node:path";
@@ -34,16 +30,21 @@ createServer(async (req, res) => {
       try {
         if ((await stat(file)).isDirectory()) file = join(file, "index.html");
       } catch {
-        // no es un directorio: se intenta leer como fichero
+        // no es un directorio
       }
     }
     const data = await readFile(file);
-    res.writeHead(200, { "content-type": types[extname(file)] ?? "application/octet-stream" });
+    res.writeHead(200, {
+      "content-type": types[extname(file)] ?? "application/octet-stream",
+      "cache-control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+      "pragma": "no-cache",
+      "expires": "0",
+    });
     res.end(data);
   } catch {
     res.writeHead(404, { "content-type": "text/plain; charset=utf-8" });
     res.end("404");
   }
 }).listen(PORT, () => {
-  console.log(`Preview: http://localhost:${PORT}/herramientas/plano/`);
+  console.log(`Preview: http://localhost:${PORT}/`);
 });
