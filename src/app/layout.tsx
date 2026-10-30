@@ -1,25 +1,24 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import "./globals.css";
-import { getSite } from "@/lib/data";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const site = await getSite();
   return {
-    title: {
-      default: site.siteFullName,
-      template: `%s · ${site.siteName}`,
-    },
-    description: site.description,
+    title: { default: "TusPlanos3D", template: `%s · TusPlanos3D` },
+    description: "Generador de planos gratuito para tu vivienda con dibujo técnico rápido.",
   };
 }
 
-export default async function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body className="min-h-screen bg-paper text-ink antialiased">
-        <main className="flex-1">{children}</main>
+      <body className="min-h-screen bg-gray-900 text-white antialiased">
+        {children}
+        <footer className="fixed bottom-0 z-50 mb-2 flex w-full justify-center gap-4 text-xs text-gray-400">
+          <Link href="/ayuda/" className="hover:text-orange-400 underline">Ayuda</Link>
+          <Link href="/cookies/" className="hover:text-orange-400 underline">Cookies</Link>
+          <Link href="/login" className="hover:text-orange-400 underline">Login</Link>
+        </footer>
       </body>
     </html>
   );
