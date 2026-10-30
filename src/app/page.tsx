@@ -149,6 +149,18 @@ export default function PlanEditor() {
 
   return (
     <div className="min-h-screen bg-gray-900 p-4 text-white">
+      <header className="mb-2 flex items-center gap-3">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/img/logo.svg"
+          alt="TusPlanos3D"
+          width={205}
+          height={50}
+          className="h-10 w-auto"
+        />
+        <h1 className="text-xl font-bold text-orange-400">Generador de Planos</h1>
+      </header>
+
       <div className="flex flex-wrap items-center gap-2 border border-gray-700 bg-gray-800/85 p-3 backdrop-blur">
         <button type="button" onClick={addRoom} className={btn}>Añadir estancia</button>
         <button type="button" onClick={duplicateSelection} disabled={!selection} className={btn}>Duplicar</button>
@@ -208,7 +220,11 @@ export default function PlanEditor() {
             id="ui-container"
             className="absolute top-4 left-4 z-10 w-72 rounded-lg border border-gray-700 bg-gray-800/95 p-4 shadow-lg backdrop-blur"
           >
-            <h3 className="text-sm font-bold text-orange-400">Estudio de Arquitectura</h3>
+            <div className="flex items-center gap-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/img/logo.svg" alt="TusPlanos3D" width={160} height={39} className="h-8 w-auto" />
+            </div>
+            <h3 className="mt-1 text-sm font-bold text-orange-400">Estudio de Arquitectura</h3>
             <p className="mt-1 text-[11px] text-gray-300">• Teclea metros + <kbd>Enter</kbd> para fijar muro.</p>
             <p className="mt-1 text-[11px] text-gray-300">• Atajo: <kbd>Ctrl + Z</kbd> para Deshacer.</p>
 
