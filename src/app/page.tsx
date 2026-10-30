@@ -1,27 +1,21 @@
+"use client";
 import { useState, useEffect } from "react";
-import Script from "next/script";
 import { CATALOG, CAT_BY_KEY } from "@/lib/plano/catalog";
 import {
   docFileName,
   downloadBlob,
-  emptyDoc,
   exampleDoc,
   fmt,
   loadDoc,
   roomArea,
-  sanitizeDoc,
   saveDoc,
   totalArea,
   uid,
 } from "@/lib/plano/store";
 import type { PlanDoc, Selection } from "@/lib/plano/types";
 
-const btn =
-  "rounded border border-line bg-paper-2 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-ink-soft transition:hover:border-accent-bright hover:text-accent disabled:cursor-not-allowed disabled:opacity-40";
-const btnPrimary =
-  "rounded bg-ink px-4 py-2 text-xs font-semibold uppercase tracking-wide text-paper transition:hover:bg-accent";
-const field =
-  "mt-1 w-full border border-line bg-paper px-2 py-1.5 text-sm text-ink focus:border-accent-bright focus:outline-none";
+const btn = "rounded bg-gray-700 px-3 py-2 text-xs text-gray-200";
+const btnPrimary = "rounded bg-orange-500 px-4 py-2 text-xs font-semibold text-gray-900";
 
 function NumInput({
   label,
@@ -35,33 +29,25 @@ function NumInput({
   onCommit: (value: number) => void;
 }) {
   const [raw, setRaw] = useState(() => String(value));
-  const [prevValue, setPrevValue] = useState<number>(value);
-  if (value !== prevValue) {
-    setPrevValue(value);
-    setRaw(String(value));
-  }
+  const [prev, setPrev] = useState(value);
+  if (value !== prev) { setPrev(value); setRaw(String(value)); }
   function commit() {
     const parsed = Number(raw.replace(",", "."));
-    if (Number.isFinite(parsed) && parsed > 0) {
-      onCommit(parsed);
-    } else {
-      setRaw(String(value));
-    }
+    if (Number.isFinite(parsed) && parsed > 0) onCommit(parsed);
+    else setRaw(String(value));
   }
   return (
-    <label className="block text-xs text-muted">
+    <label className="block text-xs text-gray-300">
       {label}
       <span className="mt-1 flex items-center gap-1.5">
         <input
           type="text"
           inputMode="decimal"
           value={raw}
-          onChange={(event) => setRaw(event.target.value as string)}
+          onChange={(e) => setRaw(e.target.value)}
           onBlur={commit}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") (event.target as HTMLInputElement).blur();
-          }}
-          className={field}
+          onKeyDown={(e) => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); }}
+          className="mt-1 w-full rounded border border-gray-600 bg-gray-900 px-2 py-1.5 text-sm text-gray-100 focus:border-orange-400 focus:outline-none"
         />
         <span className="shrink-0">{suffix}</span>
       </span>
@@ -70,11 +56,9 @@ function NumInput({
 }
 
 export default function PlanEditor() {
-  // @ts-expect-error - Next.js en modo export tiene compatibilidad especial con React globals
   const [doc, setDoc] = useState<PlanDoc>(() => exampleDoc());
   const [selection, setSelection] = useState<Selection | null>(null);
 
-  // Cargar/guardar en localStorage (deferido)
   useEffect(() => {
     const timer = window.setTimeout(() => {
       const stored = loadDoc();
@@ -87,49 +71,25 @@ export default function PlanEditor() {
     saveDoc(doc);
   }, [doc]);
 
-  // Atajos mínimos: Borrar (Supr) y Esc
-  useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setSelection(null);
-      if (event.key === "Delete" || event.key === "Backspace") {
-        event.preventDefault();
-        if (selection?.kind === "room") {
-          setDoc((c) => ({ ...c, rooms: c.rooms.filter((r) => r.id !== selection.id) }));
-        } else if (selection?.kind === "piece") {
-          setDoc((c) => ({ ...c, pieces: c.pieces.filter((p) => p.id !== selection.id) }));
-        }
-        setSelection(null);
-      }
-    }
-    (window as unknown as { addEventListener: (t: string, l: EventListener) => void }).addEventListener("keydown", onKeyDown as EventListener);
-    return () => (window as unknown as { removeEventListener: (t: string, l: EventListener) => void }).removeEventListener("keydown", onKeyDown as EventListener);
-  }, [selection]);
-
   // --- Operaciones ---
   function addRoom() {
     const id = uid();
-    setDoc((current) => ({
-      ...current,
-      rooms: [...current.rooms, { id, name: `Estancia ${current.rooms.length + 1}`, x: 0, y: 0, w: 400, h: 350 }],
-    }));
+    setDoc((c) => ({ ...c, rooms: [...c.rooms, { id, name: `Estancia ${c.rooms.length + 1}`, x: 0, y: 0, w: 400, h: 350 }] }));
     setSelection({ kind: "room", id });
   }
   function addPiece(key: string) {
     const item = CAT_BY_KEY[key];
     if (!item) return;
     const id = uid();
-    setDoc((current) => ({
-      ...current,
-      pieces: [...current.pieces, { id, key, x: 0, y: 0, w: item.w, h: item.h, rot: 0 }],
-    }));
+    setDoc((c) => ({ ...c, pieces: [...c.pieces, { id, key, x: 0, y: 0, w: item.w, h: item.h, rot: 0 }] }));
     setSelection({ kind: "piece", id });
   }
   function deleteSelection() {
     if (!selection) return;
-    setDoc((current) =>
+    setDoc((c) =>
       selection.kind === "room"
-        ? { ...current, rooms: current.rooms.filter((room) => room.id !== selection.id) }
-        : { ...current, pieces: current.pieces.filter((piece) => piece.id !== selection.id) },
+        ? { ...c, rooms: c.rooms.filter((r) => r.id !== selection.id) }
+        : { ...c, pieces: c.pieces.filter((p) => p.id !== selection.id) },
     );
     setSelection(null);
   }
@@ -137,40 +97,27 @@ export default function PlanEditor() {
     if (!selection) return;
     const id = uid();
     if (selection.kind === "room") {
-      const room = doc.rooms.find((item) => item.id === selection.id);
+      const room = doc.rooms.find((i) => i.id === selection.id);
       if (!room) return;
-      setDoc((current) => ({
-        ...current,
-        rooms: [...current.rooms, { ...room, id, x: room.x + 60, y: room.y + 60, name: `${room.name} (copia)` }],
-      }));
+      setDoc((c) => ({ ...c, rooms: [...c.rooms, { ...room, id, x: room.x + 60, y: room.y + 60, name: `${room.name} (copia)` }] }));
     } else {
-      const piece = doc.pieces.find((item) => item.id === selection.id);
+      const piece = doc.pieces.find((i) => i.id === selection.id);
       if (!piece) return;
-      setDoc((current) => ({
-        ...current,
-        pieces: [...current.pieces, { ...piece, id, x: piece.x + 60, y: piece.y + 60 }],
-      }));
+      setDoc((c) => ({ ...c, pieces: [...c.pieces, { ...piece, id, x: piece.x + 60, y: piece.y + 60 }] }));
     }
     setSelection({ kind: selection.kind, id });
   }
   function updateRoom(id: string, patch: Partial<{ name: string; w: number; h: number }>) {
-    setDoc((current) => ({
-      ...current,
-      rooms: current.rooms.map((room) => (room.id === id ? { ...room, ...patch } : room)),
-    }));
+    setDoc((c) => ({ ...c, rooms: c.rooms.map((r) => (r.id === id ? { ...r, ...patch } : r)) }));
   }
   function updatePiece(id: string, patch: Partial<{ w: number; h: number; rot: number }>) {
-    setDoc((current) => ({
-      ...current,
-      pieces: current.pieces.map((piece) => (piece.id === id ? { ...piece, ...patch } : piece)),
-    }));
+    setDoc((c) => ({ ...c, pieces: c.pieces.map((p) => (p.id === id ? { ...p, ...patch } : p)) }));
   }
   function rotatePiece(id: string, delta: number) {
-    const piece = doc.pieces.find((item) => item.id === id);
+    const piece = doc.pieces.find((i) => i.id === id);
     if (!piece) return;
     updatePiece(id, { rot: ((piece.rot + delta) % 360 + 360) % 360 });
   }
-  // Descargas
   function exportPdf() {
     window.print();
   }
@@ -178,10 +125,7 @@ export default function PlanEditor() {
     const svg = document.getElementById("canvasPlanos") as SVGSVGElement | null;
     if (!svg) return;
     const markup = new XMLSerializer().serializeToString(svg);
-    downloadBlob(
-      new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n${markup}`], { type: "image/svg+xml;charset=utf-8" }),
-      docFileName(doc, "svg"),
-    );
+    downloadBlob(new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n${markup}`], { type: "image/svg+xml;charset=utf-8" }), docFileName(doc, "svg"));
   }
   function exportJson() {
     const blob = new Blob([JSON.stringify(doc, null, 2)], { type: "application/json" });
@@ -192,124 +136,40 @@ export default function PlanEditor() {
     event.target.value = "";
     if (!file) return;
     file.text().then((text: string) => {
-      const parsed: unknown = JSON.parse(text);
-      const clean = sanitizeDoc(parsed);
-      if (clean.rooms.length === 0 && clean.pieces.length === 0 && !clean.title) return;
-      setDoc(clean);
+      const parsed: PlanDoc = JSON.parse(text);
+      setDoc(parsed);
       setSelection(null);
     });
   }
 
   // --- Derivados ---
-  const selectedRoom =
-    selection?.kind === "room"
-      ? doc.rooms.find((r) => r.id === selection.id) ?? null
-      : null;
-  const selectedPiece =
-    selection?.kind === "piece"
-      ? doc.pieces.find((p) => p.id === selection.id) ?? null
-      : null;
+  const selectedRoom = selection?.kind === "room" ? doc.rooms.find((r) => r.id === selection.id) ?? null : null;
+  const selectedPiece = selection?.kind === "piece" ? doc.pieces.find((p) => p.id === selection.id) ?? null : null;
   const selectedCatalogItem = selectedPiece ? CAT_BY_KEY[selectedPiece.key] ?? null : null;
 
   return (
     <div className="min-h-screen bg-gray-900 p-4 text-white">
-      <Script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" strategy="beforeInteractive" />
-
-      {/* Barra superior: herramientas del dibujo de muros */}
       <div className="flex flex-wrap items-center gap-2 border border-gray-700 bg-gray-800/85 p-3 backdrop-blur">
-        <button
-          id="btn-muro"
-          type="button"
-          className="btn-tool rounded bg-orange-500 px-3 py-1.5 text-xs font-semibold text-gray-900"
-          onClick={() => (window as unknown as { cambiarHerramienta?: (h: string) => void }).cambiarHerramienta?.("muro")}
-        >
-          Dibujar Muro
-        </button>
-        <button
-          id="btn-puerta"
-          type="button"
-          className="btn-tool rounded bg-gray-200 px-3 py-1.5 text-xs text-gray-800"
-          onClick={() => (window as unknown as { cambiarHerramienta?: (h: string) => void }).cambiarHerramienta?.("puerta")}
-        >
-          Puerta 0.80m
-        </button>
-        <button
-          id="btn-ventana"
-          type="button"
-          className="btn-tool rounded bg-gray-200 px-3 py-1.5 text-xs text-gray-800"
-          onClick={() => (window as unknown as { cambiarHerramienta?: (h: string) => void }).cambiarHerramienta?.("ventana")}
-        >
-          Ventana 1.20m
-        </button>
-
+        <button type="button" onClick={addRoom} className={btn}>Añadir estancia</button>
+        <button type="button" onClick={duplicateSelection} disabled={!selection} className={btn}>Duplicar</button>
+        <button type="button" onClick={deleteSelection} disabled={!selection} className={btn}>Eliminar</button>
+        <button type="button" onClick={() => window.confirm("¿Vaciar todo?")} className={btn}>Vaciar</button>
         <span className="mx-1 hidden h-6 w-px bg-gray-600 sm:block" />
-
-        <button
-          id="btn-grosor-carga"
-          type="button"
-          className="btn-tool rounded bg-orange-500 px-3 py-1.5 text-xs font-semibold text-gray-900"
-          onClick={() => (window as unknown as { cambiarGrosor?: (g: number, t: string) => void }).cambiarGrosor?.(30, "carga")}
-        >
-          Grosor Carga (30cm)
-        </button>
-        <button
-          id="btn-grosor-tabique"
-          type="button"
-          className="btn-tool rounded bg-gray-700 px-3 py-1.5 text-xs text-gray-200"
-          onClick={() => (window as unknown as { cambiarGrosor?: (g: number, t: string) => void }).cambiarGrosor?.(10, "tabique")}
-        >
-          Grosor Tabique (10cm)
-        </button>
-
-        <span className="mx-1 hidden h-6 w-px bg-gray-600 sm:block" />
-
-        <button type="button" onClick={addRoom} className="rounded bg-gray-700 px-3 py-1.5 text-xs text-gray-200">
-          Añadir estancia
-        </button>
-        <button type="button" onClick={duplicateSelection} disabled={!selection} className="rounded bg-gray-700 px-3 py-1.5 text-xs text-gray-200 disabled:opacity-40">
-          Duplicar
-        </button>
-        <button type="button" onClick={deleteSelection} disabled={!selection} className="rounded bg-gray-700 px-3 py-1.5 text-xs text-gray-200 disabled:opacity-40">
-          Eliminar
-        </button>
-        <button type="button" onClick={() => window.confirm("¿Vaciar todo?")} className="rounded bg-gray-700 px-3 py-1.5 text-xs text-gray-200">
-          Vaciar
-        </button>
-
-        <span className="ml-auto flex flex-wrap items-center gap-2">
-          <button type="button" onClick={exportPdf} className="rounded bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white">
-            Descargar PDF
-          </button>
-          <button
-            onClick={() => (window as unknown as { exportarAPDF?: () => void }).exportarAPDF?.()}
-            className="rounded bg-green-600 px-3 py-1.5 text-xs font-semibold text-white"
-          >
-            PDF Muros
-          </button>
-          <button type="button" onClick={exportSvg} className="rounded bg-gray-600 px-3 py-1.5 text-xs text-white">
-            SVG
-          </button>
-          <button type="button" onClick={exportJson} className="rounded bg-gray-600 px-3 py-1.5 text-xs text-white">
-            JSON
-          </button>
-          <label className="cursor-pointer rounded bg-gray-600 px-3 py-1.5 text-xs text-white">
-            Cargar
-            <input
-              type="file"
-              accept="application/json,.json"
-              onChange={(e) => importJson(e as React.ChangeEvent<HTMLInputElement>)}
-              className="sr-only"
-            />
-          </label>
-        </span>
+        <button type="button" onClick={exportPdf} className={btnPrimary}>Descargar PDF</button>
+        <button type="button" onClick={exportSvg} className={btn}>SVG</button>
+        <button type="button" onClick={exportJson} className={btn}>JSON</button>
+        <label className={`${btn} cursor-pointer`}>
+          Cargar proyecto
+          <input type="file" accept="application/json,.json" onChange={(e) => importJson(e as React.ChangeEvent<HTMLInputElement>)} className="sr-only" />
+        </label>
       </div>
 
-      <div className="mt-1 text-xs text-gray-300">
-        «Descargar PDF» abre el diálogo de impresión; «PDF Muros» genera PDF técnico con jsPDF (A4 horizontal).
-      </div>
+      <p className="mt-2 text-xs leading-relaxed text-muted">
+        «Descargar PDF» abre el diálogo de impresión: A4 apaisado, 100 % de escala.
+      </p>
 
+      {/* Canvas de muros */}
       <div className="relative mt-4 flex gap-4">
-        {/* Canvas de muros */}
         <div className="relative min-w-0 flex-1">
           <canvas
             id="canvasPlanos"
@@ -318,7 +178,7 @@ export default function PlanEditor() {
             className="block h-full w-full select-none rounded border border-gray-700 bg-[#1e1e1e]"
             style={{ touchAction: "none", cursor: "crosshair" }}
             role="img"
-            aria-label="Lienzo para dibujar muros de la vivienda"
+            aria-label="Lienzo para dibujar muros"
           />
           <input
             type="text"
@@ -342,9 +202,72 @@ export default function PlanEditor() {
               zIndex: "30",
             }}
           />
+
+          {/* UI flotante (herramientas + presupuesto) */}
+          <div
+            id="ui-container"
+            className="absolute top-4 left-4 z-10 w-72 rounded-lg border border-gray-700 bg-gray-800/95 p-4 shadow-lg backdrop-blur"
+          >
+            <h3 className="text-sm font-bold text-orange-400">Estudio de Arquitectura</h3>
+            <p className="mt-1 text-[11px] text-gray-300">• Teclea metros + <kbd>Enter</kbd> para fijar muro.</p>
+            <p className="mt-1 text-[11px] text-gray-300">• Atajo: <kbd>Ctrl + Z</kbd> para Deshacer.</p>
+
+            <div className="mt-3 space-y-2">
+              <button id="btn-muro" type="button" className="w-full rounded bg-orange-500 px-2 py-1.5 text-xs font-semibold text-gray-900 transition:hover:bg-orange-400" onClick={() => (window as unknown as { cambiarHerramienta?: (h: string) => void }).cambiarHerramienta?.("muro")}>Dibujar Estructura</button>
+              <button id="btn-puerta" type="button" className="w-full rounded bg-gray-200 px-2 py-1.5 text-xs text-gray-800 transition:hover:bg-gray-300" onClick={() => (window as unknown as { cambiarHerramienta?: (h: string) => void }).cambiarHerramienta?.("puerta")}>Puerta (0.80m)</button>
+              <button id="btn-ventana" type="button" className="w-full rounded bg-gray-200 px-2 py-1.5 text-xs text-gray-800 transition:hover:bg-gray-300" onClick={() => (window as unknown as { cambiarHerramienta?: (h: string) => void }).cambiarHerramienta?.("ventana")}>Ventana (1.20m)</button>
+            </div>
+
+            <div className="mt-3 space-y-1">
+              <button
+                id="btn-grosor-carga"
+                onClick={() => (window as unknown as { cambiarGrosor?: (g: number, t: string) => void }).cambiarGrosor?.(30, "carga")}
+                className="w-full rounded bg-orange-500 px-2 py-1.5 text-xs font-semibold text-gray-900 transition:hover:bg-orange-400"
+              >
+                Grosor Carga (30cm)
+              </button>
+              <button
+                id="btn-grosor-tabique"
+                onClick={() => (window as unknown as { cambiarGrosor?: (g: number, t: string) => void }).cambiarGrosor?.(10, "tabique")}
+                className="w-full rounded bg-gray-200 px-2 py-1.5 text-xs text-gray-800 transition:hover:bg-gray-300"
+              >
+                Grosor Tabique (10cm)
+              </button>
+            </div>
+
+            <div id="budget-container" className="mt-4 rounded bg-gray-800 p-2 text-[10px]">
+              <div className="flex justify-between">
+                <span>Muros Carga:</span>
+                <span className="font-mono font-bold" id="b-carga">0.00 m</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Tabiquería:</span>
+                <span className="font-mono font-bold" id="b-tabique">0.00 m</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Puertas:</span>
+                <span className="font-mono font-bold" id="b-puertas">0 ud</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Ventanas:</span>
+                <span className="font-mono font-bold" id="b-ventanas">0 ud</span>
+              </div>
+              <div className="mt-1 flex justify-between border-t border-gray-600 pt-1 font-bold">
+                <span>Total:</span>
+                <span className="text-green-400" id="b-total">0.00 €</span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => (window as unknown as { exportarAPDF?: () => void }).exportarAPDF?.()}
+              className="mt-3 w-full rounded bg-green-500 px-3 py-2 text-xs font-semibold uppercase text-black transition:hover:bg-green-400"
+            >
+              Exportar Plano PDF
+            </button>
+          </div>
         </div>
 
-        {/* Panel lateral de propiedades Next.js */}
+        {/* Panel lateral de propiedades Next.js + catálogo */}
         <aside className="w-64 flex-shrink-0 space-y-4 overflow-y-auto border border-gray-700 bg-gray-800 p-3">
           <section>
             <h2 className="text-xs font-semibold uppercase text-gray-400">Proyecto</h2>
@@ -353,53 +276,12 @@ export default function PlanEditor() {
               <input
                 type="text"
                 value={doc.title}
+                maxLength={80}
                 onChange={(e) => setDoc((c) => ({ ...c, title: (e.target as HTMLInputElement).value }))}
                 className="mt-1 w-full rounded border border-gray-600 bg-gray-900 px-2 py-1.5 text-sm text-gray-100 focus:border-orange-400 focus:outline-none"
               />
             </label>
           </section>
-
-          {selectedRoom && (
-            <section>
-              <h2 className="text-xs font-semibold uppercase text-gray-400">Estancia</h2>
-              <label className="mt-2 block text-xs text-gray-300">
-                Nombre
-                <input
-                  type="text"
-                  value={selectedRoom.name}
-                  onChange={(e) => updateRoom(selectedRoom.id, { name: (e.target as HTMLInputElement).value })}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-900 px-2 py-1.5 text-sm text-gray-100 focus:border-orange-400 focus:outline-none"
-                />
-              </label>
-              <div className="mt-2 grid grid-cols-2 gap-2">
-                <NumInput label="Ancho" value={selectedRoom.w / 100} suffix="m" onCommit={(v) => updateRoom(selectedRoom.id, { w: Math.min(5000, Math.max(40, Math.round(v * 10))) })} />
-                <NumInput label="Largo" value={selectedRoom.h / 100} suffix="m" onCommit={(v) => updateRoom(selectedRoom.id, { h: Math.min(5000, Math.max(40, Math.round(v * 10))) })} />
-              </div>
-            </section>
-          )}
-
-          {selectedPiece && selectedCatalogItem && (
-            <section>
-              <h2 className="text-xs font-semibold uppercase text-gray-400">Pieza</h2>
-              <p className="mt-1 text-sm font-semibold text-orange-300">{selectedCatalogItem.label}</p>
-              <div className="mt-2 grid grid-cols-2 gap-2">
-                <NumInput label="Ancho" value={selectedPiece.w} suffix="cm" onCommit={(v) => updatePiece(selectedPiece.id, { w: Math.min(1000, Math.max(10, Math.round(v))) })} />
-                <NumInput label="Fondo" value={selectedPiece.h} suffix="cm" onCommit={(v) => updatePiece(selectedPiece.id, { h: Math.min(1000, Math.max(10, Math.round(v))) })} />
-              </div>
-              <label className="mt-2 block text-xs text-gray-300">
-                Giro: {(((selectedPiece.rot % 360) + 360) % 360)}°
-                <input
-                  type="range"
-                  min={0}
-                  max={345}
-                  step={15}
-                  value={((selectedPiece.rot % 360) + 360) % 360}
-                  onChange={(e) => updatePiece(selectedPiece.id, { rot: Number((e.target as HTMLInputElement).value) })}
-                  className="mt-1 w-full accent-orange-500"
-                />
-              </label>
-            </section>
-          )}
 
           <section>
             <h2 className="text-xs font-semibold uppercase text-gray-400">Resumen</h2>
@@ -409,42 +291,42 @@ export default function PlanEditor() {
                 <dd className="font-semibold">{doc.rooms.length}</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-gray-300">Piezas</dt>
-                <dd className="font-semibold">{doc.pieces.length}</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-gray-300">Superficie</dt>
-                <dd className="font-semibold text-orange-400">{fmt(totalArea(doc))} m²</dd>
-              </div>
-              <div className="flex justify-between">
                 <dt className="text-gray-300">Clima ≈</dt>
-                <dd className="font-bold text-green-400">{(totalArea(doc) * 130 / 860).toFixed(1)} kW</dd>
+                <dd className="font-bold text-green-400">
+                  {(totalArea(doc) * 130 / 860).toFixed(1)} kW
+                </dd>
               </div>
             </dl>
           </section>
 
-          {/* Catálogo mobiliario con picker rápido */}
           <section>
             <h2 className="text-xs font-semibold uppercase text-gray-400">Mobiliario rápido</h2>
             <div className="mt-2 grid grid-cols-2 gap-1">
-              {CATALOG.slice(0, 4).map((g) => g.items.slice(0, 2).map((it) => (
-                <button
-                  key={it.key}
-                  type="button"
-                  onClick={() => addPiece(it.key)}
-                  title={`${it.label} · ${it.w}×${it.h} cm`}
-                  className="flex flex-col items-center gap-1 rounded border border-gray-700 bg-gray-900 p-1 text-[9px] text-gray-200 transition:hover:border-orange-400 hover:text-orange-300"
-                >
-                  <svg viewBox={`${-it.w / 2 - 6} ${-it.h / 2 - 6} ${it.w + 12} ${it.h + 12}`} className="h-5 w-5">
-                    <g fill="#2d2d2d" stroke="#9ca3af" strokeWidth={3} strokeLinejoin="round">
-                      {it.draw()}
-                    </g>
-                  </svg>
-                  {it.label}
-                </button>
-              )))}
+              {CATALOG.slice(0, 4).map((g) =>
+                g.items.slice(0, 2).map((it) => (
+                  <button
+                    key={it.key}
+                    type="button"
+                    onClick={() => addPiece(it.key)}
+                    title={`${it.label} · ${it.w}×${it.h} cm`}
+                    className="flex flex-col items-center gap-1 rounded border border-gray-700 bg-gray-900 p-1 text-[9px] text-gray-200 transition:hover:border-orange-400 hover:text-orange-300"
+                  >
+                    <svg
+                      viewBox={`${-it.w / 2 - 6} ${-it.h / 2 - 6} ${it.w + 12} ${it.h + 12}`}
+                      className="h-5 w-5"
+                    >
+                      <g fill="#2d2d2d" stroke="#9ca3af" strokeWidth={3} strokeLinejoin="round">
+                        {it.draw()}
+                      </g>
+                    </svg>
+                    {it.label}
+                  </button>
+                )),
+              )}
             </div>
-            <p className="mt-1 text-[9px] text-gray-500">Más piezas en el catálogo real. El canvas arriba sirve para dibujar muros.</p>
+            <p className="mt-1 text-[9px] text-gray-500">
+              Click para añadir piezas de catálogo
+            </p>
           </section>
         </aside>
       </div>
