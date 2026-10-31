@@ -78,7 +78,7 @@ export default function SiteFooter({ site }: { site: SiteData }) {
       </div>
 
       <div className="border-t border-paper/15 px-6 py-4 text-center text-xs text-paper/60">
-        © {new Date().getFullYear()} {site.siteName}. Todos los derechos reservados.
+        &copy; {new Date().getFullYear()} {site.siteName}. Todos los derechos reservados. Msoft
       </div>
     </footer>
   );
