@@ -1,76 +1,65 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 
 type Msg = { from: "bot" | "user"; text: string };
 
-// Base de conocimiento FAQ (cliente, sin backend).
-// Se alimenta con keywords/​regex y devuelve respuestas amplias de ayuda.
-const FAQ: { keys: RegExp[]; answer: string }[] = [
-  {
-    keys: [/pdf|exportar|imprimir|impresión/i],
-    answer: "Para PDF: pulsa «Exportar Plano PDF» (botón verde). Genera A4 horizontal con cotas, membrete y escala. También puedes imprimir la página (Ctrl+P → Guardar como PDF) como alternativa.",
-  },
-  {
-    keys: [/medida|cota|metro|mundo|unidad/i],
-    answer: "Mientras arrastras un muro, teclea el valor (ej. 5.20) y pulsa Enter; el muro se estira exactamente esa distancia. Mantén Shift para forzar ángulos de 90°.",
-  },
-  {
-    keys: [/puerta|ventana|aberturas/i],
-    answer: "Pincha el botón Puerta (0.80m) o Ventana (1.20m), luego haz clic sobre el muro; se inserta la abertura en el punto más cercano y el presupuesto se recalcula.",
-  },
-  {
-    keys: [/clima|aa|aire|a\/a|conducto|rejilla|fancoil|split/i],
-    answer: "Climatización ≈ 130 frig/h por m² (1 frig = 1.163 W). El panel muestra la potencia estimada en kW. Usa el botón Conducto/Rejilla/Split/Compresor para dibujar la distribución.",
-  },
-  {
-    keys: [/grosor|muro|tabique|exterior|interior/i],
-    answer: "Grosor Carga (30cm) = muro exterior de carga (línea gruesa). Grosor Tabique (10cm) = tabique interior (línea fina).",
-  },
-  {
-    keys: [/deshacer|undo|borrar|delete|tecla/i],
-    answer: "Deshacer: Ctrl+Z o tecla «u». Cancelar tramo: Esc. Quitar selección: Supr / Borrar (Del).",
-  },
-  {
-    keys: [/presupuesto|precio|coste|peso/i],
-    answer: "El panel de presupuesto es bueno para aproximación, pero dependerá mucho de tu zona (mano de obra, material, etc.).",
-  },
-  {
-    keys: [/proyecto|guardar|json|recuperar/i],
-    answer: "El proyecto se guarda en tu navegador (localStorage: «tusplanos3d:plano:v1»). Puedes descargarlo como JSON y volver a importarlo más tarde (botón «Cargar proyecto»).",
-  },
-  {
-    keys: [/cota|exacta<|message|>medida/i],
-    answer: "Para cota exacta: segundo clic + número + Enter. El muro industrial con ese valor. También puedes arrastrar libre y luego ajustar con el teclado (flechas ±10 cm).",
-  },
-  {
-    keys: [/svg|vectorial/i],
-    answer: "SVG exporta el canvas en formato vectorial, útil para Illustrator/Inkscape/Figma o para insertar en documentos.",
-  },
-  {
-    keys: [/offline|local|sin conexión/i],
-    answer: "Todo se ejecuta en tu navegador. No enviarás datos a internet (localStorage). No necesita conexión para usar la app.",
-  },
-  {
-    keys: [/ayuda|help|cómo/i],
-    answer: "Visita la página /ayuda para la guía completa y /cookies para la política de uso de localStorage.",
-  },
-  {
-    keys: [/login|account|sesión|usuario/i],
-    answer: "El login (Google/Supabase) está preparado en /login y /account pero sin credenciales reales por ahora. Leemos Supabase (.env).",
-  },
+type Faq = { keys: string[]; answer: string };
+
+const FAQ: Faq[] = [
+  { keys: ["pdf", "exportar pdf", "imprimir", "exportar"], answer: "Para PDF: pulsa Exportar Plano PDF (boton verde). Genera A4 horizontal con cotas, membrete y escala. Tambien puedes imprimir la pagina (Ctrl+P -> Guardar como PDF)." },
+  { keys: ["medida", "cota", "metro", "mundo", "unidad", "exacta"], answer: "Mientras arrastras un muro, teclea el valor (ej. 5.20) y pulsa Enter. Manten Shift para forzar 90 grados. Cota exacta: segundo clic + numero + Enter." },
+  { keys: ["puerta", "ventana", "abertura", "aberturas"], answer: "Pincha el boton Puerta (0.80m) o Ventana (1.20m), luego haz clic sobre el muro; se inserta la abertura en el punto mas cercano y el presupuesto se recalcula." },
+  { keys: ["clima", "aa", "aire", "conducto", "rejilla", "fancoil", "split"], answer: "Climatizacion ~130 frig/h por m2 (1 frig = 1.163 W). El panel muestra la potencia estimada en kW. Usa Conducto/Rejilla/Split/Compresor para distribuir." },
+  { keys: ["grosor", "muro", "tabique", "exterior", "interior", "carga"], answer: "Grosor Carga (30cm) = muro exterior de carga (linea gruesa). Grosor Tabique (10cm) = tabique interior (linea fina)." },
+  { keys: ["deshacer", "undo", "borrar", "delete", "tecla", "supr", "borrar", "cancelar"], answer: "Deshacer: Ctrl+Z o 'u'. Cancelar tramo: Esc. Quitar seleccion: Supr/Del. Guardar/cargar: botones del panel lateral." },
+  { keys: ["presupuesto", "precio", "coste", "peso", "material", "mano de obra"], answer: "El presupuesto es aproximado y depende mucho de la zona (mano de obra, material, acabados). Usalo como estimacion, no como cotizacion final." },
+  { keys: ["proyecto", "guardar", "json", "recuperar", "localstorage", "importar"], answer: "El proyecto se guarda en tu navegador (localStorage: tusplanos3d:plano:v1). Puedes descargarlo como JSON y volver a importarlo mas tarde (Cargar proyecto)." },
+  { keys: ["svg", "vectorial", "exportar svg"], answer: "SVG exporta el canvas en formato vectorial; util para Illustrator/Inkscape/Figma o para insertar en documentos." },
+  { keys: ["offline", "local", "sin conexion", "internet"], answer: "Todo se ejecuta en tu navegador. No enviaras datos a internet (localStorage). No necesita conexion para usar la app." },
+  { keys: ["ayuda", "help", "guia", "cookies"], answer: "Visita /ayuda para la guia completa y /cookies para la politica de uso de localStorage." },
+  { keys: ["login", "account", "sesion", "usuario", "google", "auth"], answer: "El login (Google/Supabase) esta preparado en /login y /account, pero requiere configurar credenciales reales por ahora." },
+  { keys: ["contratacion", "electricidad", "potencia", "icp", "amperios", "kw", "kilowatt"], answer: "Ve a /electricidad para la calculadora: selecciona aparatos, factor de coincidencia y margen. Obtiene kW contratados e ICP recomendado a 230V." },
+  { keys: ["csv", "exportar csv"], answer: "En la pagina /electricidad puedes exportar el resultado a CSV (boton Exportar CSV) o imprimir a PDF." },
+  { keys: ["superficie", "m2", "metros", "area", "planta"], answer: "La iluminacion se estima 10W por m2 (un punto cada 10m2). Puedes cambiar la superficie en la calculadora de electricidad." },
+  { keys: ["zoom", "vista", "centrar", "canvas"], answer: "Usa la rueda del raton para zoom y Ctrl+0 para centrar. La vista se ajusta a los limites del lienzo." },
 ];
 
+function normalize(s: string) {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9 ]/g, " ");
+}
+
+function score(q: string, keys: string[]) {
+  const qn = normalize(q);
+  const tokens = qn.split(/\s+/).filter(Boolean);
+  let s = 0;
+  for (const k of keys) {
+    const kn = normalize(k);
+    if (qn.includes(kn)) s += 5;
+    for (const t of tokens) if (kn.includes(t) && t.length > 2) s += 1;
+  }
+  return s;
+}
+
 function getReply(text: string): string {
-  const item = FAQ.find((f) => f.keys.some((k) => k.test(text)));
-  return item?.answer || "No enciendo eso. Prueba con: PDF, medir, cota, ángulos, puerta, tabique, clima, presupuesto, ayuda.";
+  const ranked = FAQ.map((f) => ({ f, s: score(text, f.keys) }))
+    .filter((x) => x.s > 0)
+    .sort((a, b) => b.s - a.s);
+  if (ranked.length === 0) {
+    return "No entiendo del todo esa consulta. Prueba con: PDF, medicion, cota, puerta, tabique, clima, presupuesto, electricidad, ayuda, login.";
+  }
+  return ranked[0].f.answer;
 }
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Msg[]>([
-    { from: "bot", text: "Hola, soy el asistente de TusPlanos3D. ¿En qué puedo ayudarte?" },
+    { from: "bot", text: "Hola, soy el asistente de TusPlanos3D. En que puedo ayudarte?" },
   ]);
   const [typing, setTyping] = useState(false);
   const [showChip, setShowChip] = useState(true);
@@ -100,7 +89,6 @@ export default function ChatWidget() {
     }, 600);
   }
 
-  // Diseño original: botón flotante, panel con historial y sugerencias chip.
   return (
     <>
       {showChip && (
@@ -108,10 +96,8 @@ export default function ChatWidget() {
           className="fixed bottom-16 right-4 z-50 rounded-lg border border-orange-400/40 bg-gray-800/90 px-3 py-2 text-[11px] shadow"
           style={{ maxWidth: "220px" }}
         >
-          <p className="text-gray-200">
-            Ayuda rápida con el generador (cotas, PDF, prespuesto).
-          </p>
-          <button className="absolute -top-1 right-1 text-xs text-gray-400" onClick={() => setShowChip(false)}>×</button>
+          <p className="text-gray-200">Ayuda rapida con el generador (cotas, PDF, presupuesto, electricidad).</p>
+          <button className="absolute -top-1 right-1 text-xs text-gray-400" onClick={() => setShowChip(false)}>x</button>
         </div>
       )}
       <button
@@ -119,7 +105,7 @@ export default function ChatWidget() {
         className="rounded-full bg-orange-500 px-3 py-2 font-semibold text-gray-900 shadow-lg"
         style={{ position: "fixed", bottom: "1rem", right: "1rem", zIndex: 50 }}
       >
-        💬
+        ?
       </button>
       {open && (
         <div
@@ -127,7 +113,7 @@ export default function ChatWidget() {
           style={{ height: "360px" }}
         >
           <div className="mb-2 flex items-center justify-between">
-            <strong className="text-sm text-orange-400">Ayuda rápida</strong>
+            <strong className="text-sm text-orange-400">Ayuda rapida</strong>
             <button onClick={() => setOpen(false)} className="text-xs text-gray-400">cerrar</button>
           </div>
           <div className="mb-2 h-60 overflow-y-auto space-y-2 rounded bg-gray-900 p-2 text-xs">
@@ -136,10 +122,10 @@ export default function ChatWidget() {
                 {m.text}
               </div>
             ))}
-            {typing && <div className="text-gray-400">escribiendo…</div>}
+            {typing && <div className="text-gray-400">escribiendo...</div>}
           </div>
           <div className="mb-2 flex flex-wrap gap-1">
-            {["PDF", "cotas", "puertas", "clima", "undo", "presupuesto"].map((q) => (
+            {["PDF", "cotas", "puertas", "clima", "undo", "electricidad"].map((q) => (
               <button
                 key={q}
                 onClick={() => quick(q)}
@@ -155,10 +141,10 @@ export default function ChatWidget() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && send()}
               className="flex-1 rounded border border-gray-600 bg-gray-900 px-2 py-1 text-xs text-white focus:border-orange-400 focus:outline-none"
-              placeholder="pregunta…"
+              placeholder="pregunta..."
             />
             <button onClick={send} className="rounded bg-orange-500 px-2 py-1 text-xs font-bold text-gray-900">
-              ▶
+              -&gt;
             </button>
           </div>
         </div>
