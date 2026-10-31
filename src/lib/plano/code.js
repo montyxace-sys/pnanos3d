@@ -354,8 +354,8 @@
   // === EXPORTACIÓN TÉCNICA A PDF ===
   function exportarAPDF() {
     if (murosGuardados.length === 0) { alert("Dibuja infraestructura antes de exportar."); return; }
-    if (!(window as unknown as { jspdf?: unknown }).jspdf) { alert("jsPDF no cargado. Usa Ctrl+P del navegador (A4, 100%)."); return; }
-    const { jsPDF } = (window as unknown as { jspdf: { jsPDF: (...args: unknown[]) => unknown } }).jspdf;
+    if (!window.jspdf) { alert("jsPDF no cargado. Usa Ctrl+P del navegador (A4, 100%)."); return; }
+    const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation: "l", unit: "mm", format: "a4" });
     const anchoA4 = 297; const altoA4 = 210;
     let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
@@ -388,9 +388,9 @@
   }
 
   // Exponer globales para los botones HTML
-  (window as unknown as { cambiarHerramienta?: (h: string) => void }).cambiarHerramienta = cambiarHerramienta;
-  (window as unknown as { cambiarGrosor?: (g: number, t: string) => void }).cambiarGrosor = cambiarGrosor;
-  (window as unknown as { exportarAPDF: () => void }).exportarAPDF = exportarAPDF;
+  window.cambiarHerramienta = cambiarHerramienta;
+  window.cambiarGrosor = cambiarGrosor;
+  window.exportarAPDF = exportarAPDF;
 
   // === ARRANQUE ===
   resizeCanvas();
