@@ -51,7 +51,7 @@ export default function AyudaPage() {
         <li>Ajusta el factor de coincidencia (0,7 típico) y el margen de seguridad.</li>
         <li>Resultado: potencia instalada, estimada, con margen y contratacion recomendada (kW + ICP A).</li>
         <li>Exporta a CSV o imprime el reporte (PDF).</li>
-        <li>El botón "Guardar en cuenta" / "Mi plano" usa Supabase si estás logueado.</li>
+        <li>El botón «Guardar en cuenta» / «Mi plano» usa Supabase si estás logueado.</li>
       </ul>
 
       <div className="mt-10 border-t border-line pt-6">

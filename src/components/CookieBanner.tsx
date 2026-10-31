@@ -10,7 +10,10 @@ export default function CookieBanner() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const accept = localStorage.getItem(KEY);
-    if (accept !== "accepted" && accept !== "rejected") setVisible(true);
+    if (accept !== "accepted" && accept !== "rejected") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setVisible(true);
+    }
   }, []);
 
   function accept() {

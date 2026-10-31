@@ -1,5 +1,5 @@
 ﻿"use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Appliance = { id: string; label: string; watts: number; defaultCount?: number };
 
@@ -32,6 +32,21 @@ export default function ElectricidadClient() {
   const [m2, setM2] = useState(80);
   const [factor, setFactor] = useState(0.7);
   const [margin, setMargin] = useState(15);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("tusplanos3d:plano:v1");
+      if (!raw) return;
+      const doc = JSON.parse(raw) as { rooms?: { w: number; h: number }[] };
+      const area = (doc.rooms ?? []).reduce((s, r) => s + r.w * r.h, 0) / 10000;
+      if (area > 0) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setM2(Math.round(area));
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
 
   const result = useMemo(() => {
     const installed = APPLIANCES.reduce((sum, a) => sum + a.watts * (counts[a.id] ?? 0), 0) + Math.ceil((m2 / 10) * 100);
