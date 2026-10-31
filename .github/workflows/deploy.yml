@@ -32,8 +32,8 @@ jobs:
         env:
           NEXT_PUBLIC_BASE_PATH: ""
           NEXT_PUBLIC_SITE_URL: https://tusplanos3d.es
-          NEXT_PUBLIC_SUPABASE_URL: https://lgwaffbjlggfwwushjoz.supabase.co
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: sb_publishable_VG8r9yTgC8rW85BkH87wFw_NUfewpiq
+          NEXT_PUBLIC_SUPABASE_URL: https://kvfjvqxcojyzbccsbokg.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: sb_publishable_t2X3Vi6OEfmc0eGVO_doRA_QO2aAenR
         run: npm run build
 
       - name: Deploy to gh-pages
