@@ -32,6 +32,8 @@ export default function ElectricidadClient() {
   const [m2, setM2] = useState(80);
   const [factor, setFactor] = useState(0.7);
   const [margin, setMargin] = useState(15);
+  const [price, setPrice] = useState(0.16);
+  const [monthlyKwh, setMonthlyKwh] = useState(250);
 
   useEffect(() => {
     try {
@@ -122,6 +124,12 @@ export default function ElectricidadClient() {
           <input type="range" min={0} max={40} step={5} value={margin} onChange={(e) => setMargin(Number(e.target.value))}
                  className="w-full"/>
           <p className="text-xs text-gray-400 mb-4">Anade reserva para puntas de arranque.</p>
+          <label className="block text-sm mb-1">Precio energia (€/kWh): {price}</label>
+          <input type="number" step="0.001" min={0.05} value={price} onChange={(e) => setPrice(Math.max(0.05, Number(e.target.value) || 0.16))}
+                 className="w-full rounded border border-gray-600 bg-gray-700 px-2 py-1.5 mb-3"/>
+          <label className="block text-sm mb-1">Consumo mensual estimado (kWh): {monthlyKwh}</label>
+          <input type="number" min={50} value={monthlyKwh} onChange={(e) => setMonthlyKwh(Math.max(50, Number(e.target.value) || 250))}
+                 className="w-full rounded border border-gray-600 bg-gray-700 px-2 py-1.5 mb-4"/>
 
           <div className="rounded-lg bg-gray-900 p-4 border border-gray-700">
             <div className="text-sm text-gray-300">Potencia instalada</div>
@@ -135,6 +143,9 @@ export default function ElectricidadClient() {
             </div>
             <div className="text-sm text-gray-300 mt-1">
               ICP recomendado (230V): {result.icp} A (aprox. {(result.amps).toFixed(1)} A)
+            </div>
+            <div className="text-sm text-gray-300 mt-2">
+              Coste estimado mensual: {(price * monthlyKwh).toFixed(2)} € ({monthlyKwh} kWh × {price.toFixed(3)} €/kWh)
             </div>
             <p className="text-xs text-gray-400 mt-2">
               El ICP (interruptor) debe tener capacidad igual o superior a la potencia contratada.
