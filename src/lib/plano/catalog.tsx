@@ -61,6 +61,7 @@ export const CATALOG: CatalogGroup[] = [
     items: [
       { key: "encimera", label: "Encimera", w: 180, h: 60, draw: () => (<><rect x={-90} y={-30} width={180} height={60} rx={3} /><rect x={-80} y={-21} width={160} height={42} rx={2} fill="none" /></>) },
       { key: "fregadero", label: "Fregadero", w: 60, h: 55, draw: () => (<><rect x={-30} y={-27} width={60} height={55} rx={5} /><rect x={-22} y={-8} width={44} height={30} rx={4} fill="none" /><circle cx={0} cy={-17} r={5} fill="none" /></>) },
+      { key: "campana", label: "Campana extractora", w: 60, h: 45, draw: () => (<><rect x={-30} y={-22} width={60} height={15} rx={4} /><rect x={-24} y={-7} width={48} height={29} rx={4} fill="none" /><path d="M-18 -22 V-30 M0 -22 V-30 M18 -22 V-30" fill="none" /></>) },
       { key: "placa", label: "Placa", w: 60, h: 60, draw: () => (<><rect x={-30} y={-30} width={60} height={60} rx={4} /><circle cx={-15} cy={-15} r={9} fill="none" /><circle cx={15} cy={-15} r={9} fill="none" /><circle cx={-15} cy={15} r={9} fill="none" /><circle cx={15} cy={15} r={9} fill="none" /></>) },
       { key: "frigorifico", label: "Frigorífico", w: 60, h: 65, draw: () => (<><rect x={-30} y={-32} width={60} height={65} rx={4} /><path d="M-30 -12 H30" fill="none" /><path d="M20 -28 V-16 M20 -8 V4" fill="none" /></>) },
       { key: "isla", label: "Isla", w: 120, h: 80, draw: () => (<><rect x={-60} y={-40} width={120} height={80} rx={4} /><rect x={-48} y={-29} width={96} height={58} rx={3} fill="none" /></>) },

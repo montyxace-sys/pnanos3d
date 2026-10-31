@@ -367,8 +367,8 @@ export default function PlanEditor() {
 
           <section>
             <h2 className="text-xs font-semibold uppercase text-gray-400">Mobiliario rápido</h2>
-            <div className="mt-2 grid grid-cols-2 gap-1">
-              {CATALOG.slice(0, 4).map((g) =>
+            <div className="mt-2 grid grid-cols-3 gap-1">
+              {CATALOG.slice(0, 5).map((g) =>
                 g.items.slice(0, 2).map((it) => (
                   <button
                     key={it.key}
