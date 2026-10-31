@@ -393,8 +393,6 @@
   (window as unknown as { exportarAPDF: () => void }).exportarAPDF = exportarAPDF;
 
   // === ARRANQUE ===
-  window.addEventListener("load", () => {
-    resizeCanvas();
-    render();
-  });
+  resizeCanvas();
+  render();
 })();

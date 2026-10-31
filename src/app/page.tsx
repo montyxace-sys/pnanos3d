@@ -82,6 +82,14 @@ export default function PlanEditor() {
     saveDoc(doc);
   }, [doc]);
 
+  useEffect(() => {
+    // Carga el motor de dibujo interactivo una sola vez.
+    const script = document.createElement("script");
+    script.src = "code.js";
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
+
   // --- Operaciones ---
   function addRoom() {
     const id = uid();
