@@ -351,46 +351,10 @@
     ctx.restore();
   }
 
-  // === EXPORTACIÓN TÉCNICA A PDF ===
+  // === EXPORTACION PDF ===
   function exportarAPDF() {
-    if (murosGuardados.length === 0) { alert("Dibuja infraestructura antes de exportar."); return; }
-    if (!window.jspdf) { alert("jsPDF no cargado. Usa Ctrl+P del navegador (A4, 100%)."); return; }
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ orientation: "l", unit: "mm", format: "a4" });
-    const anchoA4 = 297; const altoA4 = 210;
-    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-    murosGuardados.forEach(m => { minX = Math.min(minX, m.x1, m.x2); maxX = Math.max(maxX, m.x1, m.x2); minY = Math.min(minY, m.y1, m.y2); maxY = Math.max(maxY, m.y1, m.y2); });
-    const centroX = (minX + maxX) / 2; const centroY = (minY + maxY) / 2;
-    const factorEscalaMm = 20 / CONFIG.escala;
-
-    doc.setDrawColor(60); doc.setLineWidth(0.4); doc.rect(10, 10, anchoA4 - 20, altoA4 - 20);
-    doc.setFont("helvetica", "bold"); doc.setFontSize(14); doc.text("PLANO DE VIVIENDA - ARQUITECTURA", 15, 20);
-    doc.setFont("helvetica", "normal"); doc.setFontSize(9);
-    doc.text(`Escala: 1m = ${factorEscalaMm.toFixed(1)}mm | Muros: ${murosGuardados.length} | Carpinterías: ${aberturasGuardadas.length}`, 15, 25);
-
-    murosGuardados.forEach(muro => {
-      const x1 = (anchoA4 / 2) + (muro.x1 - centroX) * factorEscalaMm;
-      const y1 = (altoA4 / 2) + (muro.y1 - centroY) * factorEscalaMm;
-      const x2 = (anchoA4 / 2) + (muro.x2 - centroX) * factorEscalaMm;
-      const y2 = (altoA4 / 2) + (muro.y2 - centroY) * factorEscalaMm;
-      doc.setDrawColor(0); doc.setLineWidth(1.2); doc.line(x1, y1, x2, y2);
-      doc.setFontSize(8); doc.text(`${muro.longitud.toFixed(2)} m`, (x1 + x2) / 2, ((y1 + y2) / 2) - 1, { align: "center" });
-    });
-
-    aberturasGuardadas.forEach(ab => {
-      const pdfX = (anchoA4 / 2) + (ab.x - centroX) * factorEscalaMm;
-      const pdfY = (altoA4 / 2) + (ab.y - centroY) * factorEscalaMm;
-      doc.setFillColor(255); doc.circle(pdfX, pdfY, 2, "F");
-      doc.setFontSize(7); doc.text(ab.tipo === "puerta" ? "P" : "V", pdfX, pdfY + 0.8, { align: "center" });
-    });
-
-    doc.save("plano-distribucion.pdf");
+    alert("Exportar PDF temporalmente deshabilitado. Usa Ctrl+P.");
   }
-
-  // Exponer globales para los botones HTML
-  window.cambiarHerramienta = cambiarHerramienta;
-  window.cambiarGrosor = cambiarGrosor;
-  window.exportarAPDF = exportarAPDF;
 
   // === ARRANQUE ===
   resizeCanvas();
