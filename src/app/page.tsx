@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { CATALOG, CAT_BY_KEY } from "@/lib/plano/catalog";
+import { getSupabase } from "@/lib/supabase";
 import {
   docFileName,
   downloadBlob,
@@ -58,6 +59,16 @@ function NumInput({
 export default function PlanEditor() {
   const [doc, setDoc] = useState<PlanDoc>(() => exampleDoc());
   const [selection, setSelection] = useState<Selection | null>(null);
+  const [user, setUser] = useState<string | null>(null);
+  useEffect(() => {
+    const sb = getSupabase();
+    if (!sb) return;
+    sb.auth.getSession().then(({ data }) => setUser(data.session?.user?.email ?? null));
+    const { data: subscription } = sb.auth.onAuthStateChange((_e, session) => {
+      setUser(session?.user?.email ?? null);
+    });
+    return () => subscription.subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -131,6 +142,29 @@ export default function PlanEditor() {
     const blob = new Blob([JSON.stringify(doc, null, 2)], { type: "application/json" });
     downloadBlob(blob, docFileName(doc, "json"));
   }
+  async function saveCloud() {
+    const sb = getSupabase();
+    if (!sb || !user) { alert("Inicia sesion para guardar en tu cuenta."); return; }
+    const name = window.prompt("Nombre del plano", "Mi plano") || "Mi plano";
+    const { error } = await sb.from("user_plans").insert({ name, plan: doc });
+    if (error) alert("No se pudo guardar: " + error.message);
+    else alert("Plan guardado en tu cuenta.");
+  }
+
+  async function loadCloud() {
+    const sb = getSupabase();
+    if (!sb || !user) { alert("Inicia sesion para cargar tus planos."); return; }
+    const { data, error } = await sb
+      .from("user_plans")
+      .select("id,name,plan")
+      .order("updated_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (error || !data) { alert("No hay planos guardados o hubo error."); return; }
+    setDoc(data.plan as PlanDoc);
+    alert("Cargado: " + data.name);
+  }
+
   function importJson(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     event.target.value = "";
@@ -170,6 +204,12 @@ export default function PlanEditor() {
         <button type="button" onClick={exportPdf} className={btnPrimary}>Descargar PDF</button>
         <button type="button" onClick={exportSvg} className={btn}>SVG</button>
         <button type="button" onClick={exportJson} className={btn}>JSON</button>
+    {user && (
+      <>
+        <button type="button" onClick={saveCloud} className={btn}>Guardar cuenta</button>
+        <button type="button" onClick={loadCloud} className={btn}>Cargar cuenta</button>
+      </>
+    )}
         <label className={`${btn} cursor-pointer`}>
           Cargar proyecto
           <input type="file" accept="application/json,.json" onChange={(e) => importJson(e as React.ChangeEvent<HTMLInputElement>)} className="sr-only" />

@@ -27,6 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: { card: "summary_large_image", title, description, images: ["/img/logo.svg"] },
     robots: { index: true, follow: true },
+    alternates: { canonical: SITE },
   };
 }
 
@@ -43,6 +44,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </footer>
         <ChatWidget />
         <CookieBanner />
+        <Script id="jsonld" type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "TusPlanos3D",
+            url: SITE,
+            inLanguage: "es",
+            description:
+              "Dibuja planos tecnicos rapidos de tu vivienda y calcula la contratacion minima de electricidad.",
+            publisher: { "@type": "Organization", name: "TusPlanos3D" },
+          })}
+        </Script>
         <Script id="sw" strategy="afterInteractive">
           {`if ("serviceWorker" in navigator) { navigator.serviceWorker.register("/sw.js"); }`}
         </Script>
