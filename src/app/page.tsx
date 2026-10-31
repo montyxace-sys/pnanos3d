@@ -213,6 +213,7 @@ export default function PlanEditor() {
         <button type="button" onClick={exportPdf} className={btnPrimary}>Descargar PDF</button>
         <button type="button" onClick={exportSvg} className={btn}>SVG</button>
         <button type="button" onClick={exportJson} className={btn}>JSON</button>
+    <button type="button" onClick={() => (window.location.href = withBase("/electricidad/"))} className={btnPrimary}>&#9889; Electricidad</button>
     {user && (
       <>
         <button type="button" onClick={saveCloud} className={btn}>Guardar cuenta</button>
