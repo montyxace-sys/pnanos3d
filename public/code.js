@@ -167,6 +167,9 @@
         estadoDibujo.xCurrent = estadoDibujo.xStart + Math.cos(angulo) * pixelesExactos;
         estadoDibujo.yCurrent = estadoDibujo.yStart + Math.sin(angulo) * pixelesExactos;
         guardarMuroActual();
+      } else if (!inputCota.value.trim()) {
+        guardarMuroActual();
+        ocultarInputFlotante();
       } else {
         cancelarDibujo();
       }
