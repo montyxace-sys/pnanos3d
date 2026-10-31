@@ -14,16 +14,35 @@ export default function SiteFooter({ site }: { site: SiteData }) {
         </div>
 
         <nav aria-label="Pie de página" className="text-sm">
-          <ul className="space-y-2">
+          <ul className="flex flex-wrap gap-2">
             {mainNav.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="text-paper/80 hover:text-accent-soft">
+                <Link
+                  href={item.href}
+                  className="inline-flex items-center rounded-full border border-paper/15 bg-paper/5 px-3 py-1.5 text-xs font-semibold tracking-wide text-paper/80 uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
+                >
                   {item.label}
                 </Link>
               </li>
             ))}
             <li>
-              <Link href="/privacidad/" className="text-paper/80 hover:text-accent-soft">
+              <Link href="/electricidad/"
+                className="inline-flex items-center rounded-full border border-paper/15 bg-paper/5 px-3 py-1.5 text-xs font-semibold tracking-wide text-paper/80 uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
+              >
+                Electricidad
+              </Link>
+            </li>
+            <li>
+              <Link href="/ayuda/"
+                className="inline-flex items-center rounded-full border border-paper/15 bg-paper/5 px-3 py-1.5 text-xs font-semibold tracking-wide text-paper/80 uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
+              >
+                Ayuda
+              </Link>
+            </li>
+            <li>
+              <Link href="/privacidad/"
+                className="inline-flex items-center rounded-full border border-paper/15 bg-paper/5 px-3 py-1.5 text-xs font-semibold tracking-wide text-paper/80 uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
+              >
                 Privacidad
               </Link>
             </li>
