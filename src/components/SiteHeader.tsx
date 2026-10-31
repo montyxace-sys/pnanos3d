@@ -1,12 +1,18 @@
+﻿"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { mainNav } from "@/lib/nav";
-import { withBase } from "@/lib/base";
 import type { SiteData } from "@/lib/data";
 
 export default function SiteHeader({ site }: { site: SiteData }) {
+  const [logoSrc, setLogoSrc] = useState("/img/logo.svg");
+  useEffect(() => {
+    if (window.location.pathname.startsWith("/pnanos3d")) setLogoSrc("/pnanos3d/img/logo.svg");
+  }, []);
+
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
-      {/* Franja superior de contacto */}
       <div className="hidden bg-ink text-paper md:block">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-2 text-xs">
           <div className="flex items-center gap-6">
@@ -21,17 +27,10 @@ export default function SiteHeader({ site }: { site: SiteData }) {
         </div>
       </div>
 
-      {/* Cabecera principal */}
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4">
         <Link href="/" className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/img/logo.svg`.replace(/\/\//g, "/")}
-            alt={`${site.siteName} — inicio`}
-            width={160}
-            height={48}
-            className="h-10 w-auto"
-          />
+          <img src={logoSrc} alt={`${site.siteName} - inicio`} width={160} height={48} className="h-10 w-auto" />
         </Link>
 
         <nav aria-label="Principal" className="-mr-2 flex items-center gap-1 overflow-x-auto">
