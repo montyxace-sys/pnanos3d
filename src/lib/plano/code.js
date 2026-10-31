@@ -108,11 +108,17 @@
   });
 
   // === MOUSE ===
+  function canvasPos(e) {
+    const r = canvas.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  }
+
   canvas.addEventListener("mousedown", (e) => {
     if (document.activeElement === inputCota) return;
+    const pos = canvasPos(e);
     if (herramientaActiva === "muro") {
-      const snapX = Math.round(e.clientX / CONFIG.escala) * CONFIG.escala;
-      const snapY = Math.round(e.clientY / CONFIG.escala) * CONFIG.escala;
+      const snapX = Math.round(pos.x / CONFIG.escala) * CONFIG.escala;
+      const snapY = Math.round(pos.y / CONFIG.escala) * CONFIG.escala;
       if (!estadoDibujo.dibujando) {
         estadoDibujo.dibujando = true;
         estadoDibujo.xStart = snapX; estadoDibujo.yStart = snapY;
@@ -122,31 +128,32 @@
         guardarMuroActual();
       }
     } else {
-      intentarInsertarAbertura(e.clientX, e.clientY);
+      intentarInsertarAbertura(pos.x, pos.y);
     }
     render();
   });
 
   canvas.addEventListener("mousemove", (e) => {
+    const pos = canvasPos(e);
     if (herramientaActiva === "muro" && estadoDibujo.dibujando && document.activeElement !== inputCota) {
       if (shiftPresionado) {
-        const dx = e.clientX - estadoDibujo.xStart;
-        const dy = e.clientY - estadoDibujo.yStart;
-        const snapX = Math.round(e.clientX / CONFIG.escala) * CONFIG.escala;
-        const snapY = Math.round(e.clientY / CONFIG.escala) * CONFIG.escala;
+        const dx = pos.x - estadoDibujo.xStart;
+        const dy = pos.y - estadoDibujo.yStart;
+        const snapX = Math.round(pos.x / CONFIG.escala) * CONFIG.escala;
+        const snapY = Math.round(pos.y / CONFIG.escala) * CONFIG.escala;
         if (Math.abs(dx) > Math.abs(dy)) {
           estadoDibujo.xCurrent = snapX; estadoDibujo.yCurrent = estadoDibujo.yStart;
         } else {
           estadoDibujo.xCurrent = estadoDibujo.xStart; estadoDibujo.yCurrent = snapY;
         }
       } else {
-        estadoDibujo.xCurrent = Math.round(e.clientX / CONFIG.escala) * CONFIG.escala;
-        estadoDibujo.yCurrent = Math.round(e.clientY / CONFIG.escala) * CONFIG.escala;
+        estadoDibujo.xCurrent = Math.round(pos.x / CONFIG.escala) * CONFIG.escala;
+        estadoDibujo.yCurrent = Math.round(pos.y / CONFIG.escala) * CONFIG.escala;
       }
       render();
     } else if (herramientaActiva !== "muro") {
-      estadoDibujo.xCurrent = e.clientX;
-      estadoDibujo.yCurrent = e.clientY;
+      estadoDibujo.xCurrent = Math.round(pos.x / CONFIG.escala) * CONFIG.escala;
+      estadoDibujo.yCurrent = Math.round(pos.y / CONFIG.escala) * CONFIG.escala;
       render();
     }
   });
