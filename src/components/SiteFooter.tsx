@@ -1,16 +1,29 @@
-﻿import Link from "next/link";
+﻿"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import { mainNav } from "@/lib/nav";
 import SocialIcon from "@/components/SocialIcon";
 import type { SiteData } from "@/lib/data";
 
 export default function SiteFooter({ site }: { site: SiteData }) {
+  const [footerLogo, setFooterLogo] = useState<string | null>(null);
+  useEffect(() => {
+    const base = window.location.pathname.startsWith("/pnanos3d") ? "/pnanos3d" : "";
+    setFooterLogo(`${base}/img/logo.svg`.replace(/\/\//g, "/"));
+  }, []);
+
   return (
     <footer className="border-t border-line bg-ink text-paper">
       <div className="mx-auto grid max-w-6xl gap-10 px-6 py-14 md:grid-cols-3">
-        <div>
-          <p className="font-serif text-2xl">{site.siteName}</p>
-          <p className="mt-2 text-sm text-paper/70">{site.tagline}</p>
-          <p className="mt-4 text-sm text-paper/70">{site.address.join(" | ")}</p>
+        <div className="flex items-start gap-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          {footerLogo && <img src={footerLogo} alt={site.siteName} width={120} height={36} className="h-9 w-auto shrink-0 opacity-90" />}
+          <div>
+            <p className="font-serif text-2xl">{site.siteName}</p>
+            <p className="mt-2 text-sm text-paper/70">{site.tagline}</p>
+            <p className="mt-4 text-sm text-paper/70">{site.address.join(" | ")}</p>
+          </div>
         </div>
 
         <nav aria-label="Pie de pagina" className="text-sm">
