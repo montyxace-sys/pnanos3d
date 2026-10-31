@@ -179,23 +179,17 @@ export default function ContactForm({ site }: { site: SiteData }) {
         return;
       }
 
-      // Aviso por email (Resend) vía Edge Function: mejor esfuerzo, no bloquea.
-      const fnUrl = process.env.NEXT_PUBLIC_CONTACT_FUNCTION_URL;
-      if (fnUrl) {
-        try {
-          await fetch(fnUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name: values.name.trim(),
-              email: values.email.trim(),
-              message: values.message.trim(),
-            }),
-            signal: AbortSignal.timeout(10000),
-          });
-        } catch {
-          // El registro ya está guardado: no convertimos un fallo de aviso en error.
-        }
+      // Aviso por email (Resend) via Edge Function: mejor esfuerzo, no bloquea.
+      try {
+        await supabase?.functions.invoke("contact-notify", {
+          body: {
+            name: values.name.trim(),
+            email: values.email.trim(),
+            message: values.message.trim(),
+          },
+        });
+      } catch {
+        // El registro ya esta guardado: no convertimos un fallo de aviso en error.
       }
 
       setValues(EMPTY);
