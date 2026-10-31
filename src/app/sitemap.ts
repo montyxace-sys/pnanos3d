@@ -6,7 +6,7 @@ export function siteUrl() {
   return (process.env.NEXT_PUBLIC_SITE_URL ?? "https://montyxace-sys.github.io/pnanos3d").replace(/\/$/, "");
 }
 
-const routes = ["/", "/electricidad/"];
+const routes = ["/", "/electricidad/", "/climatizacion/"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

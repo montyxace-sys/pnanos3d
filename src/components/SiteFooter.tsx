@@ -40,6 +40,13 @@ export default function SiteFooter({ site }: { site: SiteData }) {
               </Link>
             </li>
             <li>
+              <Link href="/aviso-legal/"
+                className="inline-flex items-center rounded-full border border-paper/15 bg-paper/5 px-3 py-1.5 text-xs font-semibold tracking-wide text-paper/80 uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
+              >
+                Aviso legal
+              </Link>
+            </li>
+            <li>
               <Link href="/privacidad/"
                 className="inline-flex items-center rounded-full border border-paper/15 bg-paper/5 px-3 py-1.5 text-xs font-semibold tracking-wide text-paper/80 uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
               >
@@ -78,7 +85,7 @@ export default function SiteFooter({ site }: { site: SiteData }) {
       </div>
 
       <div className="border-t border-paper/15 px-6 py-4 text-center text-xs text-paper/60">
-        &copy; {new Date().getFullYear()} {site.siteName}. Todos los derechos reservados. Msoft
+        © {new Date().getFullYear()} {site.siteName}. Todos los derechos reservados. Diseño y desarrollo por Msoft.
       </div>
     </footer>
   );

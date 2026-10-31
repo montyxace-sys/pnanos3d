@@ -31,8 +31,8 @@ export default function CookieBanner() {
     <div className="fixed bottom-16 left-4 z-50 w-80 rounded-lg border border-line bg-paper-2 p-4 text-ink shadow-xl">
       <h3 className="text-sm font-bold text-accent">Aviso de cookies</h3>
       <p className="mt-1 text-xs text-muted">
-        Usamos <strong>localStorage</strong> (solo tu proyecto) y cookies externas solo si activas
-        servicios de terceros (login, Supabase, jsPDF). No hay reseñas ni analítica.
+        Guardamos el proyecto en tu navegador (localStorage) y solo usamos cookies si activas login o Supabase.
+        No hay publicidad ni analytics de terceros.
       </p>
       <div className="mt-3 flex gap-2">
         <button className="rounded bg-ink px-3 py-1.5 text-xs font-semibold text-paper" onClick={accept}>
