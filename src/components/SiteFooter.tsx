@@ -6,9 +6,9 @@ import type { SiteData } from "@/lib/data";
 export default function SiteFooter({ site }: { site: SiteData }) {
   return (
     <footer className="border-t border-line bg-ink text-paper">
-      <div className="mx-auto grid max-w-6xl gap-8 px-6 py-12 md:grid-cols-3">
+      <div className="mx-auto grid max-w-6xl gap-10 px-6 py-14 md:grid-cols-3">
         <div>
-          <p className="font-serif text-xl">{site.siteName}</p>
+          <p className="font-serif text-2xl">{site.siteName}</p>
           <p className="mt-2 text-sm text-paper/70">{site.tagline}</p>
           <p className="mt-4 text-sm text-paper/70">{site.address.join(" | ")}</p>
         </div>
@@ -88,9 +88,9 @@ export default function SiteFooter({ site }: { site: SiteData }) {
         </div>
       </div>
 
-      <div className="border-t border-paper/15 px-6 py-4 text-center text-xs text-paper/60">
-        © {new Date().getFullYear()} {site.siteName}. Todos los derechos reservados.
-        <span className="mx-2">•</span>
+      <div className="border-t border-paper/15 px-6 py-5 text-center text-xs text-paper/60">
+        © {new Date().getFullYear()} {site.siteName} · Todos los derechos reservados
+        <span className="mx-2">·</span>
         <span className="font-medium text-paper/70">Diseño y desarrollo por Msoft</span>
       </div>
     </footer>
