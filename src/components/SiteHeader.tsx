@@ -26,7 +26,7 @@ export default function SiteHeader({ site }: { site: SiteData }) {
         <Link href="/" className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="img/logo.svg"
+            src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/img/logo.svg`.replace(/\/\//g, "/")}
             alt={`${site.siteName} — inicio`}
             width={160}
             height={48}
