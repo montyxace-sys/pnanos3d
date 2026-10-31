@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="568" viewBox="0 0 800 568" role="img" aria-label="Board 02">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e4e6e2"/>
+      <stop offset="100%" stop-color="#cfcabf"/>
+    </linearGradient>
+    <pattern id="p" width="40" height="40" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="40" height="40" fill="none"/>
+      <path d="M0 0V40" stroke="#00000010" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="568" fill="url(#g)"/>
+  <rect width="800" height="568" fill="url(#p)"/>
+  <rect x="24" y="24" width="752" height="520" fill="none" stroke="#00000025" stroke-width="2"/>
+  <text x="50%" y="49%" text-anchor="middle" font-family="Georgia, serif" font-size="44" fill="#4a4741">Board 02</text>
+  <text x="50%" y="58%" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="19" fill="#6b675f">imagen de muestra · sustituir por foto real</text>
+</svg>

@@ -1,0 +1,12 @@
+{
+  "name": "Generador de Planos TusPlanos3D",
+  "short_name": "Planos3D",
+  "description": "Generador de planos gratuito para vivienda: dibuja muros, coloca piezas y descarga en PDF.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e1e1e",
+  "theme_color": "#f6821f",
+  "icons": [
+    { "src": "/img/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }
+  ]
+}
