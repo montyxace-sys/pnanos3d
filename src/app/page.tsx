@@ -85,7 +85,7 @@ export default function PlanEditor() {
   useEffect(() => {
     // Carga el motor de dibujo interactivo una sola vez.
     const script = document.createElement("script");
-    script.src = "code.js";
+    script.src = "code.js?v=" + Date.now();
     script.async = true;
     document.body.appendChild(script);
   }, []);
