@@ -44,6 +44,16 @@ export default function AyudaPage() {
         Para el resto, el generador funciona en modo offline/local.
       </p>
 
+      <h2 className="mt-8 text-xl font-semibold">5. Electricidad (contratacion minima)</h2>
+      <ul className="mt-2 space-y-2 text-sm text-muted">
+        <li>Ir a <Link href="/electricidad/" className="text-accent underline">Contratacion minima de electricidad</Link>.</li>
+        <li>Selecciona aparatos (nevera, lavadora, horno, aire, etc.) y la superficie.</li>
+        <li>Ajusta el factor de coincidencia (0,7 típico) y el margen de seguridad.</li>
+        <li>Resultado: potencia instalada, estimada, con margen y contratacion recomendada (kW + ICP A).</li>
+        <li>Exporta a CSV o imprime el reporte (PDF).</li>
+        <li>El botón "Guardar en cuenta" / "Mi plano" usa Supabase si estás logueado.</li>
+      </ul>
+
       <div className="mt-10 border-t border-line pt-6">
         <Link href="/" className="text-sm text-accent underline">Volver al generador de planos</Link>
       </div>
