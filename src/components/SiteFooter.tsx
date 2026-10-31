@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { mainNav } from "@/lib/nav";
-import SocialIcon from "@/components/SocialIcon";
 import type { SiteData } from "@/lib/data";
 
 export default function SiteFooter({ site }: { site: SiteData }) {
@@ -14,42 +13,16 @@ export default function SiteFooter({ site }: { site: SiteData }) {
         </div>
 
         <nav aria-label="Pie de página" className="text-sm">
-          <ul className="flex flex-wrap gap-2">
+          <ul className="space-y-2">
             {mainNav.map((item) => (
               <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="inline-flex items-center rounded-full border border-paper/15 bg-paper/5 px-3 py-1.5 text-xs font-semibold tracking-wide text-paper/80 uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
-                >
+                <Link href={item.href} className="text-paper/80 hover:text-accent-soft">
                   {item.label}
                 </Link>
               </li>
             ))}
             <li>
-              <Link href="/electricidad/"
-                className="inline-flex items-center rounded-full border border-paper/15 bg-paper/5 px-3 py-1.5 text-xs font-semibold tracking-wide text-paper/80 uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
-              >
-                Electricidad
-              </Link>
-            </li>
-            <li>
-              <Link href="/ayuda/"
-                className="inline-flex items-center rounded-full border border-paper/15 bg-paper/5 px-3 py-1.5 text-xs font-semibold tracking-wide text-paper/80 uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
-              >
-                Ayuda
-              </Link>
-            </li>
-            <li>
-              <Link href="/aviso-legal/"
-                className="inline-flex items-center rounded-full border border-paper/15 bg-paper/5 px-3 py-1.5 text-xs font-semibold tracking-wide text-paper/80 uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
-              >
-                Aviso legal
-              </Link>
-            </li>
-            <li>
-              <Link href="/privacidad/"
-                className="inline-flex items-center rounded-full border border-paper/15 bg-paper/5 px-3 py-1.5 text-xs font-semibold tracking-wide text-paper/80 uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
-              >
+              <Link href="/privacidad/" className="text-paper/80 hover:text-accent-soft">
                 Privacidad
               </Link>
             </li>
@@ -73,10 +46,9 @@ export default function SiteFooter({ site }: { site: SiteData }) {
                   href={item.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={item.label}
-                  className="group flex h-10 w-10 items-center justify-center rounded-full border border-paper/20 bg-paper/5 text-paper/80 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft hover:shadow-lg"
+                  className="text-xs tracking-widest text-paper/70 uppercase hover:text-accent-soft"
                 >
-                  <SocialIcon label={item.label} className="h-5 w-5" />
+                  {item.label}
                 </a>
               </li>
             ))}
@@ -85,7 +57,9 @@ export default function SiteFooter({ site }: { site: SiteData }) {
       </div>
 
       <div className="border-t border-paper/15 px-6 py-4 text-center text-xs text-paper/60">
-        © {new Date().getFullYear()} {site.siteName}. Todos los derechos reservados. Diseño y desarrollo por Msoft.
+        © {new Date().getFullYear()} {site.siteName}. Todos los derechos reservados.
+        <span className="mx-2">•</span>
+        <span className="font-medium text-paper/70">Diseño y desarrollo por Msoft</span>
       </div>
     </footer>
   );
