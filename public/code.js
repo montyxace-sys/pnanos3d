@@ -351,9 +351,9 @@
     ctx.restore();
   }
 
-  // === EXPORTACION PDF ===
+  // === EXPORTACI?N PDF ===
   function exportarAPDF() {
-    alert("Exportar PDF temporalmente deshabilitado. Usa Ctrl+P.");
+    window.print();
   }
 
   // === ARRANQUE ===
