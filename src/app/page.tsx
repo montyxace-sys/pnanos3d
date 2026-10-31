@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { CATALOG, CAT_BY_KEY } from "@/lib/plano/catalog";
+import { withBase } from "@/lib/base";
 import { getSupabase } from "@/lib/supabase";
 import {
   docFileName,
@@ -194,7 +195,7 @@ export default function PlanEditor() {
       <header className="mb-2 flex items-center gap-3">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/img/logo.svg"
+          src={withBase("/img/logo.svg")}
           alt="TusPlanos3D"
           width={205}
           height={50}
@@ -270,7 +271,7 @@ export default function PlanEditor() {
           >
             <div className="flex items-center gap-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/img/logo.svg" alt="TusPlanos3D" width={160} height={39} className="h-8 w-auto" />
+              <img src={withBase("/img/logo.svg")} alt="TusPlanos3D" width={160} height={39} className="h-8 w-auto" />
             </div>
             <h3 className="mt-1 text-sm font-bold text-orange-400">Estudio de Arquitectura</h3>
             <p className="mt-1 text-[11px] text-gray-300">• Teclea metros + <kbd>Enter</kbd> para fijar muro.</p>

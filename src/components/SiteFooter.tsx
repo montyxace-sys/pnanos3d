@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { mainNav } from "@/lib/nav";
+import SocialIcon from "@/components/SocialIcon";
 import type { SiteData } from "@/lib/data";
 
 export default function SiteFooter({ site }: { site: SiteData }) {
@@ -46,9 +47,10 @@ export default function SiteFooter({ site }: { site: SiteData }) {
                   href={item.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs tracking-widest text-paper/70 uppercase hover:text-accent-soft"
+                  aria-label={item.label}
+                  className="group flex h-10 w-10 items-center justify-center rounded-full border border-paper/20 bg-paper/5 text-paper/80 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft hover:shadow-lg"
                 >
-                  {item.label}
+                  <SocialIcon label={item.label} className="h-5 w-5" />
                 </a>
               </li>
             ))}

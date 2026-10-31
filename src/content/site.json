@@ -9,8 +9,9 @@
   "address": ["Nombre del estudio, S.L.", "C/ Pendiente de confirmar, 0", "00000 Ciudad"],
   "social": [
     { "label": "Facebook", "href": "https://www.facebook.com/" },
-    { "label": "LinkedIn", "href": "https://www.linkedin.com/" },
-    { "label": "Instagram", "href": "https://www.instagram.com/" }
+    { "label": "X", "href": "https://x.com/" },
+    { "label": "Instagram", "href": "https://www.instagram.com/" },
+    { "label": "YouTube", "href": "https://www.youtube.com/" }
   ],
   "channels": [
     { "label": "Canal de vídeo", "note": "Sustituir por el enlace real", "href": "#" },
