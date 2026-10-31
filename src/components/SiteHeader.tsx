@@ -6,9 +6,10 @@ import { mainNav } from "@/lib/nav";
 import type { SiteData } from "@/lib/data";
 
 export default function SiteHeader({ site }: { site: SiteData }) {
-  const [logoSrc, setLogoSrc] = useState("/img/logo.svg");
+  const [logoSrc, setLogoSrc] = useState<string | null>(null);
   useEffect(() => {
-    if (window.location.pathname.startsWith("/pnanos3d")) setLogoSrc("/pnanos3d/img/logo.svg");
+    const base = window.location.pathname.startsWith("/pnanos3d") ? "/pnanos3d" : "";
+    setLogoSrc(`${base}/img/logo.svg`.replace(/\/\//g, "/"));
   }, []);
 
   return (
@@ -30,7 +31,7 @@ export default function SiteHeader({ site }: { site: SiteData }) {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4">
         <Link href="/" className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={logoSrc} alt={`${site.siteName} - inicio`} width={160} height={48} className="h-10 w-auto" />
+          {logoSrc && <img src={logoSrc} alt={`${site.siteName} - inicio`} width={160} height={48} className="h-10 w-auto" />}
         </Link>
 
         <nav aria-label="Principal" className="-mr-2 flex items-center gap-1 overflow-x-auto">
