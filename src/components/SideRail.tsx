@@ -1,5 +1,4 @@
 import type { SiteData } from "@/lib/data";
-import SocialIcon from "@/components/SocialIcon";
 
 /**
  * Barra lateral de accesos rápidos (redes y canales), equivalente al
@@ -21,7 +20,7 @@ export default function SideRail({ site }: { site: SiteData }) {
           title={item.label}
           className="flex h-10 w-10 items-center justify-center rounded-full border border-line bg-paper text-[11px] font-semibold text-ink-soft uppercase transition hover:border-accent-bright hover:text-accent"
         >
-          <SocialIcon label={item.label} className="h-5 w-5" />
+          {item.label.slice(0, 2)}
         </a>
       ))}
       <span aria-hidden className="mx-auto my-1 h-px w-6 bg-line" />
@@ -32,7 +31,7 @@ export default function SideRail({ site }: { site: SiteData }) {
           title={item.note ? `${item.label} — ${item.note}` : item.label}
           className="flex h-10 w-10 items-center justify-center rounded-full border border-line bg-paper text-[11px] font-semibold text-ink-soft uppercase transition hover:border-accent-bright hover:text-accent"
         >
-          <SocialIcon label={item.label} className="h-5 w-5" />
+          {item.label.slice(0, 2)}
         </a>
       ))}
     </aside>

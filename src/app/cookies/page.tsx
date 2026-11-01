@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
+import { siteUrl } from "@/app/sitemap";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Cookies",
-  description: "Política de cookies y almacenamiento local.",
+  title: "Política de cookies",
+  description: "Política de cookies y almacenamiento local de TusPlanos3D. Sin rastreo ni publicidad.",
+  alternates: {
+    canonical: `${siteUrl()}/cookies/`,
+  },
+  robots: { index: true, follow: false },
 };
 
 export default function CookiesPage() {

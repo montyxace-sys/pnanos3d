@@ -1,9 +1,24 @@
 import type { Metadata } from "next";
+import { siteUrl } from "@/app/sitemap";
 import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Ayuda",
-  description: "Guia de uso del generador de planos TusPlanos3D.",
+  description:
+    "Guía de uso del generador de planos TusPlanos3D: cómo dibujar muros, insertar puertas y ventanas, exportar a PDF, calcular electricidad y más.",
+  alternates: {
+    canonical: `${siteUrl()}/ayuda/`,
+  },
+  openGraph: {
+    title: "Ayuda – TusPlanos3D",
+    description:
+      "Guía completa para usar el generador de planos online: muros, cotas, exportación PDF y calculadora eléctrica.",
+    url: `${siteUrl()}/ayuda/`,
+    siteName: "TusPlanos3D",
+    type: "website",
+    locale: "es_ES",
+    images: ["/img/logo.svg"],
+  },
 };
 
 export default function AyudaPage() {

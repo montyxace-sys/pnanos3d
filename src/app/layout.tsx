@@ -5,17 +5,19 @@ import ChatWidget from "@/components/ChatWidget";
 import CookieBanner from "@/components/CookieBanner";
 import "./globals.css";
 
-const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://montyxace-sys.github.io/pnanos3d").replace(/\/$/, "");
+const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://montyxace-sys.github.io/planos3d").replace(/\/$/, "");
 
 export async function generateMetadata(): Promise<Metadata> {
-  const title = "TusPlanos3D - Generador de planos 3D";
-  const description = "Dibuja planos tecnicos rapidos de tu vivienda y calcula la contratacion minima de electricidad.";
+  const title = "TusPlanos3D - Generador de planos online gratuito";
+  const description =
+    "Dibuja planos técnicos de tu vivienda online y gratis: muros, puertas, ventanas, mobiliario. Calcula la contratación mínima de electricidad y climatización.";
   return {
     metadataBase: new URL(SITE),
     title: { default: title, template: "%s | TusPlanos3D" },
     description,
     manifest: "/manifest.json",
     appleWebApp: { capable: true, title: "TusPlanos3D", statusBarStyle: "default" },
+    alternates: { canonical: SITE },
     openGraph: {
       title,
       description,
@@ -23,15 +25,87 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "TusPlanos3D",
       type: "website",
       locale: "es_ES",
+      images: [{ url: "/img/logo.svg", alt: "TusPlanos3D" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
       images: ["/img/logo.svg"],
     },
-    twitter: { card: "summary_large_image", title, description, images: ["/img/logo.svg"] },
     robots: { index: true, follow: true },
-    alternates: { canonical: SITE },
   };
 }
 
 export const viewport: Viewport = { themeColor: "#f6821f" };
+
+const jsonLdWebSite = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "TusPlanos3D",
+  url: SITE,
+  inLanguage: "es",
+  description:
+    "Generador de planos online gratuito para vivienda con calculadora de electricidad y climatización.",
+  publisher: { "@type": "Organization", name: "TusPlanos3D" },
+};
+
+const jsonLdApp = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "TusPlanos3D – Generador de planos",
+  url: SITE,
+  applicationCategory: "DesignApplication",
+  operatingSystem: "Any",
+  browserRequirements: "Requires JavaScript",
+  inLanguage: "es",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "EUR",
+  },
+  description:
+    "Dibuja planos 2D de tu vivienda en el navegador: muros, puertas, ventanas, mobiliario. Exporta a PDF, SVG o JSON. Sin instalación.",
+};
+
+const jsonLdFaq = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "¿Cómo se exporta el plano a PDF?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Pulsa el botón «Exportar Plano PDF» (verde). Se abre el diálogo de impresión: selecciona A4 apaisado al 100 % de escala para obtener un PDF con cotas, membrete y escala.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Cómo se introduce una medida exacta en metros?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Mientras arrastras el muro aparece un campo de cota. Escribe el valor (ej. 5.20) y pulsa Enter para fijar la medida exacta. Mantén Shift para forzar ángulos a 90 grados.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Para qué sirve la calculadora de electricidad?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Calcula la potencia contratada mínima recomendada para tu vivienda según los electrodomésticos, superficie, factor de coincidencia y margen de seguridad. Obtienes los kW e ICP recomendados.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Se guardan mis datos?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "El proyecto se guarda automáticamente en el localStorage de tu navegador. No se envía nada a servidores externos. Puedes descargarlo como JSON y volver a importarlo.",
+      },
+    },
+  ],
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -44,17 +118,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </footer>
         <ChatWidget />
         <CookieBanner />
-        <Script id="jsonld" type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            name: "TusPlanos3D",
-            url: SITE,
-            inLanguage: "es",
-            description:
-              "Dibuja planos tecnicos rapidos de tu vivienda y calcula la contratacion minima de electricidad.",
-            publisher: { "@type": "Organization", name: "TusPlanos3D" },
-          })}
+        <Script id="jsonld-website" type="application/ld+json">
+          {JSON.stringify(jsonLdWebSite)}
+        </Script>
+        <Script id="jsonld-app" type="application/ld+json">
+          {JSON.stringify(jsonLdApp)}
+        </Script>
+        <Script id="jsonld-faq" type="application/ld+json">
+          {JSON.stringify(jsonLdFaq)}
         </Script>
         <Script id="sw" strategy="afterInteractive">
           {`if ("serviceWorker" in navigator) { navigator.serviceWorker.register("/sw.js"); }`}

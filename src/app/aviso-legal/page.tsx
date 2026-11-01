@@ -1,8 +1,14 @@
 ﻿import type { Metadata } from "next";
+import Link from "next/link";
+import { siteUrl } from "@/app/sitemap";
 
 export const metadata: Metadata = {
   title: "Aviso legal",
   description: "Aviso legal y condiciones de uso de TusPlanos3D.",
+  alternates: {
+    canonical: `${siteUrl()}/aviso-legal/`,
+  },
+  robots: { index: true, follow: false },
 };
 
 export default function AvisoLegalPage() {
@@ -44,7 +50,7 @@ export default function AvisoLegalPage() {
       </p>
 
       <div className="mt-10 border-t border-line pt-6">
-        <a href="/" className="text-sm text-accent underline">Volver al inicio</a>
+        <Link href="/" className="text-sm text-accent underline">Volver al inicio</Link>
       </div>
     </div>
   );

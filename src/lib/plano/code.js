@@ -30,12 +30,19 @@
   let estadoDibujo = { dibujando: false, xStart: 0, yStart: 0, xCurrent: 0, yCurrent: 0 };
   let shiftPresionado = false;
 
-  // === RESIZE ===
+  // === RESIZE (alineacion 1:1 con el lienzo visible) ===
   function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const r = canvas.getBoundingClientRect();
+    const w = Math.max(1, Math.round(r.width));
+    const h = Math.max(1, Math.round(r.height));
+    if (w > 0 && h > 0) {
+      canvas.width = w;
+      canvas.height = h;
+    }
     render();
   }
+  // Asegurar que las dimensiones se toman tras el layout inicial.
+  window.addEventListener("load", () => { setTimeout(resizeCanvas, 0); });
   window.addEventListener("resize", resizeCanvas);
 
   // === INTERFAZ DE HERRAMIENTAS ===

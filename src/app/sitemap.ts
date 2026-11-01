@@ -3,17 +3,30 @@
 export const dynamic = "force-static";
 
 export function siteUrl() {
-  return (process.env.NEXT_PUBLIC_SITE_URL ?? "https://montyxace-sys.github.io/pnanos3d").replace(/\/$/, "");
+  return (process.env.NEXT_PUBLIC_SITE_URL ?? "https://montyxace-sys.github.io/planos3d").replace(/\/$/, "");
 }
 
-const routes = ["/", "/electricidad/", "/climatizacion/"];
+type RouteConfig = {
+  path: string;
+  priority: number;
+  changeFrequency: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
+};
+
+const routes: RouteConfig[] = [
+  { path: "/",               priority: 1.0, changeFrequency: "weekly"  },
+  { path: "/electricidad/",  priority: 0.9, changeFrequency: "weekly"  },
+  { path: "/climatizacion/", priority: 0.8, changeFrequency: "weekly"  },
+  { path: "/ayuda/",         priority: 0.6, changeFrequency: "monthly" },
+  { path: "/aviso-legal/",   priority: 0.2, changeFrequency: "yearly"  },
+  { path: "/cookies/",       priority: 0.2, changeFrequency: "yearly"  },
+];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
-  return routes.map((route, index) => ({
-    url: `${siteUrl()}${route}`,
+  return routes.map(({ path, priority, changeFrequency }) => ({
+    url: `${siteUrl()}${path}`,
     lastModified: now,
-    changeFrequency: "weekly",
-    priority: index === 0 ? 1 : 0.8,
+    changeFrequency,
+    priority,
   }));
 }
