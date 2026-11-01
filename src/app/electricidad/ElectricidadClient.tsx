@@ -85,7 +85,8 @@ export default function ElectricidadClient() {
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-10 text-gray-100">
-      <h1 className="text-3xl font-bold">Contratacion minima de electricidad</h1>
+      <h1 className="text-3xl font-bold text-white">Contratacion minima de electricidad</h1>
+      <p className="mt-2 text-sm text-gray-300">Calcula la potencia contratada a partir de tus aparatos y superficie.</p>
       <p className="mt-2 text-sm text-gray-300">
         Selecciona los electrodomesticos y la superficie para estimar la potencia contratada recomendada.
       </p>
