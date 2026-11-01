@@ -10,7 +10,7 @@ export default function HomePage() {
           alt="TusPlanos3D"
           width={205}
           height={50}
-          className="h-10 w-auto"
+          className="h-10 w-auto brightness-125 contrast-125"
         />
         <h1 className="text-xl font-bold text-orange-400">Generador de Planos</h1>
       </header>
