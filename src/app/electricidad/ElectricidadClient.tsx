@@ -34,6 +34,12 @@ export default function ElectricidadClient() {
   const [margin, setMargin] = useState(15);
   const [price, setPrice] = useState(0.16);
   const [monthlyKwh, setMonthlyKwh] = useState(250);
+  const [logoSrc, setLogoSrc] = useState<string | null>(null);
+
+  useEffect(() => {
+    const base = window.location.pathname.startsWith("/pnanos3d") ? "/pnanos3d" : "";
+    setLogoSrc(`${base}/img/logo.svg`.replace(/\/\//g, "/"));
+  }, []);
 
   useEffect(() => {
     try {
@@ -85,6 +91,10 @@ export default function ElectricidadClient() {
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-10 text-gray-100">
+      <div className="mb-6 flex items-center gap-3">
+        {logoSrc && <img src={logoSrc} alt="TusPlanos3D" width={140} height={40} className="h-9 w-auto" />}
+        <span className="text-xs font-semibold tracking-[0.16em] text-gray-400 uppercase">Generador + calculadoras</span>
+      </div>
       <h1 className="text-3xl font-bold text-white">Contratacion minima de electricidad</h1>
       <p className="mt-2 text-sm text-gray-300">Calcula la potencia contratada a partir de tus aparatos y superficie.</p>
       <p className="mt-2 text-sm text-gray-300">
