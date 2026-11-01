@@ -127,9 +127,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Script id="jsonld-faq" type="application/ld+json">
           {JSON.stringify(jsonLdFaq)}
         </Script>
-        <Script id="sw" strategy="afterInteractive">
-          {`if ("serviceWorker" in navigator) { navigator.serviceWorker.register("/sw.js"); }`}
-        </Script>
       </body>
     </html>
   );
