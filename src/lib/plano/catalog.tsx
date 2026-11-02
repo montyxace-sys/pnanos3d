@@ -94,6 +94,38 @@ export const CATALOG: CatalogGroup[] = [
     items: [
       { key: "alfombra", label: "Alfombra", w: 200, h: 140, draw: () => (<><rect x={-100} y={-70} width={200} height={140} rx={6} strokeDasharray="12 9" fill="none" /><rect x={-86} y={-56} width={172} height={112} rx={5} strokeDasharray="8 7" fill="none" /></>) },
       { key: "planta", label: "Planta", w: 60, h: 60, draw: () => (<><circle cx={0} cy={0} r={28} /><circle cx={0} cy={0} r={15} fill="none" /></>) },
+      { key: "mesa-centro", label: "Mesa centro", w: 120, h: 60, draw: () => (<><rect x={-60} y={-30} width={120} height={60} rx={8} /><rect x={-48} y={-18} width={96} height={36} rx={4} fill="none" /></>) },
+      { key: "lampara-pie", label: "Lámpara pie", w: 40, h: 40, draw: () => (<><circle cx={0} cy={0} r={18} /><circle cx={0} cy={0} r={6} fill="none" /><path d="M0 18 V40" fill="none" strokeWidth={2} /></>) },
+      { key: "librero", label: "Librería", w: 90, h: 30, draw: () => (<><rect x={-45} y={-15} width={90} height={30} rx={3} /><path d="M-30 -15 V15 M-15 -15 V15 M0 -15 V15 M15 -15 V15 M30 -15 V15" fill="none" /></>) },
+      { key: "tv-mueble", label: "Mueble TV", w: 160, h: 45, draw: () => (<><rect x={-80} y={-22} width={160} height={45} rx={4} /><rect x={-70} y={-12} width={140} height={22} rx={3} fill="none" /><path d="M-60 0 H60" fill="none" /></>) },
+    ],
+  },
+  {
+    id: "oficina",
+    label: "Oficina",
+    items: [
+      { key: "escritorio", label: "Escritorio", w: 140, h: 70, draw: () => (<><rect x={-70} y={-35} width={140} height={70} rx={4} /><rect x={-60} y={-25} width={120} height={50} rx={3} fill="none" /><path d="M-50 0 H50" fill="none" /></>) },
+      { key: "silla-oficina", label: "Silla oficina", w: 60, h: 60, draw: () => (<><rect x={-30} y={-30} width={60} height={60} rx={8} /><circle cx={0} cy={0} r={18} fill="none" /><path d="M-20 25 H20" fill="none" strokeWidth={2} /></>) },
+      { key: "archivador", label: "Archivador", w: 45, h: 60, draw: () => (<><rect x={-22} y={-30} width={45} height={60} rx={3} /><path d="M-22 -10 H23 M-22 10 H23" fill="none" /><path d="M10 -20 V-16 M10 0 V4 M10 20 V24" fill="none" /></>) },
+      { key: "estanteria-libros", label: "Estantería libros", w: 80, h: 30, draw: () => (<><rect x={-40} y={-15} width={80} height={30} rx={3} /><path d="M-32 -15 V15 M-16 -15 V15 M0 -15 V15 M16 -15 V15 M32 -15 V15" fill="none" /></>) },
+    ],
+  },
+  {
+    id: "lavanderia",
+    label: "Lavandería",
+    items: [
+      { key: "lavadora", label: "Lavadora", w: 60, h: 60, draw: () => (<><rect x={-30} y={-30} width={60} height={60} rx={6} /><circle cx={0} cy={5} r={18} fill="none" /><circle cx={0} cy={5} r={10} fill="none" /><path d="M-12 -22 H12" fill="none" strokeWidth={2} /></>) },
+      { key: "secadora", label: "Secadora", w: 60, h: 60, draw: () => (<><rect x={-30} y={-30} width={60} height={60} rx={6} /><circle cx={0} cy={5} r={18} fill="none" /><path d="M-10 -2 H10 M0 -12 V12" fill="none" strokeWidth={2} /><path d="M-12 -22 H12" fill="none" strokeWidth={2} /></>) },
+      { key: "tendedero", label: "Tendedero", w: 120, h: 40, draw: () => (<><rect x={-60} y={-20} width={120} height={40} rx={4} /><path d="M-50 -12 H50 M-50 -4 H50 M-50 4 H50 M-50 12 H50" fill="none" /></>) },
+    ],
+  },
+  {
+    id: "dormitorio-extra",
+    label: "Dormitorio extra",
+    items: [
+      { key: "cuna", label: "Cuna", w: 70, h: 130, draw: () => (<><rect x={-35} y={-65} width={70} height={130} rx={6} /><path d="M-35 -55 H35 M-35 -40 H35" fill="none" /><circle cx={0} cy={-50} r={6} fill="none" /></>) },
+      { key: "tocador", label: "Tocador", w: 100, h: 45, draw: () => (<><rect x={-50} y={-22} width={100} height={45} rx={4} /><rect x={-40} y={-15} width={80} height={30} rx={3} fill="none" /><circle cx={-25} cy={0} r={6} fill="none" /><circle cx={25} cy={0} r={6} fill="none" /></>) },
+      { key: "ropero", label: "Ropero", w: 120, h: 60, draw: () => (<><rect x={-60} y={-30} width={120} height={60} rx={3} /><path d="M-60 0 H60" fill="none" /><path d="M-50 -20 V-5 M-40 -20 V-5 M50 -20 V-5 M40 -20 V-5" fill="none" /></>) },
     ],
   },
   {
