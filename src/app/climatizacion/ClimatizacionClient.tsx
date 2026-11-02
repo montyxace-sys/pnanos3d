@@ -13,6 +13,13 @@ export default function ClimatizacionPage() {
   const [exposure, setExposure] = useState<"sombra" | "normal" | "sol">("normal");
   const [occupants, setOccupants] = useState(3);
   const [appliances, setAppliances] = useState(1);
+  const [logoSrc, setLogoSrc] = useState<string | null>(null);
+
+  useEffect(() => {
+    const base = window.location.pathname.startsWith("/pnanos3d") ? "/pnanos3d" : "";
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLogoSrc(`${base}/img/logo.svg`.replace(/\/\//g, "/"));
+  }, []);
 
   useEffect(() => {
     try {
@@ -43,7 +50,11 @@ export default function ClimatizacionPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-10 text-gray-100">
-      <h1 className="text-3xl font-bold">Climatizacion minima</h1>
+      <div className="mb-6 flex items-center gap-3">
+        {logoSrc && <img src={logoSrc} alt="TusPlanos3D" width={140} height={40} className="h-9 w-auto" />}
+        <span className="text-xs font-semibold tracking-[0.16em] text-gray-400 uppercase">Generador + calculadoras</span>
+      </div>
+      <h1 className="text-3xl font-bold text-white">Climatizacion minima</h1>
       <p className="mt-2 text-sm text-gray-300">
         Dimensiona la potencia de climatizacion recomendada segun superficie y condiciones.
       </p>
