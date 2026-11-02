@@ -1,19 +1,51 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+function generateCaptcha() {
+  const a = Math.floor(Math.random() * 9) + 1;
+  const b = Math.floor(Math.random() * 9) + 1;
+  return { question: `${a} + ${b}`, answer: a + b };
+}
 
 export default function ContactoClient() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [captcha, setCaptcha] = useState(generateCaptcha());
+  const [captchaInput, setCaptchaInput] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    setCaptcha(generateCaptcha());
+  }, []);
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+
+    // Anti-spam: honeypot check
+    if (honeypot.trim() !== "") {
+      // Bot detected - silently reject
+      setStatus("ok");
+      setName("");
+      setEmail("");
+      setMessage("");
+      return;
+    }
+
+    // Anti-spam: captcha check
+    if (parseInt(captchaInput, 10) !== captcha.answer) {
+      setError("Respuesta incorrecta a la verificación anti-spam.");
+      setCaptcha(generateCaptcha());
+      setCaptchaInput("");
+      return;
+    }
+
     setStatus("sending");
     setError("");
 
@@ -28,7 +60,7 @@ export default function ContactoClient() {
       const res = await fetch(`${SUPABASE_URL}/functions/v1/contact-notify`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, message }),
+        body: JSON.stringify({ name, email, message, captchaAnswer: parseInt(captchaInput, 10), captchaExpected: captcha.answer }),
       });
 
       if (!res.ok) {
@@ -40,6 +72,8 @@ export default function ContactoClient() {
       setName("");
       setEmail("");
       setMessage("");
+      setCaptchaInput("");
+      setCaptcha(generateCaptcha());
     } catch (err) {
       setStatus("error");
       setError(err instanceof Error ? err.message : "Error desconocido");
@@ -104,6 +138,36 @@ export default function ContactoClient() {
               onChange={(e) => setMessage(e.target.value)}
               className="w-full rounded border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-white focus:border-orange-400 focus:outline-none resize-none"
               placeholder="Escribe tu mensaje (mínimo 10 caracteres)..."
+            />
+          </div>
+
+          {/* Honeypot anti-spam (oculto para humanos, los bots lo rellenan) */}
+          <div style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, overflow: "hidden" }} aria-hidden="true">
+            <label htmlFor="website">No rellenar este campo</label>
+            <input
+              id="website"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+            />
+          </div>
+
+          {/* Captcha anti-spam */}
+          <div className="rounded-lg border border-gray-600 bg-gray-800/50 p-4">
+            <label className="block text-sm font-medium mb-2">
+              Verificación anti-spam: ¿Cuánto es{" "}
+              <strong className="text-orange-400">{captcha.question}</strong>?
+            </label>
+            <input
+              type="text"
+              inputMode="numeric"
+              required
+              value={captchaInput}
+              onChange={(e) => setCaptchaInput(e.target.value)}
+              className="w-full rounded border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-white focus:border-orange-400 focus:outline-none"
+              placeholder="Respuesta"
             />
           </div>
 

@@ -35,7 +35,7 @@ Deno.serve(async (req: Request) => {
     return json({ ok: false, error: "method_not_allowed" }, 405);
   }
 
-  let payload: { name?: unknown; email?: unknown; message?: unknown };
+  let payload: { name?: unknown; email?: unknown; message?: unknown; captchaAnswer?: unknown; captchaExpected?: unknown };
   try {
     payload = await req.json();
   } catch {
@@ -45,14 +45,21 @@ Deno.serve(async (req: Request) => {
   const name = String(payload.name ?? "").trim().slice(0, 100);
   const email = String(payload.email ?? "").trim().slice(0, 255);
   const message = String(payload.message ?? "").trim().slice(0, 2000);
+  const captchaAnswer = Number(payload.captchaAnswer);
+  const captchaExpected = Number(payload.captchaExpected);
 
   if (name.length < 2 || !EMAIL_RE.test(email) || message.length < 10) {
     return json({ ok: false, error: "invalid_payload" }, 400);
   }
 
+  // Anti-spam: verificar captcha matematico
+  if (!Number.isFinite(captchaAnswer) || captchaAnswer !== captchaExpected) {
+    return json({ ok: false, error: "captcha_failed" }, 400);
+  }
+
   const apiKey = Deno.env.get("RESEND_API_KEY");
-  const to = Deno.env.get("CONTACT_TO_EMAIL");
-  const from = Deno.env.get("CONTACT_FROM_EMAIL");
+  const to = Deno.env.get("CONTACT_TO_EMAIL") ?? "info@tusplanos3d.es";
+  const from = Deno.env.get("CONTACT_FROM_EMAIL") ?? "onboarding@resend.dev";
 
   if (!apiKey || !to || !from) {
     console.error("contact-notify: faltan secrets (RESEND_API_KEY / CONTACT_TO_EMAIL / CONTACT_FROM_EMAIL)");
