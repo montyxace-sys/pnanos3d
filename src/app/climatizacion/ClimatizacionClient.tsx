@@ -20,7 +20,10 @@ export default function ClimatizacionPage() {
       if (!raw) return;
       const doc = JSON.parse(raw) as { rooms?: { w: number; h: number }[] };
       const area = (doc.rooms ?? []).reduce((s, r) => s + r.w * r.h, 0) / 10000;
-      if (area > 0) setM2(Math.round(area));
+      if (area > 0) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setM2(Math.round(area));
+      }
     } catch {
       // ignore
     }

@@ -10,6 +10,7 @@ export default function SiteFooter({ site }: { site: SiteData }) {
   const [footerLogo, setFooterLogo] = useState<string | null>(null);
   useEffect(() => {
     const base = window.location.pathname.startsWith("/pnanos3d") ? "/pnanos3d" : "";
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFooterLogo(`${base}/img/logo.svg`.replace(/\/\//g, "/"));
   }, []);
 
