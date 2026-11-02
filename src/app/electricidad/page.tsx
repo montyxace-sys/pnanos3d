@@ -3,14 +3,14 @@ import { siteUrl } from "@/app/sitemap";
 import ElectricidadClient from "./ElectricidadClient";
 
 export const metadata: Metadata = {
-  title: "Contratación mínima de electricidad",
+  title: "Calculadora de potencia eléctrica contratada | TusPlanos3D",
   description:
-    "Calcula la potencia eléctrica contratada mínima para tu vivienda: selecciona electrodomésticos, factor de coincidencia y margen de seguridad. Obtén el kW e ICP recomendados.",
+    "Calcula la potencia eléctrica contratada mínima para tu vivienda gratis: selecciona electrodomésticos, factor de coincidencia y margen de seguridad. Obtén el kW e ICP recomendados. Herramienta gratuita.",
   alternates: {
     canonical: `${siteUrl()}/electricidad/`,
   },
   openGraph: {
-    title: "Contratación mínima de electricidad – TusPlanos3D",
+    title: "Calculadora de potencia eléctrica contratada | TusPlanos3D",
     description:
       "Herramienta gratuita para calcular la potencia eléctrica contratada mínima según tus electrodomésticos y superficie.",
     url: `${siteUrl()}/electricidad/`,
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Contratación mínima de electricidad – TusPlanos3D",
+    title: "Calculadora de potencia eléctrica contratada | TusPlanos3D",
     description:
       "Herramienta gratuita para calcular la potencia eléctrica contratada mínima según tus electrodomésticos y superficie.",
     images: ["/img/og-image.svg"],

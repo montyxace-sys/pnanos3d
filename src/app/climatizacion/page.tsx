@@ -3,9 +3,9 @@ import { siteUrl } from "@/app/sitemap";
 import ClimatizacionClient from "./ClimatizacionClient";
 
 export const metadata: Metadata = {
-  title: "Climatización mínima",
+  title: "Calculadora de climatización y frigorías | TusPlanos3D",
   description:
-    "Calcula la potencia de climatización recomendada según la superficie y condiciones de tu vivienda. Estimación en kW de frío y calor.",
+    "Calcula la potencia de climatización recomendada para tu vivienda gratis: superficie útil × 130 frigorías, kW de frío y calor. Herramienta gratuita.",
   alternates: {
     canonical: `${siteUrl()}/climatizacion/`,
   },

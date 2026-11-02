@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     canonical: `${siteUrl()}/ayuda/`,
   },
   openGraph: {
-    title: "Ayuda – TusPlanos3D",
+    title: "Ayuda y guía de uso | TusPlanos3D",
     description:
       "Guía completa para usar el generador de planos online: muros, cotas, exportación PDF y calculadora eléctrica.",
     url: `${siteUrl()}/ayuda/`,
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ayuda – TusPlanos3D",
+    title: "Ayuda y guía de uso | TusPlanos3D",
     description:
       "Guía completa para usar el generador de planos online: muros, cotas, exportación PDF y calculadora eléctrica.",
     images: ["/img/og-image.svg"],

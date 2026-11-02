@@ -8,9 +8,9 @@ import "./globals.css";
 const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://tusplanos3d.es").replace(/\/$/, "");
 
 export async function generateMetadata(): Promise<Metadata> {
-  const title = "TusPlanos3D - Generador de planos online gratuito";
+  const title = "TusPlanos3D - Generador de planos online gratuito y calculadoras";
   const description =
-    "Dibuja planos técnicos de tu vivienda online y gratis: muros, puertas, ventanas, mobiliario. Calcula la contratación mínima de electricidad y climatización.";
+    "La web principal en español para crear planos de vivienda gratis: dibuja muros, puertas, ventanas y mobiliario, calcula la potencia eléctrica contratada y la climatización (frigorías). Todo completamente gratis, sin registro ni instalación.";
   return {
     metadataBase: new URL(SITE),
     title: { default: title, template: "%s | TusPlanos3D" },
@@ -51,8 +51,27 @@ const jsonLdWebSite = {
   url: SITE,
   inLanguage: "es",
   description:
-    "Generador de planos online gratuito para vivienda con calculadora de electricidad y climatización.",
-  publisher: { "@type": "Organization", name: "TusPlanos3D" },
+    "La web principal en español para crear planos de vivienda gratis y calcular la potencia eléctrica y de climatización de tu proyecto. Todo completamente gratis, sin registro ni instalación.",
+  publisher: { "@type": "Organization", name: "TusPlanos3D", url: SITE, logo: `${SITE}/img/logo.svg` },
+  potentialAction: {
+    "@type": "SearchAction",
+    target: `${SITE}/?q={search_term_string}`,
+    "query-input": "required name=search_term_string",
+  },
+};
+
+const jsonLdOrganization = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "TusPlanos3D",
+  url: SITE,
+  logo: `${SITE}/img/logo.svg`,
+  description: "Generador de planos online gratuito y calculadoras de electricidad y climatización para vivienda.",
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer support",
+    availableLanguage: "Spanish",
+  },
 };
 
 const jsonLdApp = {
@@ -70,7 +89,7 @@ const jsonLdApp = {
     priceCurrency: "EUR",
   },
   description:
-    "Dibuja planos 2D de tu vivienda en el navegador: muros, puertas, ventanas, mobiliario. Exporta a PDF, SVG o JSON. Sin instalación.",
+    "Dibuja planos 2D de tu vivienda en el navegador: muros, puertas, ventanas, mobiliario. Calcula la potencia eléctrica contratada y la climatización (frigorías). Exporta a PDF, SVG o JSON. Todo completamente gratis, sin instalación ni registro.",
 };
 
 const jsonLdFaq = {
@@ -109,12 +128,40 @@ const jsonLdFaq = {
         text: "El proyecto se guarda automáticamente en el localStorage de tu navegador. No se envía nada a servidores externos. Puedes descargarlo como JSON y volver a importarlo.",
       },
     },
+    {
+      "@type": "Question",
+      name: "¿Cómo se calcula la climatización?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Introduce los metros cuadrados útiles de tu vivienda. La herramienta multiplica por 130 frigorías por m² para darte la potencia de refrigeración recomendada. También calcula kW de frío y calor según exposición solar, ocupantes y equipos.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Es completamente gratis?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Sí, TusPlanos3D es 100% gratuito. No requiere registro, no tiene publicidad y no envía datos a servidores. Puedes usar el generador de planos, la calculadora de electricidad y la de climatización sin coste alguno.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Funciona en el móvil?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Sí, la web es responsive y funciona en móviles y tablets. Para dibujar con mayor precisión se recomienda usar un ordenador con ratón.",
+      },
+    },
   ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
+      <head>
+        <link rel="preconnect" href="https://kvfjvqxcojyzbccsbokg.supabase.co" />
+        <link rel="dns-prefetch" href="https://kvfjvqxcojyzbccsbokg.supabase.co" />
+      </head>
       <body className="min-h-screen bg-gray-900 text-white antialiased">
         {children}
         <footer className="fixed bottom-0 z-50 mb-2 flex w-full justify-center gap-4 text-xs text-gray-400">
@@ -125,6 +172,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CookieBanner />
         <Script id="jsonld-website" type="application/ld+json">
           {JSON.stringify(jsonLdWebSite)}
+        </Script>
+        <Script id="jsonld-org" type="application/ld+json">
+          {JSON.stringify(jsonLdOrganization)}
         </Script>
         <Script id="jsonld-app" type="application/ld+json">
           {JSON.stringify(jsonLdApp)}
