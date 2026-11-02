@@ -5,7 +5,7 @@ import ChatWidget from "@/components/ChatWidget";
 import CookieBanner from "@/components/CookieBanner";
 import "./globals.css";
 
-const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://montyxace-sys.github.io/planos3d").replace(/\/$/, "");
+const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://tusplanos3d.es").replace(/\/$/, "");
 
 export async function generateMetadata(): Promise<Metadata> {
   const title = "TusPlanos3D - Generador de planos online gratuito";
@@ -17,7 +17,11 @@ export async function generateMetadata(): Promise<Metadata> {
     description,
     manifest: "/manifest.json",
     appleWebApp: { capable: true, title: "TusPlanos3D", statusBarStyle: "default" },
-    alternates: { canonical: SITE },
+    icons: {
+      icon: "/icon.svg",
+      apple: "/img/logo.svg",
+    },
+    alternates: { canonical: SITE, languages: { "es-ES": SITE } },
     openGraph: {
       title,
       description,
@@ -25,13 +29,14 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "TusPlanos3D",
       type: "website",
       locale: "es_ES",
-      images: [{ url: "/img/logo.svg", alt: "TusPlanos3D" }],
+      images: [{ url: "/img/logo.svg", alt: "TusPlanos3D", width: 205, height: 50 }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
       images: ["/img/logo.svg"],
+      site: "@TusPlanos3D",
     },
     robots: { index: true, follow: true },
   };

@@ -17,6 +17,13 @@ export const metadata: Metadata = {
     siteName: "TusPlanos3D",
     type: "website",
     locale: "es_ES",
+    images: [{ url: "/img/logo.svg", width: 205, height: 50 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contratación mínima de electricidad – TusPlanos3D",
+    description:
+      "Herramienta gratuita para calcular la potencia eléctrica contratada mínima según tus electrodomésticos y superficie.",
     images: ["/img/logo.svg"],
   },
 };

@@ -17,6 +17,13 @@ export const metadata: Metadata = {
     siteName: "TusPlanos3D",
     type: "website",
     locale: "es_ES",
+    images: [{ url: "/img/logo.svg", width: 205, height: 50 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ayuda – TusPlanos3D",
+    description:
+      "Guía completa para usar el generador de planos online: muros, cotas, exportación PDF y calculadora eléctrica.",
     images: ["/img/logo.svg"],
   },
 };

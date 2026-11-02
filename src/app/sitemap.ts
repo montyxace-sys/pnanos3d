@@ -3,7 +3,7 @@
 export const dynamic = "force-static";
 
 export function siteUrl() {
-  return (process.env.NEXT_PUBLIC_SITE_URL ?? "https://montyxace-sys.github.io/planos3d").replace(/\/$/, "");
+  return (process.env.NEXT_PUBLIC_SITE_URL ?? "https://tusplanos3d.es").replace(/\/$/, "");
 }
 
 type RouteConfig = {
