@@ -3,9 +3,9 @@
 @theme {
   --color-paper: #faf9f7;
   --color-paper-2: #f2efe9;
-  --color-ink: #1c1f24;
-  --color-ink-soft: #4a4741;
-  --color-muted: #6b675f;
+  --color-ink: #111318;
+  --color-ink-soft: #2d2a26;
+  --color-muted: #4a4741;
 
   /* Naranja estilo Cloudflare en dos tonos:
      `accent` para texto (contraste AA sobre papel claro),
