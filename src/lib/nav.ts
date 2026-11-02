@@ -5,4 +5,5 @@ export const mainNav: NavItem[] = [
   { href: "/electricidad/", label: "Contratación mínima de electricidad" },
   { href: "/climatizacion/", label: "Climatizacion minima" },
   { href: "/ayuda/", label: "Ayuda" },
+  { href: "/contacto/", label: "Contacto" },
 ];

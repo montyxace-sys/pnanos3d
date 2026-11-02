@@ -1,0 +1,148 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+export default function ContactoClient() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
+  const [error, setError] = useState("");
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus("sending");
+    setError("");
+
+    try {
+      if (!SUPABASE_URL) {
+        // Fallback: mailto
+        window.location.href = `mailto:info@tusplanos3d.es?subject=Contacto: ${encodeURIComponent(name)}&body=${encodeURIComponent(message + "\n\nDe: " + name + " <" + email + ">")}`;
+        setStatus("ok");
+        return;
+      }
+
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/contact-notify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Error al enviar");
+      }
+
+      setStatus("ok");
+      setName("");
+      setEmail("");
+      setMessage("");
+    } catch (err) {
+      setStatus("error");
+      setError(err instanceof Error ? err.message : "Error desconocido");
+    }
+  }
+
+  return (
+    <div className="mx-auto max-w-2xl px-6 py-14 text-gray-100">
+      <p className="text-xs font-semibold tracking-[0.2em] text-accent uppercase">Contacto</p>
+      <h1 className="mt-3 text-3xl font-bold">¿Tienes alguna pregunta?</h1>
+      <p className="mt-4 text-sm text-gray-300">
+        Rellena el formulario y te responderemos en menos de 24 horas. También puedes escribirnos a{" "}
+        <a href="mailto:info@tusplanos3d.es" className="text-accent underline">
+          info@tusplanos3d.es
+        </a>
+        .
+      </p>
+
+      {status === "ok" ? (
+        <div className="mt-8 rounded-xl border border-green-500/30 bg-green-500/10 p-6 text-center">
+          <p className="text-lg font-semibold text-green-300">¡Mensaje enviado!</p>
+          <p className="mt-2 text-sm text-gray-300">Te responderemos lo antes posible.</p>
+          <button
+            onClick={() => setStatus("idle")}
+            className="mt-4 rounded bg-orange-500 px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-orange-400"
+          >
+            Enviar otro mensaje
+          </button>
+        </div>
+      ) : (
+        <form onSubmit={submit} className="mt-8 space-y-5">
+          <div>
+            <label className="block text-sm font-medium mb-1">Nombre</label>
+            <input
+              type="text"
+              required
+              minLength={2}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full rounded border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-white focus:border-orange-400 focus:outline-none"
+              placeholder="Tu nombre"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Email</label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full rounded border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-white focus:border-orange-400 focus:outline-none"
+              placeholder="tu@email.com"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Mensaje</label>
+            <textarea
+              required
+              minLength={10}
+              rows={5}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="w-full rounded border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-white focus:border-orange-400 focus:outline-none resize-none"
+              placeholder="Escribe tu mensaje (mínimo 10 caracteres)..."
+            />
+          </div>
+
+          {status === "error" && (
+            <p className="text-sm text-red-400">{error}</p>
+          )}
+
+          <button
+            type="submit"
+            disabled={status === "sending"}
+            className="w-full rounded bg-orange-500 px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-orange-400 disabled:opacity-50"
+          >
+            {status === "sending" ? "Enviando..." : "Enviar mensaje"}
+          </button>
+        </form>
+      )}
+
+      <div className="mt-12 border-t border-gray-700 pt-6">
+        <h2 className="text-lg font-semibold">Otros canales</h2>
+        <div className="mt-3 space-y-2 text-sm text-gray-300">
+          <p>
+            <strong>Email:</strong>{" "}
+            <a href="mailto:info@tusplanos3d.es" className="text-accent underline">
+              info@tusplanos3d.es
+            </a>
+          </p>
+          <p>
+            <strong>Teléfono:</strong>{" "}
+            <a href="tel:+34600000000" className="text-accent underline">
+              +34 600 000 000
+            </a>
+          </p>
+        </div>
+        <div className="mt-6">
+          <Link href="/" className="text-sm text-accent underline">
+            Volver al generador de planos
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
