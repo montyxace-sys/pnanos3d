@@ -102,6 +102,7 @@ export default function PlanEditor() {
   const [selection, setSelection] = useState<Selection>(null);
   const [drawMode, setDrawMode] = useState(false);
   const [preview, setPreview] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
+  const [cursorPos, setCursorPos] = useState<{ x: number; y: number } | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
 
   const svgRef = useRef<SVGSVGElement>(null);
@@ -143,6 +144,7 @@ export default function PlanEditor() {
       if (event.key === "Escape") {
         setDrawMode(false);
         setPreview(null);
+        setCursorPos(null);
         setSelection(null);
         return;
       }
@@ -221,8 +223,11 @@ export default function PlanEditor() {
 
     if (drawMode) {
       const p = toWorld(svg, e);
-      dragRef.current = { mode: "draw", sx: snap(p.x), sy: snap(p.y) };
-      setPreview({ x: snap(p.x), y: snap(p.y), w: 0, h: 0 });
+      const sx = snap(p.x);
+      const sy = snap(p.y);
+      dragRef.current = { mode: "draw", sx, sy };
+      setPreview({ x: sx, y: sy, w: 0, h: 0 });
+      setCursorPos({ x: sx, y: sy });
       svg.setPointerCapture(e.pointerId);
     } else {
       setSelection(null);
@@ -232,8 +237,15 @@ export default function PlanEditor() {
   function onCanvasPointerMove(e: ReactPointerEvent) {
     const drag = dragRef.current;
     const svg = svgRef.current;
-    if (!drag || !svg) return;
+    if (!svg) return;
     const p = toWorld(svg, e);
+
+    // En modo dibujo, actualizar cruceta del cursor (snap a rejilla)
+    if (drawMode) {
+      setCursorPos({ x: snap(p.x), y: snap(p.y) });
+    }
+
+    if (!drag) return;
 
     if (drag.mode === "draw") {
       const x2 = snap(p.x);
@@ -244,6 +256,7 @@ export default function PlanEditor() {
         w: Math.abs(x2 - drag.sx),
         h: Math.abs(y2 - drag.sy),
       });
+      setCursorPos({ x: x2, y: y2 });
       return;
     }
 
@@ -303,6 +316,7 @@ export default function PlanEditor() {
         setSelection({ kind: "room", id });
       }
       setPreview(null);
+      setCursorPos(null);
     }
   }
 
@@ -475,6 +489,7 @@ export default function PlanEditor() {
           onClick={() => {
             setDrawMode((value) => !value);
             setPreview(null);
+            setCursorPos(null);
           }}
           aria-pressed={drawMode}
           className={
@@ -621,6 +636,7 @@ export default function PlanEditor() {
               grid
               drawMode={drawMode}
               preview={preview}
+              cursorPos={cursorPos}
               svgRef={svgRef}
               onShapePointerDown={onShapePointerDown}
               onHandlePointerDown={onHandlePointerDown}

@@ -20,6 +20,8 @@ interface PlanSvgProps {
   drawMode?: boolean;
   /** Rectángulo en proceso de dibujo (estiramido del ratón). */
   preview?: BoundsRect | null;
+  /** Posición del cursor en modo dibujo (para la cruceta). */
+  cursorPos?: { x: number; y: number } | null;
   svgRef?: Ref<SVGSVGElement>;
   onShapePointerDown?: ShapeHandler;
   onHandlePointerDown?: (id: string, e: ReactPointerEvent) => void;
@@ -39,6 +41,7 @@ export default function PlanSvg({
   grid = false,
   drawMode = false,
   preview = null,
+  cursorPos = null,
   svgRef,
   onShapePointerDown,
   onHandlePointerDown,
@@ -83,12 +86,24 @@ export default function PlanSvg({
           <defs>
             <pattern id="plan-grid" width="200" height="200" patternUnits="userSpaceOnUse">
               <path
+                d="M0 10H200M0 20H200M0 30H200M0 40H200M0 50H200M0 60H200M0 70H200M0 80H200M0 90H200M0 100H200M0 110H200M0 120H200M0 130H200M0 140H200M0 150H200M0 160H200M0 170H200M0 180H200M0 190H200"
+                fill="none"
+                stroke="#f0ede6"
+                strokeWidth="1"
+              />
+              <path
+                d="M10 0V200M20 0V200M30 0V200M40 0V200M50 0V200M60 0V200M70 0V200M80 0V200M90 0V200M100 0V200M110 0V200M120 0V200M130 0V200M140 0V200M150 0V200M160 0V200M170 0V200M180 0V200M190 0V200"
+                fill="none"
+                stroke="#f0ede6"
+                strokeWidth="1"
+              />
+              <path
                 d="M0 50H200M0 100H200M0 150H200M50 0V200M100 0V200M150 0V200"
                 fill="none"
-                stroke="#eceae4"
+                stroke="#ded8cb"
                 strokeWidth="2"
               />
-              <path d="M0 0H200V200H0Z" fill="none" stroke="#ded8cb" strokeWidth="2.5" />
+              <path d="M0 0H200V200H0Z" fill="none" stroke="#c8c0b0" strokeWidth="2.5" />
             </pattern>
           </defs>
           <rect
@@ -230,18 +245,44 @@ export default function PlanSvg({
 
       {/* Rectángulo en curso (modo dibujar) */}
       {preview && preview.w > 0 && preview.h > 0 && (
-        <rect
-          x={preview.x}
-          y={preview.y}
-          width={preview.w}
-          height={preview.h}
-          fill="#f6821f"
-          fillOpacity={0.08}
-          stroke="#f6821f"
-          strokeWidth={4}
-          strokeDasharray="18 12"
-          pointerEvents="none"
-        />
+        <>
+          <rect
+            x={preview.x}
+            y={preview.y}
+            width={preview.w}
+            height={preview.h}
+            fill="#f6821f"
+            fillOpacity={0.08}
+            stroke="#f6821f"
+            strokeWidth={4}
+            strokeDasharray="18 12"
+            pointerEvents="none"
+          />
+          {/* Medida del rectángulo en curso */}
+          <text
+            x={preview.x + preview.w / 2}
+            y={preview.y - 12}
+            fontSize={24}
+            fontWeight={600}
+            textAnchor="middle"
+            fill="#c2410c"
+            stroke="#ffffff"
+            strokeWidth={6}
+            style={{ paintOrder: "stroke" }}
+            pointerEvents="none"
+          >
+            {fmt(preview.w / 100)} × {fmt(preview.h / 100)} m
+          </text>
+        </>
+      )}
+
+      {/* Cruceta del cursor en modo dibujar */}
+      {drawMode && cursorPos && (
+        <g pointerEvents="none" opacity={0.7}>
+          <line x1={cursorPos.x - 2000} y1={cursorPos.y} x2={cursorPos.x + 2000} y2={cursorPos.y} stroke="#f6821f" strokeWidth={1.5} strokeDasharray="8 6" />
+          <line x1={cursorPos.x} y1={cursorPos.y - 2000} x2={cursorPos.x} y2={cursorPos.y + 2000} stroke="#f6821f" strokeWidth={1.5} strokeDasharray="8 6" />
+          <circle cx={cursorPos.x} cy={cursorPos.y} r={6} fill="#f6821f" stroke="#ffffff" strokeWidth={2} />
+        </g>
       )}
 
       {/* Cotas generales */}
