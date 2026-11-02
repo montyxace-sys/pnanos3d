@@ -15,7 +15,7 @@ export default function SiteFooter({ site }: { site: SiteData }) {
   }, []);
 
   return (
-    <footer className="border-t border-line bg-ink text-paper">
+    <footer className="border-t border-line bg-paper-2 text-ink">
       <div className="mx-auto grid max-w-6xl gap-10 px-6 py-14 md:grid-cols-3">
         <div className="flex items-start gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}

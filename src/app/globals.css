@@ -1,19 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --color-paper: #faf9f7;
-  --color-paper-2: #f2efe9;
-  --color-ink: #111318;
-  --color-ink-soft: #2d2a26;
-  --color-muted: #4a4741;
+  /* Paleta estilo Cloudflare */
+  --color-paper: #1a1f2e;
+  --color-paper-2: #141824;
+  --color-ink: #ffffff;
+  --color-ink-soft: #c8cdd6;
+  --color-muted: #8a92a0;
 
-  /* Naranja estilo Cloudflare en dos tonos:
-     `accent` para texto (contraste AA sobre papel claro),
-     `accent-bright` (#F6821F) para bordes, iconos y fondos. */
-  --color-accent: #c2410c;
+  /* Naranja estilo Cloudflare */
+  --color-accent: #f6821f;
   --color-accent-bright: #f6821f;
-  --color-accent-soft: #fbad41; /* para hover sobre fondos oscuros */
-  --color-line: #e3ded4;
+  --color-accent-soft: #fbad41;
+  --color-line: #2a3142;
 
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-serif: Georgia, "Times New Roman", Times, serif;
@@ -24,10 +23,23 @@ html {
 }
 
 body {
-  background-color: #0f172a;
+  background-color: #0b0e14;
   color: #ffffff;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Grid pattern sutil estilo Cloudflare */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(246, 130, 31, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(246, 130, 31, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
 h1,

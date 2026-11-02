@@ -10,18 +10,18 @@ export default function SiteHeader({ site }: { site: SiteData }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
-      <div className="hidden bg-ink text-paper md:block">
+    <header className="sticky top-0 z-40 border-b border-line bg-paper/80 backdrop-blur-xl">
+      <div className="hidden bg-paper-2/60 text-paper md:block">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-2 text-xs">
           <div className="flex items-center gap-6">
-            <a href={`tel:${site.phoneHref}`} className="hover:text-accent-soft">
+            <a href={`tel:${site.phoneHref}`} className="text-muted hover:text-accent transition">
               {site.phone}
             </a>
-            <a href={`mailto:${site.email}`} className="hover:text-accent-soft">
+            <a href={`mailto:${site.email}`} className="text-muted hover:text-accent transition">
               {site.email}
             </a>
           </div>
-          <span className="tracking-widest text-paper/70 uppercase">{site.tagline}</span>
+          <span className="tracking-widest text-muted uppercase">{site.tagline}</span>
         </div>
       </div>
 
@@ -44,7 +44,7 @@ export default function SiteHeader({ site }: { site: SiteData }) {
             <Link
               key={item.href}
               href={item.href}
-              className="shrink-0 rounded px-3 py-2 text-[13px] font-medium tracking-wide text-ink-soft uppercase transition hover:bg-paper-2 hover:text-ink"
+              className="shrink-0 rounded px-3 py-2 text-[13px] font-medium tracking-wide text-ink-soft uppercase transition hover:bg-accent/10 hover:text-accent"
             >
               {item.label}
             </Link>
