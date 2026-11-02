@@ -35,7 +35,10 @@ export default function ClimatizacionPage() {
     const heating = Math.round(m2 * 80 * factor);
     const unit = recommendUnit(cooling);
     const btu = Math.round(cooling * 3.412);
-    return { cooling, heating, unit, btu };
+    // Regla rapida: 130 frigorias por m2 util
+    const frigorias = Math.round(m2 * 130);
+    const frigUnit = recommendUnit(Math.round(frigorias * 0.293)); // 1 frig ~ 0.293 W aprox
+    return { cooling, heating, unit, btu, frigorias, frigUnit };
   }, [m2, exposure, occupants, appliances]);
 
   return (
@@ -78,6 +81,20 @@ export default function ClimatizacionPage() {
             <div className="text-xl font-bold text-orange-400">{result.btu} BTU (aprox.)</div>
             <div className="mt-4 text-lg font-semibold text-cyan-300">
               Unidad recomendada: {result.unit} W
+            </div>
+            <div className="mt-3 rounded-lg border border-emerald-400/30 bg-emerald-500/10 p-3">
+              <div className="text-sm font-semibold text-emerald-300">Regla rapida (130 frig/m2)</div>
+              <div className="text-2xl font-bold text-emerald-200">{result.frigorias.toLocaleString("es-ES")} frig/h</div>
+              <p className="text-xs text-gray-300 mt-1">
+                {m2} m2 utiles x 130 frig/m2. Unidad orientativa: {result.frigUnit} W.
+              </p>
+              <p className="text-xs text-gray-300 mt-2">
+                ¿Necesitas instalación profesional? Pide presupuesto en{" "}
+                <a href="https://climont.es/contacto" target="_blank" rel="noopener noreferrer" className="font-semibold text-orange-400 hover:text-orange-300 underline">
+                  climont.es
+                </a>
+                .
+              </p>
             </div>
             <p className="text-xs text-gray-400 mt-2">
               Regla orientativa: 100 W/m2 base + ocupantes + equipos + factor solar.

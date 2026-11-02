@@ -5,6 +5,10 @@ import { getBrowserSupabase } from "@/lib/supabase";
 
 export default function LoginClient() {
   const [user, setUser] = useState<string | null>(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const sb = getBrowserSupabase();
@@ -12,13 +16,28 @@ export default function LoginClient() {
     sb.auth.getSession().then(({ data }) => {
       if (data.session?.user?.email) setUser(data.session.user.email);
     });
+    const { data: sub } = sb.auth.onAuthStateChange((_e, session) => {
+      setUser(session?.user?.email ?? null);
+    });
+    return () => { sub.subscription.unsubscribe(); };
   }, []);
 
-  async function login() {
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
     const sb = getBrowserSupabase();
     if (!sb) return alert("Configura Supabase (.env).");
-    await sb.auth.signInWithOAuth({ provider: "google" });
+    setError("");
+    const { error } =
+      mode === "signup"
+        ? await sb.auth.signUp({ email, password })
+        : await sb.auth.signInWithPassword({ email, password });
+    if (error) setError(error.message);
+    else {
+      const { data } = await sb.auth.getSession();
+      if (data.session?.user?.email) setUser(data.session.user.email);
+    }
   }
+
   async function logout() {
     const sb = getBrowserSupabase();
     if (!sb) return;
@@ -37,9 +56,36 @@ export default function LoginClient() {
           </button>
         </>
       ) : (
-        <button onClick={login} className="rounded bg-orange-500 px-4 py-2 font-semibold text-gray-900">
-          Continuar con Google
-        </button>
+        <form onSubmit={submit} className="space-y-3">
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="email@ejemplo.com"
+            className="w-full rounded border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-white"
+          />
+          <input
+            type="password"
+            required
+            minLength={6}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="contraseña (mín. 6)"
+            className="w-full rounded border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-white"
+          />
+          {error && <p className="text-sm text-red-400">{error}</p>}
+          <button type="submit" className="w-full rounded bg-orange-500 px-4 py-2 font-semibold text-gray-900">
+            {mode === "signup" ? "Crear cuenta" : "Entrar"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode(mode === "signup" ? "login" : "signup")}
+            className="w-full text-xs text-gray-400 hover:text-orange-400"
+          >
+            {mode === "signup" ? "Ya tengo cuenta" : "Crear cuenta nueva"}
+          </button>
+        </form>
       )}
     </div>
   );

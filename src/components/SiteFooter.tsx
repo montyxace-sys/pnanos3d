@@ -102,10 +102,10 @@ export default function SiteFooter({ site }: { site: SiteData }) {
         </div>
       </div>
 
-      <div className="border-t border-paper/15 px-6 py-5 text-center text-xs text-paper/60">
-        © {new Date().getFullYear()} {site.siteName} · Todos los derechos reservados
-        <span className="mx-2">·</span>
-        <span className="font-medium text-paper/70">Diseño y desarrollo por Msoft</span>
+      <div className="border-t border-paper/15 px-6 py-5 text-center text-sm font-medium text-paper">
+        &copy; {new Date().getFullYear()} {site.siteName}. Todos los derechos reservados.
+        <span className="mx-2">&bull;</span>
+        <span className="font-semibold text-paper">Diseno y desarrollo por Msoft</span>
       </div>
     </footer>
   );
