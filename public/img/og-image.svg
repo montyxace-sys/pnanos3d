@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f6821f"/>
+      <stop offset="100%" style="stop-color:#fbad41"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="0" y="0" width="1200" height="8" fill="url(#accent)"/>
+  <g transform="translate(100, 180)">
+    <rect width="80" height="80" rx="16" fill="#f6821f"/>
+    <g transform="translate(10, 10) scale(0.95)">
+      <polygon points="40,60 72,42 40,24 8,42" fill="#1c1f24"/>
+      <path d="M24,51 L56,33 M24,33 L56,51" stroke="#f6821f" stroke-width="3" stroke-linecap="round"/>
+    </g>
+  </g>
+  <text x="200" y="230" font-family="Georgia, serif" font-size="72" font-weight="700" fill="#ffffff">TusPlanos3D</text>
+  <text x="200" y="290" font-family="system-ui, sans-serif" font-size="36" fill="#fbad41">Generador de planos online gratuito</text>
+  <text x="200" y="360" font-family="system-ui, sans-serif" font-size="28" fill="#94a3b8">Dibuja muros, puertas, ventanas y mobiliario.</text>
+  <text x="200" y="400" font-family="system-ui, sans-serif" font-size="28" fill="#94a3b8">Calcula electricidad y climatización. Exporta a PDF.</text>
+  <text x="200" y="520" font-family="system-ui, sans-serif" font-size="24" fill="#64748b">tusplanos3d.es</text>
+  <rect x="0" y="622" width="1200" height="8" fill="url(#accent)"/>
+</svg>
