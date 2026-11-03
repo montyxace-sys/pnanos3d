@@ -1,10 +1,9 @@
 // Service Worker básico para TusPlanos3D
-const CACHE = "tusplanos3d-v2";
+const CACHE = "tusplanos3d-v3";
 const ASSETS = [
   "/",
   "/manifest.json",
   "/img/logo.svg",
-  "/img/icon-192.svg",
 ];
 
 self.addEventListener("install", (event) => {
