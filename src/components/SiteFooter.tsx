@@ -33,7 +33,7 @@ export default function SiteFooter({ site = DEFAULT_SITE }: { site?: SiteData })
 
   return (
     <footer className="border-t border-line bg-paper-2 text-ink">
-      <div className="mx-auto grid max-w-6xl gap-10 px-6 py-14 md:grid-cols-3">
+      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:px-6 sm:py-14 md:grid-cols-3">
         <div className="flex items-start gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           {footerLogo && <Link href="/"><img src={footerLogo} alt={`${site.siteName} - inicio`} width={120} height={36} className="h-9 w-auto shrink-0 " /></Link>}
@@ -129,7 +129,7 @@ export default function SiteFooter({ site = DEFAULT_SITE }: { site?: SiteData })
         </div>
       </div>
 
-      <div className="border-t border-line px-6 py-5 text-center text-sm font-medium text-ink">
+      <div className="border-t border-line px-4 py-4 sm:px-6 sm:py-5 text-center text-sm font-medium text-ink">
         &copy; {new Date().getFullYear()} TusPlanos3D. Todos los derechos reservados. &mdash; Diseño por
         <a href="https://msoft.com.es" target="_blank" rel="noopener noreferrer" className="ml-1 font-semibold text-accent hover:underline">
           Msoft.com.es
