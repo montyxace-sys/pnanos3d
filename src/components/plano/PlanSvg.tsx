@@ -143,7 +143,7 @@ export default function PlanSvg({
               height={room.h}
               fill={selected ? "#fdf3e7" : "#f4f1ea"}
               stroke={selected ? "#f6821f" : "#1c1f24"}
-              strokeWidth={selected ? 10 : 8}
+              strokeWidth={selected ? 10 : room.wallType === "tabique" ? 6 : 14}
             />
             {fitsText && (
               <>

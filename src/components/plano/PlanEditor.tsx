@@ -101,6 +101,7 @@ export default function PlanEditor() {
   const [doc, setDoc] = useState<PlanDoc>(() => exampleDoc());
   const [selection, setSelection] = useState<Selection>(null);
   const [drawMode, setDrawMode] = useState(false);
+  const [drawWallType, setDrawWallType] = useState<"carga" | "tabique">("carga");
   const [preview, setPreview] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
   const [cursorPos, setCursorPos] = useState<{ x: number; y: number } | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
@@ -310,6 +311,7 @@ export default function PlanEditor() {
               y: created.y,
               w: created.w,
               h: created.h,
+              wallType: drawWallType,
             },
           ],
         }));
@@ -331,7 +333,7 @@ export default function PlanEditor() {
       ...current,
       rooms: [
         ...current.rooms,
-        { id, name: `Estancia ${current.rooms.length + 1}`, x: snap(x), y: snap(y), w: 400, h: 350 },
+        { id, name: `Estancia ${current.rooms.length + 1}`, x: snap(x), y: snap(y), w: 400, h: 350, wallType: drawWallType },
       ],
     }));
     setSelection({ kind: "room", id });
@@ -500,6 +502,16 @@ export default function PlanEditor() {
         >
           {drawMode ? "Dibujando… (Esc sale)" : "Dibujar estancia"}
         </button>
+        <select
+          value={drawWallType}
+          onChange={(e) => setDrawWallType(e.target.value as "carga" | "tabique")}
+          aria-label="Grosor de pared al dibujar"
+          className="rounded border border-line bg-paper px-2 py-2 text-xs font-semibold uppercase tracking-wide text-ink outline-none focus:border-accent"
+        >
+          <option value="carga">Pared carga (30 cm)</option>
+          <option value="tabique">Tabique (10 cm)</option>
+        </select>
+
         <button type="button" onClick={addRoom} className={btn}>
           Añadir estancia
         </button>
