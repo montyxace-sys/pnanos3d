@@ -28,8 +28,6 @@ export default function AvisoLegalPage() {
         <br />
         Correo electrónico: info@tusplanos3d.es
         <br />
-        Teléfono: +34 600 000 000
-        <br />
         Sitio web: https://tusplanos3d.es
       </p>
 
