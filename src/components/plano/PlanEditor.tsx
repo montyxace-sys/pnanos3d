@@ -101,7 +101,7 @@ export default function PlanEditor() {
   const [doc, setDoc] = useState<PlanDoc>(() => exampleDoc());
   const [selection, setSelection] = useState<Selection>(null);
   const [drawMode, setDrawMode] = useState(false);
-  const [drawWallType, setDrawWallType] = useState<"carga" | "tabique">("carga");
+  const [drawWallType, setDrawWallType] = useState<"carga" | "tabique" | "pladur" | "aluminio">("carga");
   const [preview, setPreview] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
   const [cursorPos, setCursorPos] = useState<{ x: number; y: number } | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
@@ -504,12 +504,14 @@ export default function PlanEditor() {
         </button>
         <select
           value={drawWallType}
-          onChange={(e) => setDrawWallType(e.target.value as "carga" | "tabique")}
+          onChange={(e) => setDrawWallType(e.target.value as "carga" | "tabique" | "pladur" | "aluminio")}
           aria-label="Grosor de pared al dibujar"
           className="rounded border border-line bg-paper px-2 py-2 text-xs font-semibold uppercase tracking-wide text-ink outline-none focus:border-accent"
         >
           <option value="carga">Pared carga (30 cm)</option>
           <option value="tabique">Tabique (10 cm)</option>
+          <option value="pladur">Pladur / drywall (8 cm)</option>
+          <option value="aluminio">Muro de aluminio (15 cm)</option>
         </select>
 
         <button type="button" onClick={addRoom} className={btn}>

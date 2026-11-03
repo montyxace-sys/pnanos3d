@@ -231,6 +231,9 @@ export default function PlanSheet({ doc }: { doc: PlanDoc }) {
               <div>
                 <strong>Piezas:</strong> {doc.pieces.length}
               </div>
+              <div style={{ fontSize: "6.3pt", color: "#6b675f" }}>
+                <strong>Grosor de muros:</strong> carga 30 cm · tabique 10 cm · pladur 8 cm · aluminio 15 cm (orientativo).
+              </div>
               <div>
                 <strong>Escala:</strong> {scaleLabel}
               </div>

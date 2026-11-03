@@ -12,7 +12,7 @@ export type Room = {
   y: number;
   w: number;
   h: number;
-  wallType?: 'carga' | 'tabique';
+  wallType?: 'carga' | 'tabique' | 'pladur' | 'aluminio';
 };
 
 /** Pieza colocada sobre el plano (mobiliario o elemento de construcción). */

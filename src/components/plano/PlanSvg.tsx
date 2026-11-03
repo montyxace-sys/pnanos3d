@@ -34,6 +34,9 @@ interface PlanSvgProps {
  * Dibujo vectorial del plano, en centímetros. Lo usan tanto el editor
  * (interactivo) como la hoja A4 de la descarga en PDF (solo lectura).
  */
+
+function wallCm(t?: "carga" | "tabique" | "pladur" | "aluminio") { const map = { carga: 30, tabique: 10, pladur: 8, aluminio: 15 }; return map[t || "carga"] || 30; }
+
 export default function PlanSvg({
   doc,
   selection,
@@ -143,7 +146,7 @@ export default function PlanSvg({
               height={room.h}
               fill={selected ? "#fdf3e7" : "#f4f1ea"}
               stroke={selected ? "#f6821f" : "#1c1f24"}
-              strokeWidth={selected ? 10 : room.wallType === "tabique" ? 6 : 14}
+              strokeWidth={selected ? 10 : room.wallType === "aluminio" ? 8 : room.wallType === "pladur" ? 5 : room.wallType === "tabique" ? 6 : 14}
             />
             {fitsText && (
               <>
@@ -167,7 +170,7 @@ export default function PlanSvg({
                     fill="#6b675f"
                     pointerEvents="none"
                   >
-                    {fmt(room.w / 100)} × {fmt(room.h / 100)} m · {fmt(roomArea(room))} m²
+                    {fmt(room.w / 100)} × {fmt(room.h / 100)} m · {fmt(roomArea(room))} m² · Muro {wallCm(room.wallType)} cm
                   </text>
                 )}
               </>
