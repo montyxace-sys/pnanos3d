@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="iconTitle">
+  <title id="iconTitle">TusPlanos3D</title>
+  <rect width="64" height="64" rx="14" fill="#f6821f" />
+  <g transform="translate(4 10)">
+    <!-- suelo -->
+    <polygon points="28,42 52,28 28,14 4,28" fill="#fffbe7" opacity="0.95" />
+    <!-- retícula de plano -->
+    <path d="M14 35 L42 18 M14 18 L42 35" stroke="#0a0c0f" stroke-width="2" stroke-linecap="round" opacity="0.6" />
+    <!-- pared izquierda -->
+    <polygon points="4,28 28,14 28,0 4,14" fill="#fff" opacity="0.9" />
+    <!-- pared derecha -->
+    <polygon points="28,14 52,28 52,14 28,0" fill="#e8e2d0" opacity="0.9" />
+    <!-- canto superior -->
+    <path d="M4 14 L28 0 L52 14" fill="none" stroke="#0a0c0f" stroke-width="2.5" stroke-linejoin="round" />
+  </g>
+  <!-- sello 3D -->
+  <text x="32" y="58" font-family="'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle" fill="#fff">3D</text>
+</svg>
