@@ -259,7 +259,7 @@ export default function PlanSheet({ doc }: { doc: PlanDoc }) {
             flexShrink: 0,
           }}
         >
-          <span>TusPlanos3D · Herramienta gratuita de planos</span>
+          <span>tusplanos3d.es · Herramienta gratuita de planos</span>
           <span>Plano descargable en PDF y JSON desde la web</span>
         </footer>
       </div>
