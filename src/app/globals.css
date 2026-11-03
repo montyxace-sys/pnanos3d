@@ -4,13 +4,13 @@
   /* Paleta estilo Cloudflare (claro) */
   --color-paper: #ffffff;
   --color-paper-2: #f3f4f6;
-  --color-ink: #050607;
-  --color-ink-soft: #2a2e36;
-  --color-muted: #474d57;
+  --color-ink: #000000;
+  --color-ink-soft: #1f222a;
+  --color-muted: #373c47;
 
   /* Naranja estilo Cloudflare */
-  --color-accent: #f6821f;
-  --color-accent-bright: #f6821f;
+  --color-accent: #b45309;
+  --color-accent-bright: #b45309;
   --color-accent-soft: #fbad41;
   --color-line: #d4d7dd;
 
@@ -23,7 +23,7 @@ html {
 }
 
 body {
-  background-color: #f6f7f9;
+  background-color: #f7f8fa;
   color: #1d1f23;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -37,8 +37,8 @@ body::before {
   pointer-events: none;
   z-index: 0;
   background-image:
-    linear-gradient(rgba(246, 130, 31, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(246, 130, 31, 0.06) 1px, transparent 1px);
+    linear-gradient(rgba(180, 83, 9, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180, 83, 9, 0.06) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 

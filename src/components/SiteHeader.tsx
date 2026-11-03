@@ -26,7 +26,7 @@ export default function SiteHeader({ site }: { site: SiteData }) {
       </div>
 
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4">
-        <Link href="/" className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-3" aria-label="Ir al inicio">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={withBase("/img/logo.svg")} alt={`${site.siteName} - inicio`} width={160} height={48} className="h-10 w-auto " />
         </Link>
