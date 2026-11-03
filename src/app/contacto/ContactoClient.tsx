@@ -199,12 +199,6 @@ export default function ContactoClient() {
               info@tusplanos3d.es
             </a>
           </p>
-          <p>
-            <strong>Teléfono:</strong>{" "}
-            <a href="tel:+34600000000" className="text-accent underline">
-              +34 600 000 000
-            </a>
-          </p>
         </div>
         <div className="mt-6">
           <Link href="/" className="text-sm text-accent underline">

@@ -14,9 +14,11 @@ export default function SiteHeader({ site }: { site: SiteData }) {
       <div className="hidden bg-paper-2/60 text-ink md:block">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-2 text-xs">
           <div className="flex items-center gap-6">
-            <a href={`tel:${site.phoneHref}`} className="text-muted hover:text-accent transition">
-              {site.phone}
-            </a>
+            {site.phone && (
+              <a href={`tel:${site.phoneHref}`} className="text-muted hover:text-accent transition">
+                {site.phone}
+              </a>
+            )}
             <a href={`mailto:${site.email}`} className="text-muted hover:text-accent transition">
               {site.email}
             </a>

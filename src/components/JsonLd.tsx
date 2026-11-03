@@ -14,7 +14,7 @@ export default function JsonLd({ site }: { site: SiteData }) {
     description: site.description,
     url: `${siteUrl}/`,
     email: site.email,
-    telephone: site.phone,
+    ...(site.phone ? { telephone: site.phone } : {}),
     address: {
       "@type": "PostalAddress",
       streetAddress: site.address[1] ?? site.address.join(" "),
