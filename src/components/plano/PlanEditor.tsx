@@ -561,6 +561,9 @@ export default function PlanEditor() {
           <button type="button" onClick={exportSvg} className={btn}>
             SVG
           </button>
+          <button type="button" onClick={exportJson} className={btnPrimary}>
+            Guardar copia
+          </button>
           <button type="button" onClick={exportJson} className={btn}>
             Proyecto JSON
           </button>
