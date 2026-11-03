@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
   assetPrefix: basePath === "" ? undefined : basePath,
   trailingSlash: true,
   images: { unoptimized: true },
+  productionBrowserSourceMaps: false,
+  poweredByHeader: false,
   turbopack: { root: __dirname },
 };
 
