@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const RAW_SC = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_URL = (RAW_SC && RAW_SC.includes("lgwaffbjlggfwwushjoz") ? RAW_SC : "https://lgwaffbjlggfwwushjoz.supabase.co");
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 function generateCaptcha() {

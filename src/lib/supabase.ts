@@ -1,8 +1,10 @@
 import { createBrowserClient, createServerClient } from "@supabase/ssr";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const RAW_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const url = (RAW_URL && RAW_URL.includes("lgwaffbjlggfwwushjoz") ? RAW_URL : "https://lgwaffbjlggfwwushjoz.supabase.co");
+const RAW_ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const anonKey = (RAW_ANON && RAW_ANON.includes("VG8r9yTgC8rW85BkH87wFw") ? RAW_ANON : "sb_publishable_VG8r9yTgC8rW85BkH87wFw_NUfewpiq");
 
 export const supabaseConfigured = Boolean(url && anonKey);
 
