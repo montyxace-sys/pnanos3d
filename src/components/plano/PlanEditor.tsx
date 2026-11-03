@@ -644,7 +644,7 @@ export default function PlanEditor() {
         <div className="min-w-0">
           <div
             className="relative border border-line bg-white"
-            style={{ height: "min(58vh, 520px)", minHeight: "360px" }}
+            style={{ height: "min(80vh, 940px)", minHeight: "600px" }}
           >
             <PlanSvg
               doc={doc}
