@@ -115,17 +115,21 @@ export default function AdminPage() {
     setLoading(true);
     setError("");
     try {
-      const u = `${SUPABASE_URL}/functions/v1/admin-insights`;
-      console.log("[admin] fetch", u);
-      const res = await fetch(u, { headers: { Authorization: `Bearer ${SUPABASE_ANON_KEY}` } });
-      const txt = await res.text();
-      if (!res.ok) {
-        console.error("admin load fail", res.status, txt);
-        throw new Error("Error al cargar datos (" + res.status + "): " + (txt || "").slice(0, 300));
+      const u1 = `${SUPABASE_URL}/rest/v1/analytics_events?select=*&order=created_at.desc&limit=5000`;
+      const u2 = `${SUPABASE_URL}/rest/v1/contact_submissions?select=*&order=created_at.desc&limit=100`;
+      console.log("[admin] fetch", u1, u2);
+      const [r1, r2] = await Promise.all([
+        fetch(u1, { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }),
+        fetch(u2, { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }),
+      ]);
+      const t1 = await r1.text();
+      const t2 = await r2.text();
+      if (!r1.ok || !r2.ok) {
+        console.error("admin load fail", r1.status, t1, r2.status, t2);
+        throw new Error("Error al cargar datos (" + r1.status + "/" + r2.status + "): " + (t1 || "").slice(0, 300));
       }
-      const data = txt ? JSON.parse(txt) : {};
-      setEvents(Array.isArray(data.events) ? data.events : []);
-      setSubmissions(Array.isArray(data.submissions) ? data.submissions : []);
+      setEvents(t1 ? JSON.parse(t1) : []);
+      setSubmissions(t2 ? JSON.parse(t2) : []);
       setLastRefresh(new Date());
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error desconocido");
