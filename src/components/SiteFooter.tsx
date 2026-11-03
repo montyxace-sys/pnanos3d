@@ -89,16 +89,7 @@ export default function SiteFooter({ site = DEFAULT_SITE }: { site?: SiteData })
               >
                 Cookies
               </Link>
-            </li>
-            <li>
-              <Link
-                href="/contacto/"
-                className="inline-flex items-center rounded-full border border-line bg-paper px-3 py-1.5 text-xs font-semibold tracking-wide text-ink-soft uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
-              >
-                Contacto
-              </Link>
-            </li>
-          </ul>
+            </li>          </ul>
         </nav>
 
         <div className="text-sm">
