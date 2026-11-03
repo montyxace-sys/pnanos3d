@@ -139,7 +139,29 @@ export const CATALOG: CatalogGroup[] = [
       { key: "fancoil", label: "Fancoil", w: 70, h: 30, draw: () => (<><rect x={-35} y={-15} width={70} height={30} rx={4} /><path d="M-25 -8 H25 M-25 -4 H25 M-25 0 H25 M-25 4 H25" fill="none" /><circle cx={20} cy={0} r={4} fill="none" /></>) },
     ],
   },
-];
+
+  {
+    id: "iluminacion",
+    label: "Iluminación",
+    items: [
+      { key: "lampara", label: "Lámpara techo", w: 30, h: 30, draw: () => (<><rect x={-15} y={-15} width={30} height={30} rx={4} fill="#faf9f7" stroke="#1c1f24" /><circle cx={0} cy={0} r={6} fill="none" stroke="#f6821f" /></>) },
+      { key: "downlight", label: "Downlight", w: 20, h: 20, draw: () => (<><circle cx={0} cy={0} r={8} fill="#faf9f7" stroke="#1c1f24" /><circle cx={0} cy={0} r={3} fill="#f6821f" /></>) },
+      { key: "aplique", label: "Aplique / pared", w: 40, h: 18, draw: () => (<><rect x={-20} y={-9} width={40} height={18} rx={4} fill="#faf9f7" stroke="#1c1f24" /><circle cx={0} cy={0} r={4} fill="#f6821f" /></>) },
+      { key: "ventilador", label: "Ventilador techo", w: 60, h: 60, draw: () => (<><circle cx={0} cy={0} r={25} fill="none" stroke="#1c1f24" /><circle cx={0} cy={0} r={6} fill="#f6821f" /><path d="M-2 6 V25 M2 6 V25 M-6 4 V24 M6 4 V24" fill="none" stroke="#6b675f" /></>) },
+    ],
+  },
+  {
+    id: "fontaneria",
+    label: "Fontanería",
+    items: [
+      { key: "grifo", label: "Grifo monomando", w: 18, h: 12, draw: () => (<><rect x={-9} y={-6} width={18} height={12} rx={3} fill="#faf9f7" stroke="#1c1f24" /><circle cx={0} cy={0} r={3} fill="#475569" /><path d="M-6 0 H6" fill="none" stroke="#1c1f24" strokeWidth={1.5} /></>) },
+      { key: "grifo-bide", label: "Grifo bidé", w: 24, h: 12, draw: () => (<><rect x={-12} y={-6} width={24} height={12} rx={3} fill="#faf9f7" stroke="#1c1f24" /><circle cx={0} cy={0} r={4} fill="#475569" /><path d="M-8 0 H8" fill="none" stroke="#1c1f24" strokeWidth={1.5} /></>) },
+      { key: "grifo-lavabo", label: "Grifo lavabo", w: 16, h: 10, draw: () => (<><rect x={-8} y={-5} width={16} height={10} rx={2} fill="#faf9f7" stroke="#1c1f24" /><circle cx={0} cy={0} r={2.5} fill="#475569" /></>) },
+      { key: "manguera-ducha", label: "Manguera ducha", w: 50, h: 8, draw: () => (<><rect x={-25} y={-4} width={50} height={8} rx={4} fill="#faf9f7" stroke="#1c1f24" /><path d="M-20 0 H20" fill="none" stroke="#6b675f" strokeWidth={1.5} /><circle cx={-23} cy={0} r={2} fill="#f6821f" /><circle cx={23} cy={0} r={2} fill="#f6821f" /></>) },
+      { key: "manguera-lavabo", label: "Manguera lavabo", w: 35, h: 6, draw: () => (<><rect x={-17} y={-3} width={35} height={6} rx={3} fill="#faf9f7" stroke="#1c1f24" /><path d="M-14 0 H12" fill="none" stroke="#6b675f" strokeWidth={1.5} /></>) },
+    ],
+  },
+]
 
 export const CAT_BY_KEY: Record<string, CatalogItem> = Object.fromEntries(
   CATALOG.flatMap((group) => group.items.map((item) => [item.key, item])),
