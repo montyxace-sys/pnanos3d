@@ -115,22 +115,17 @@ export default function AdminPage() {
     setLoading(true);
     setError("");
     try {
-      const [evRes, subRes] = await Promise.all([
-        fetch(`${SUPABASE_URL}/rest/v1/analytics_events?select=*&order=created_at.desc&limit=5000`, {
-          headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
-        }),
-        fetch(`${SUPABASE_URL}/rest/v1/contact_submissions?select=*&order=created_at.desc&limit=100`, {
-          headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
-        }),
-      ]);
-      const evText = await evRes.text();
-      const subText = await subRes.text();
-      if (!evRes.ok || !subRes.ok) {
-        console.error("admin load fail", evRes.status, evText, subRes.status, subText);
-        throw new Error("Error al cargar datos (" + evRes.status + "/" + subRes.status + "): " + (evText || subText));
+      const u = `${SUPABASE_URL}/functions/v1/admin-insights`;
+      console.log("[admin] fetch", u);
+      const res = await fetch(u, { headers: { Authorization: `Bearer ${SUPABASE_ANON_KEY}` } });
+      const txt = await res.text();
+      if (!res.ok) {
+        console.error("admin load fail", res.status, txt);
+        throw new Error("Error al cargar datos (" + res.status + "): " + (txt || "").slice(0, 300));
       }
-      setEvents(evText ? JSON.parse(evText) : []);
-      setSubmissions(subText ? JSON.parse(subText) : []);
+      const data = txt ? JSON.parse(txt) : {};
+      setEvents(Array.isArray(data.events) ? data.events : []);
+      setSubmissions(Array.isArray(data.submissions) ? data.submissions : []);
       setLastRefresh(new Date());
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error desconocido");

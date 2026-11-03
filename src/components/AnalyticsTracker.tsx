@@ -32,11 +32,10 @@ export default function AnalyticsTracker() {
     if (pathname.startsWith("/admin")) return;
     (async () => {
       try {
-        await fetch(`${SUPABASE_URL}/rest/v1/analytics_events`, {
+        await fetch(`${SUPABASE_URL}/functions/v1/analytics-ingest`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            apikey: SUPABASE_ANON_KEY,
             Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
           },
           body: JSON.stringify({
