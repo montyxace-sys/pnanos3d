@@ -126,33 +126,34 @@ export function DonutChart({ data, size = 160 }: DonutChartProps) {
 
   const radius = 40;
   const circumference = 2 * Math.PI * radius;
-  let offset = 0;
+  const segments = data.reduce<{ d: typeof data[number]; i: number; dash: number; offset: number }[]>((acc, d, i) => {
+    const prev = acc.length ? acc[acc.length - 1] : null;
+    const offset = prev ? prev.offset + prev.dash : 0;
+    const fraction = d.value / total;
+    const dash = fraction * circumference;
+    acc.push({ d, i, dash, offset });
+    return acc;
+  }, []);
 
   return (
     <div className="flex items-center gap-6 flex-wrap">
       <svg viewBox="0 0 100 100" style={{ width: size, height: size }} className="flex-shrink-0">
         <circle cx={50} cy={50} r={radius} fill="none" stroke="#f1f5f9" strokeWidth={12} />
-        {data.map((d, i) => {
-          const fraction = d.value / total;
-          const dash = fraction * circumference;
-          const segment = (
-            <circle
-              key={i}
-              cx={50}
-              cy={50}
-              r={radius}
-              fill="none"
-              stroke={d.color}
-              strokeWidth={12}
-              strokeDasharray={`${dash} ${circumference - dash}`}
-              strokeDashoffset={-offset}
-              transform="rotate(-90 50 50)"
-              className="transition-all duration-500"
-            />
-          );
-          offset += dash;
-          return segment;
-        })}
+        {segments.map(({ d, i, dash, offset }) => (
+          <circle
+            key={i}
+            cx={50}
+            cy={50}
+            r={radius}
+            fill="none"
+            stroke={d.color}
+            strokeWidth={12}
+            strokeDasharray={`${dash} ${circumference - dash}`}
+            strokeDashoffset={-offset}
+            transform="rotate(-90 50 50)"
+            className="transition-all duration-500"
+          />
+        ))}
         <text x={50} y={48} textAnchor="middle" fontSize={14} fontWeight={700} fill="#0f172a">
           {total}
         </text>

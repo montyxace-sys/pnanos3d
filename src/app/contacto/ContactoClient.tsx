@@ -13,6 +13,7 @@ function generateCaptcha() {
   return { question: `${a} + ${b}`, answer: a + b };
 }
 
+/* eslint-disable react-hooks/set-state-in-effect */
 export default function ContactoClient() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

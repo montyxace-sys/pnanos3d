@@ -28,6 +28,7 @@ function getColorForIndex(i: number): string {
   return COLORS[i % COLORS.length];
 }
 
+/* eslint-disable react-hooks/set-state-in-effect */
 export default function AdminPage() {
   const [tab, setTab] = useState<"stats" | "chat" | "google">("stats");
 

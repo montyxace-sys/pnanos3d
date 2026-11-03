@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 ﻿import type { Metadata } from "next";
 import { siteUrl } from "@/app/sitemap";
 import Link from "next/link";

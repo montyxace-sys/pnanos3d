@@ -99,7 +99,7 @@ export default function HomePage() {
       </section>
 
       <p className="mt-8 text-center text-xs text-muted">
-        Volver al <a href="/" className="text-accent underline">generador de planos online gratuito</a>.
+        Volver al <Link href="/" className="text-accent underline">generador de planos online gratuito</Link>.
         También disponible: <a href="/electricidad/" className="text-accent underline">calculadora de electricidad</a> y{" "}
         <a href="/climatizacion/" className="text-accent underline">calculadora de climatización</a>.
       </p>

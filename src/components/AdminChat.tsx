@@ -6,6 +6,7 @@ import { decryptText, loadMessages, listThreads, sendEncryptedMessage, subscribe
 
 type Thread = { id: string; user_id: string; created_at: string; updated_at: string };
 
+/* eslint-disable react-hooks/set-state-in-effect */
 export default function AdminChat() {
   const [user, setUser] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);

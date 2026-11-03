@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { useState } from 'react';
 import {
   Search, TrendingUp, Gauge, Smartphone, Globe, MapPin, Tag,

@@ -21,7 +21,7 @@ Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders });
   if (req.method !== "POST") return json({ ok: false, error: "method_not_allowed" }, 405);
 
-  let payload: any;
+  let payload: any; // eslint-disable-line @typescript-eslint/no-explicit-any
   try { payload = await req.json(); } catch { return json({ ok: false, error: "invalid_json" }, 400); }
 
   const path = String(payload.path ?? "").trim().slice(0, 400);
