@@ -35,9 +35,14 @@ export default function AdminPage() {
           headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
         }),
       ]);
-      if (!evRes.ok || !subRes.ok) throw new Error("Error al cargar datos");
-      setEvents(await evRes.json());
-      setSubmissions(await subRes.json());
+      const evText = await evRes.text();
+      const subText = await subRes.text();
+      if (!evRes.ok || !subRes.ok) {
+        console.error("admin load fail", evRes.status, evText, subRes.status, subText);
+        throw new Error("Error al cargar datos (" + evRes.status + "/" + subRes.status + "): " + (evText || subText));
+      }
+      setEvents(evText ? JSON.parse(evText) : []);
+      setSubmissions(subText ? JSON.parse(subText) : []);
       setLastRefresh(new Date());
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error desconocido");
