@@ -643,10 +643,11 @@ export default function PlanEditor() {
         {/* Lienzo */}
         <div className="min-w-0">
           <div
-            className="relative border border-line bg-white"
-            style={{ height: "min(80vh, 940px)", minHeight: "600px" }}
+            className="relative max-h-[90vh] overflow-auto border border-line bg-white"
+            style={{ minHeight: "520px" }}
           >
             <PlanSvg
+              className="block w-full"
               doc={doc}
               selection={selection}
               interactive
@@ -773,7 +774,7 @@ export default function PlanEditor() {
                   type="range"
                   min={0}
                   max={345}
-                  step={15}
+                  step={5}
                   value={norm360(selectedPiece.rot)}
                   onChange={(event) =>
                     updatePiece(selectedPiece.id, { rot: Number(event.target.value) })
@@ -781,28 +782,17 @@ export default function PlanEditor() {
                   className="mt-1 w-full accent-[#f6821f]"
                 />
               </label>
-              <div className="mt-1 flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => rotatePiece(selectedPiece.id, -15)}
-                  className={btn}
-                >
-                  −15°
-                </button>
-                <button
-                  type="button"
-                  onClick={() => rotatePiece(selectedPiece.id, 15)}
-                  className={btn}
-                >
-                  +15°
-                </button>
-                <button
-                  type="button"
-                  onClick={() => rotatePiece(selectedPiece.id, 90)}
-                  className={btn}
-                >
-                  +90°
-                </button>
+              <div className="mt-1 flex flex-wrap gap-2">
+                <button type="button" onClick={() => rotatePiece(selectedPiece.id, -90)} className={btn}>-90°</button>
+                <button type="button" onClick={() => rotatePiece(selectedPiece.id, -15)} className={btn}>-15°</button>
+                <button type="button" onClick={() => rotatePiece(selectedPiece.id, 15)} className={btn}>+15°</button>
+                <button type="button" onClick={() => rotatePiece(selectedPiece.id, 90)} className={btn}>+90°</button>
+              </div>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <button type="button" onClick={() => updatePiece(selectedPiece.id, { rot: 0 })} className={btn}>Norte (0°)</button>
+                <button type="button" onClick={() => updatePiece(selectedPiece.id, { rot: 90 })} className={btn}>Este (90°)</button>
+                <button type="button" onClick={() => updatePiece(selectedPiece.id, { rot: 180 })} className={btn}>Sur (180°)</button>
+                <button type="button" onClick={() => updatePiece(selectedPiece.id, { rot: 270 })} className={btn}>Oeste (270°)</button>
               </div>
 
               <div className="mt-3 flex gap-2">

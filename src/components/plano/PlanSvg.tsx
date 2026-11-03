@@ -23,6 +23,7 @@ interface PlanSvgProps {
   /** Posición del cursor en modo dibujo (para la cruceta). */
   cursorPos?: { x: number; y: number } | null;
   svgRef?: Ref<SVGSVGElement>;
+  className?: string;
   onShapePointerDown?: ShapeHandler;
   onHandlePointerDown?: (id: string, e: ReactPointerEvent) => void;
   onCanvasPointerDown?: (e: ReactPointerEvent) => void;
@@ -46,6 +47,7 @@ export default function PlanSvg({
   preview = null,
   cursorPos = null,
   svgRef,
+  className,
   onShapePointerDown,
   onHandlePointerDown,
   onCanvasPointerDown,
@@ -70,7 +72,7 @@ export default function PlanSvg({
       ref={svgRef}
       viewBox={`${box.x} ${box.y} ${box.w} ${box.h}`}
       preserveAspectRatio="xMidYMid meet"
-      className="block h-full w-full select-none"
+      className={className ?? "block h-full w-full select-none"}
       style={{
         touchAction: "none",
         cursor: drawMode ? "crosshair" : interactive ? "default" : undefined,
