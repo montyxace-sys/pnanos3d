@@ -164,9 +164,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-screen bg-transparent text-gray-900 antialiased">
         {children}
-        <footer className="fixed bottom-0 z-50 mb-2 flex w-full justify-center gap-4 text-xs text-muted">
-          <Link href="/ayuda/" className="hover:text-orange-400 underline">Ayuda</Link>
-          <Link href="/cookies/" className="hover:text-orange-400 underline">Cookies</Link>
+                <footer className="fixed bottom-0 z-50 mb-2 flex w-full flex-wrap justify-center gap-3 text-xs text-muted">
+          <Link href="/" className="hover:text-accent underline">Volver al inicio</Link>
+          <Link href="/electricidad/" className="hover:text-accent underline">Electricidad</Link>
+          <Link href="/climatizacion/" className="hover:text-accent underline">Climatizacion</Link>
+          <Link href="/ayuda/" className="hover:text-accent underline">Ayuda</Link>
+          <Link href="/contacto/" className="hover:text-accent underline">Contacto</Link>
+          <Link href="/aviso-legal/" className="hover:text-accent underline">Aviso legal</Link>
+          <Link href="/cookies/" className="hover:text-accent underline">Cookies</Link>
         </footer>
         <ChatWidget />
         <CookieBanner />
