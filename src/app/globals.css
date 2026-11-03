@@ -4,15 +4,15 @@
   /* Paleta estilo Cloudflare (claro) */
   --color-paper: #ffffff;
   --color-paper-2: #f3f4f6;
-  --color-ink: #1d1f23;
-  --color-ink-soft: #4a5059;
-  --color-muted: #6b7280;
+  --color-ink: #0c0e12;
+  --color-ink-soft: #3a3f47;
+  --color-muted: #5b616b;
 
   /* Naranja estilo Cloudflare */
   --color-accent: #f6821f;
   --color-accent-bright: #f6821f;
   --color-accent-soft: #fbad41;
-  --color-line: #e5e7eb;
+  --color-line: #dfe1e6;
 
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-serif: Georgia, "Times New Roman", Times, serif;
@@ -23,7 +23,7 @@ html {
 }
 
 body {
-  background-color: #f6f7f9;
+  background-color: #f2f3f5;
   color: #1d1f23;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
