@@ -6,7 +6,24 @@ import { mainNav } from "@/lib/nav";
 import SocialIcon from "@/components/SocialIcon";
 import type { SiteData } from "@/lib/data";
 
-export default function SiteFooter({ site }: { site: SiteData }) {
+const DEFAULT_SITE: SiteData = {
+  siteName: "TusPlanos3D",
+  siteFullName: "TusPlanos3D",
+  tagline: "Mira tu espacio en 3D antes de empezar.",
+  description: "Generador de planos online gratuito.",
+  phone: "",
+  phoneHref: "",
+  email: "info@tusplanos3d.es",
+  address: [],
+  social: [
+    { label: "Facebook", href: "https://www.facebook.com/" },
+    { label: "Instagram", href: "https://www.instagram.com/" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/" },
+  ],
+  channels: [],
+};
+
+export default function SiteFooter({ site = DEFAULT_SITE }: { site?: SiteData }) {
   const [footerLogo, setFooterLogo] = useState<string | null>(null);
   useEffect(() => {
     const base = window.location.pathname.startsWith("/pnanos3d") ? "/pnanos3d" : "";
@@ -23,7 +40,9 @@ export default function SiteFooter({ site }: { site: SiteData }) {
           <div>
             <p className="font-serif text-2xl">{site.siteName}</p>
             <p className="mt-2 text-sm text-ink-soft">{site.tagline}</p>
-            <p className="mt-4 text-sm text-ink-soft">{site.address.join(" | ")}</p>
+            {site.address.length > 0 && (
+              <p className="mt-4 text-sm text-ink-soft">{site.address.join(" | ")}</p>
+            )}
           </div>
         </div>
 
