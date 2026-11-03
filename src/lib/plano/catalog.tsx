@@ -87,6 +87,7 @@ export const CATALOG: CatalogGroup[] = [
     label: "Construcción",
     items: [
       { key: "tabique", label: "Tabique", w: 200, h: 12, draw: () => (<rect x={-100} y={-6} width={200} height={12} fill={WALL} stroke={WALL} />) },
+      { key: "portero", label: "Portero automático", w: 150, h: 9, draw: () => (<><rect x={-75} y={-4} width={150} height={9} rx={3} fill={WALL} stroke={WALL} /><rect x={-70} y={-7} width={18} height={14} rx={2} fill="#1f2937" /><circle cx={0} cy={0} r={2.5} fill="#f6821f" /><path d="M-50 -4 L-50 5 M50 -4 L50 5" fill="none" stroke="#1f2937" strokeWidth={1.5} /></>) },
       { key: "puerta", label: "Puerta", w: 90, h: 90, draw: () => (<><path d="M-45 -45 A 90 90 0 0 1 45 45" fill="none" strokeDasharray="10 8" strokeWidth={2} /><rect x={-45} y={-45} width={9} height={90} fill={WALL} stroke={WALL} strokeWidth={1.5} /><circle cx={-45} cy={45} r={5} fill={WALL} stroke="none" /></>) },
       { key: "ventana", label: "Ventana", w: 120, h: 15, draw: () => (<><rect x={-60} y={-7} width={120} height={15} fill="#ffffff" /><path d="M-60 0 H60" fill="none" strokeWidth={2} /></>) },
       { key: "columna", label: "Columna", w: 30, h: 30, draw: () => (<rect x={-15} y={-15} width={30} height={30} fill={WALL} stroke={WALL} />) },
