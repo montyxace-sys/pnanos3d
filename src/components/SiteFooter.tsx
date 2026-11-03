@@ -111,9 +111,10 @@ export default function SiteFooter({ site }: { site: SiteData }) {
       </div>
 
       <div className="border-t border-line px-6 py-5 text-center text-sm font-medium text-ink">
-        &copy; {new Date().getFullYear()} {site.siteName}. Todos los derechos reservados.
-        <span className="mx-2">&bull;</span>
-        <span className="font-semibold text-ink">Diseno y desarrollo por Msoft</span>
+        &copy; {new Date().getFullYear()} TusPlanos3D. Todos los derechos reservados. &mdash; Diseño por
+        <a href="https://msoft.com.es" target="_blank" rel="noopener noreferrer" className="ml-1 font-semibold text-accent hover:underline">
+          Msoft.com.es
+        </a>
       </div>
     </footer>
   );

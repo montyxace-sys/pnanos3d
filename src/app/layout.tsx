@@ -164,7 +164,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-screen bg-transparent text-gray-900 antialiased">
         {children}
-                <footer className="fixed bottom-0 z-50 mb-2 flex w-full flex-wrap justify-center gap-3 text-xs text-muted">
+                <footer className="fixed bottom-0 z-50 mb-2 flex w-full flex-wrap justify-center gap-x-3 gap-y-1 text-xs text-muted">
           <Link href="/" className="hover:text-accent underline">Volver al inicio</Link>
           <Link href="/electricidad/" className="hover:text-accent underline">Electricidad</Link>
           <Link href="/climatizacion/" className="hover:text-accent underline">Climatizacion</Link>
@@ -172,6 +172,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Link href="/contacto/" className="hover:text-accent underline">Contacto</Link>
           <Link href="/aviso-legal/" className="hover:text-accent underline">Aviso legal</Link>
           <Link href="/cookies/" className="hover:text-accent underline">Cookies</Link>
+          <span className="text-muted/60">|</span>
+          <span>&copy; {new Date().getFullYear()} TusPlanos3D &mdash; Diseño por <a href="https://msoft.com.es" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">Msoft.com.es</a></span>
         </footer>
         <ChatWidget />
         <CookieBanner />
