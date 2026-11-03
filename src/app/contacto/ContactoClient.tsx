@@ -81,10 +81,10 @@ export default function ContactoClient() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-14 text-gray-100">
+    <div className="mx-auto max-w-2xl px-6 py-14 text-ink">
       <p className="text-xs font-semibold tracking-[0.2em] text-accent uppercase">Contacto</p>
       <h1 className="mt-3 text-3xl font-bold">¿Tienes alguna pregunta?</h1>
-      <p className="mt-4 text-sm text-gray-300">
+      <p className="mt-4 text-sm text-ink-soft">
         Rellena el formulario y te responderemos en menos de 24 horas. También puedes escribirnos a{" "}
         <a href="mailto:info@tusplanos3d.es" className="text-accent underline">
           info@tusplanos3d.es
@@ -95,7 +95,7 @@ export default function ContactoClient() {
       {status === "ok" ? (
         <div className="mt-8 rounded-xl border border-green-500/30 bg-green-500/10 p-6 text-center">
           <p className="text-lg font-semibold text-green-300">¡Mensaje enviado!</p>
-          <p className="mt-2 text-sm text-gray-300">Te responderemos lo antes posible.</p>
+          <p className="mt-2 text-sm text-ink-soft">Te responderemos lo antes posible.</p>
           <button
             onClick={() => setStatus("idle")}
             className="mt-4 rounded bg-orange-500 px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-orange-400"
@@ -113,7 +113,7 @@ export default function ContactoClient() {
               minLength={2}
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full rounded border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-white focus:border-orange-400 focus:outline-none"
+              className="w-full rounded border border-line bg-paper px-3 py-2 text-sm text-ink focus:border-orange-400 focus:outline-none"
               placeholder="Tu nombre"
             />
           </div>
@@ -124,7 +124,7 @@ export default function ContactoClient() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-white focus:border-orange-400 focus:outline-none"
+              className="w-full rounded border border-line bg-paper px-3 py-2 text-sm text-ink focus:border-orange-400 focus:outline-none"
               placeholder="tu@email.com"
             />
           </div>
@@ -136,7 +136,7 @@ export default function ContactoClient() {
               rows={5}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full rounded border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-white focus:border-orange-400 focus:outline-none resize-none"
+              className="w-full rounded border border-line bg-paper px-3 py-2 text-sm text-ink focus:border-orange-400 focus:outline-none resize-none"
               placeholder="Escribe tu mensaje (mínimo 10 caracteres)..."
             />
           </div>
@@ -155,7 +155,7 @@ export default function ContactoClient() {
           </div>
 
           {/* Captcha anti-spam */}
-          <div className="rounded-lg border border-gray-600 bg-gray-800/50 p-4">
+          <div className="rounded-lg border border-line bg-paper/80 p-4">
             <label className="block text-sm font-medium mb-2">
               Verificación anti-spam: ¿Cuánto es{" "}
               <strong className="text-orange-400">{captcha.question}</strong>?
@@ -166,7 +166,7 @@ export default function ContactoClient() {
               required
               value={captchaInput}
               onChange={(e) => setCaptchaInput(e.target.value)}
-              className="w-full rounded border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-white focus:border-orange-400 focus:outline-none"
+              className="w-full rounded border border-line bg-paper px-3 py-2 text-sm text-ink focus:border-orange-400 focus:outline-none"
               placeholder="Respuesta"
             />
           </div>
@@ -185,9 +185,9 @@ export default function ContactoClient() {
         </form>
       )}
 
-      <div className="mt-12 border-t border-gray-700 pt-6">
+      <div className="mt-12 border-t border-line pt-6">
         <h2 className="text-lg font-semibold">Otros canales</h2>
-        <div className="mt-3 space-y-2 text-sm text-gray-300">
+        <div className="mt-3 space-y-2 text-sm text-ink-soft">
           <p>
             <strong>Email:</strong>{" "}
             <a href="mailto:info@tusplanos3d.es" className="text-accent underline">

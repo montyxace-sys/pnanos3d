@@ -14,9 +14,9 @@ export const metadata: Metadata = {
 
 export default function AvisoLegalPage() {
   return (
-    <div className="mx-auto max-w-4xl px-6 py-14 text-gray-100">
+    <div className="mx-auto max-w-4xl px-6 py-14 text-ink">
       <h1 className="text-3xl font-bold">Aviso legal</h1>
-      <p className="mt-4 text-sm text-gray-300">
+      <p className="mt-4 text-sm text-ink-soft">
         En cumplimiento de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y de Comercio
         Electrónico (LSSI-CE), y de la Ley Orgánica 3/2018, de Protección de Datos Personales y garantía de los derechos
         digitales (LOPDGDD), se facilita la siguiente información.

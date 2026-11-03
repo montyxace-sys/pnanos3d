@@ -91,41 +91,41 @@ export default function ChatWidget() {
   return (
     <>
       {showChip && (
-        <div className="fixed bottom-16 right-4 z-50 rounded-lg border border-orange-400/40 bg-gray-800/90 px-3 py-2 text-[11px] shadow" style={{ maxWidth: "240px" }}>
+        <div className="fixed bottom-16 right-4 z-50 rounded-lg border border-orange-400/40 bg-paper/90 px-3 py-2 text-[11px] shadow" style={{ maxWidth: "240px" }}>
           <p className="text-gray-200">Chat cifrado (E2EE). Comparte la clave con el admin fuera del chat.</p>
-          <button className="absolute -top-1 right-1 text-xs text-gray-400" onClick={() => setShowChip(false)}>x</button>
+          <button className="absolute -top-1 right-1 text-xs text-muted" onClick={() => setShowChip(false)}>x</button>
         </div>
       )}
       <button onClick={() => { setOpen(!open); setShowChip(false); }} className="rounded-full bg-orange-500 px-3 py-2 font-semibold text-gray-900 shadow-lg" style={{ position: "fixed", bottom: "1rem", right: "1rem", zIndex: 50 }}>
         Chat
       </button>
       {open && (
-        <div className="fixed bottom-16 right-4 z-50 w-80 rounded-lg border border-gray-700 bg-gray-800 p-3 shadow-2xl backdrop-blur" style={{ height: "420px" }}>
+        <div className="fixed bottom-16 right-4 z-50 w-80 rounded-lg border border-line bg-paper p-3 shadow-2xl backdrop-blur" style={{ height: "420px" }}>
           <div className="mb-2 flex items-center justify-between">
             <strong className="text-sm text-orange-400">Chat cifrado</strong>
-            <button onClick={() => setOpen(false)} className="text-xs text-gray-400">cerrar</button>
+            <button onClick={() => setOpen(false)} className="text-xs text-muted">cerrar</button>
           </div>
 
           {!passphrase ? (
             <div className="mb-2 space-y-2 text-xs">
-              <p className="text-gray-300">Define una clave compartida (no la envies por este chat):</p>
-              <input value={passInput} onChange={(e) => setPassInput(e.target.value)} className="w-full rounded border border-gray-600 bg-gray-900 px-2 py-1 text-xs text-white" placeholder="clave..." />
+              <p className="text-ink-soft">Define una clave compartida (no la envies por este chat):</p>
+              <input value={passInput} onChange={(e) => setPassInput(e.target.value)} className="w-full rounded border border-line bg-paper-2 px-2 py-1 text-xs text-ink" placeholder="clave..." />
               <button onClick={savePassphrase} className="rounded bg-orange-500 px-2 py-1 text-xs font-bold text-gray-900">Guardar clave</button>
               {error && <p className="text-red-400">{error}</p>}
             </div>
           ) : (
-            <div className="mb-2 text-[10px] text-gray-400">
+            <div className="mb-2 text-[10px] text-muted">
               Hilo: {threadId?.slice(0, 8)}... · clave guardada localmente.
             </div>
           )}
 
-          <div className="mb-2 h-52 overflow-y-auto space-y-2 rounded bg-gray-900 p-2 text-xs">
+          <div className="mb-2 h-52 overflow-y-auto space-y-2 rounded bg-paper-2 p-2 text-xs">
             {messages.map((m, i) => (
               <div key={m.id || i} className={m.from === "bot" ? "text-gray-200" : "text-right text-orange-300"}>
                 {m.text}
               </div>
             ))}
-            {typing && <div className="text-gray-400">escribiendo...</div>}
+            {typing && <div className="text-muted">escribiendo...</div>}
           </div>
 
           <div className="flex gap-2">
@@ -134,7 +134,7 @@ export default function ChatWidget() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && send()}
               disabled={!passphrase}
-              className="flex-1 rounded border border-gray-600 bg-gray-900 px-2 py-1 text-xs text-white focus:border-orange-400 focus:outline-none disabled:opacity-50"
+              className="flex-1 rounded border border-line bg-paper-2 px-2 py-1 text-xs text-ink focus:border-orange-400 focus:outline-none disabled:opacity-50"
               placeholder={passphrase ? "mensaje cifrado..." : "define clave primero"}
             />
             <button onClick={send} disabled={!passphrase} className="rounded bg-orange-500 px-2 py-1 text-xs font-bold text-gray-900 disabled:opacity-50">

@@ -36,7 +36,7 @@ export default function AccountClient() {
       <h1 className="text-2xl font-bold">Mi cuenta</h1>
       <p className="text-muted">Conectado: {email}</p>
       <button
-        className="rounded bg-gray-700 px-4 py-2 text-sm text-white"
+        className="rounded bg-paper-2 px-4 py-2 text-sm text-ink"
         onClick={async () => {
           const sb = getBrowserSupabase();
           await sb?.auth.signOut();

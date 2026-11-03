@@ -51,7 +51,7 @@ export default function LoginClient() {
       {user ? (
         <>
           <p className="text-muted">Conectado como {user}</p>
-          <button onClick={logout} className="rounded bg-gray-700 px-4 py-2 text-sm text-white">
+          <button onClick={logout} className="rounded bg-paper-2 px-4 py-2 text-sm text-ink">
             Cerrar sesión
           </button>
         </>
@@ -63,7 +63,7 @@ export default function LoginClient() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="email@ejemplo.com"
-            className="w-full rounded border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-white"
+            className="w-full rounded border border-line bg-paper-2 px-3 py-2 text-sm text-ink"
           />
           <input
             type="password"
@@ -72,7 +72,7 @@ export default function LoginClient() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="contraseña (mín. 6)"
-            className="w-full rounded border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-white"
+            className="w-full rounded border border-line bg-paper-2 px-3 py-2 text-sm text-ink"
           />
           {error && <p className="text-sm text-red-400">{error}</p>}
           <button type="submit" className="w-full rounded bg-orange-500 px-4 py-2 font-semibold text-gray-900">
@@ -81,7 +81,7 @@ export default function LoginClient() {
           <button
             type="button"
             onClick={() => setMode(mode === "signup" ? "login" : "signup")}
-            className="w-full text-xs text-gray-400 hover:text-orange-400"
+            className="w-full text-xs text-muted hover:text-orange-400"
           >
             {mode === "signup" ? "Ya tengo cuenta" : "Crear cuenta nueva"}
           </button>

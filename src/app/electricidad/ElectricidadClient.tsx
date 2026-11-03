@@ -91,19 +91,19 @@ export default function ElectricidadClient() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-10 text-gray-100">
+    <div className="mx-auto max-w-5xl px-6 py-10 text-ink">
       <div className="mb-6 flex items-center gap-3">
         {logoSrc && <img src={logoSrc} alt="TusPlanos3D" width={140} height={40} className="h-9 w-auto" />}
-        <span className="text-xs font-semibold tracking-[0.16em] text-gray-400 uppercase">Generador + calculadoras</span>
+        <span className="text-xs font-semibold tracking-[0.16em] text-muted uppercase">Generador + calculadoras</span>
       </div>
-      <h1 className="text-3xl font-bold text-white">Calculadora de potencia electrica contratada</h1>
-      <p className="mt-2 text-sm text-gray-300">Calcula la potencia contratada a partir de tus aparatos y superficie.</p>
-      <p className="mt-2 text-sm text-gray-300">
+      <h1 className="text-3xl font-bold text-ink">Calculadora de potencia electrica contratada</h1>
+      <p className="mt-2 text-sm text-ink-soft">Calcula la potencia contratada a partir de tus aparatos y superficie.</p>
+      <p className="mt-2 text-sm text-ink-soft">
         Selecciona los electrodomesticos y la superficie para estimar la potencia contratada recomendada.
       </p>
 
       <div className="mt-6 grid gap-6 md:grid-cols-2">
-        <div className="rounded-xl border border-gray-700 bg-gray-800 p-5">
+        <div className="rounded-xl border border-line bg-paper p-5">
           <h2 className="text-lg font-semibold mb-3">Electrodomesticos</h2>
           <div className="space-y-2">
             {APPLIANCES.map((a) => (
@@ -114,58 +114,58 @@ export default function ElectricidadClient() {
                   min={0}
                   value={counts[a.id] ?? 0}
                   onChange={(e) => setCounts((prev) => ({ ...prev, [a.id]: Math.max(0, Number(e.target.value) || 0) }))}
-                  className="w-16 rounded border border-gray-600 bg-gray-700 px-2 py-1 text-right"
+                  className="w-16 rounded border border-line bg-paper-2 px-2 py-1 text-right"
                 />
               </div>
             ))}
             <div className="flex items-center justify-between gap-3 text-sm pt-2">
               <label className="flex-1">Superficie (m2) para iluminacion</label>
               <input type="number" min={10} value={m2} onChange={(e) => setM2(Math.max(10, Number(e.target.value) || 10))}
-                     className="w-16 rounded border border-gray-600 bg-gray-700 px-2 py-1 text-right"/>
+                     className="w-16 rounded border border-line bg-paper-2 px-2 py-1 text-right"/>
             </div>
           </div>
         </div>
 
-        <div className="rounded-xl border border-gray-700 bg-gray-800 p-5">
+        <div className="rounded-xl border border-line bg-paper p-5">
           <h2 className="text-lg font-semibold mb-3">Parametros</h2>
           <label className="block text-sm mb-1">Factor de coincidencia: {factor}</label>
           <input type="range" min={0.4} max={1} step={0.05} value={factor} onChange={(e) => setFactor(Number(e.target.value))}
                  className="w-full"/>
-          <p className="text-xs text-gray-400 mb-3">0,7 recomendado (no todos los aparatos funcionan a la vez).</p>
+          <p className="text-xs text-muted mb-3">0,7 recomendado (no todos los aparatos funcionan a la vez).</p>
           <label className="block text-sm mb-1">Margen de seguridad: {margin}%</label>
           <input type="range" min={0} max={40} step={5} value={margin} onChange={(e) => setMargin(Number(e.target.value))}
                  className="w-full"/>
-          <p className="text-xs text-gray-400 mb-4">Anade reserva para puntas de arranque.</p>
+          <p className="text-xs text-muted mb-4">Anade reserva para puntas de arranque.</p>
           <label className="block text-sm mb-1">Precio energia (€/kWh): {price}</label>
           <input type="number" step="0.001" min={0.05} value={price} onChange={(e) => setPrice(Math.max(0.05, Number(e.target.value) || 0.16))}
-                 className="w-full rounded border border-gray-600 bg-gray-700 px-2 py-1.5 mb-3"/>
+                 className="w-full rounded border border-line bg-paper-2 px-2 py-1.5 mb-3"/>
           <label className="block text-sm mb-1">Consumo mensual estimado (kWh): {monthlyKwh}</label>
           <input type="number" min={50} value={monthlyKwh} onChange={(e) => setMonthlyKwh(Math.max(50, Number(e.target.value) || 250))}
-                 className="w-full rounded border border-gray-600 bg-gray-700 px-2 py-1.5 mb-4"/>
+                 className="w-full rounded border border-line bg-paper-2 px-2 py-1.5 mb-4"/>
 
-          <div className="rounded-lg bg-gray-900 p-4 border border-gray-700">
-            <div className="text-sm text-gray-300">Potencia instalada</div>
+          <div className="rounded-lg bg-paper-2 p-4 border border-line">
+            <div className="text-sm text-ink-soft">Potencia instalada</div>
             <div className="text-2xl font-bold">{(result.installed / 1000).toFixed(2)} kW</div>
-            <div className="text-sm text-gray-300 mt-2">Potencia estimada (coincidencia)</div>
+            <div className="text-sm text-ink-soft mt-2">Potencia estimada (coincidencia)</div>
             <div className="text-2xl font-bold">{(result.used / 1000).toFixed(2)} kW</div>
-            <div className="text-sm text-gray-300 mt-2">Con margen de seguridad</div>
+            <div className="text-sm text-ink-soft mt-2">Con margen de seguridad</div>
             <div className="text-2xl font-bold">{(result.withMargin / 1000).toFixed(2)} kW</div>
             <div className="mt-4 text-lg font-semibold text-orange-400">
               Contratacion recomendada: {result.rec} kW
             </div>
-            <div className="text-sm text-gray-300 mt-1">
+            <div className="text-sm text-ink-soft mt-1">
               ICP recomendado (230V): {result.icp} A (aprox. {(result.amps).toFixed(1)} A)
             </div>
-            <div className="text-sm text-gray-300 mt-2">
+            <div className="text-sm text-ink-soft mt-2">
               Coste estimado mensual: {(price * monthlyKwh).toFixed(2)} € ({monthlyKwh} kWh × {price.toFixed(3)} €/kWh)
             </div>
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="text-xs text-muted mt-2">
               El ICP (interruptor) debe tener capacidad igual o superior a la potencia contratada.
             </p>
           </div>
 
           <div className="mt-4 flex gap-2">
-            <button onClick={exportCSV} className="rounded bg-gray-700 px-4 py-2 text-sm text-white hover:bg-gray-600">
+            <button onClick={exportCSV} className="rounded bg-paper-2 px-4 py-2 text-sm text-ink hover:bg-line">
               Exportar CSV
             </button>
             <button onClick={() => window.print()} className="rounded bg-orange-500 px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-orange-400">

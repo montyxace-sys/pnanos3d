@@ -49,46 +49,46 @@ export default function ClimatizacionPage() {
   }, [m2, exposure, occupants, appliances]);
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-10 text-gray-100">
+    <div className="mx-auto max-w-5xl px-6 py-10 text-ink">
       <div className="mb-6 flex items-center gap-3">
         {logoSrc && <img src={logoSrc} alt="TusPlanos3D" width={140} height={40} className="h-9 w-auto" />}
-        <span className="text-xs font-semibold tracking-[0.16em] text-gray-400 uppercase">Generador + calculadoras</span>
+        <span className="text-xs font-semibold tracking-[0.16em] text-muted uppercase">Generador + calculadoras</span>
       </div>
-      <h1 className="text-3xl font-bold text-white">Calculadora de climatizacion y frigorias</h1>
-      <p className="mt-2 text-sm text-gray-300">
+      <h1 className="text-3xl font-bold text-ink">Calculadora de climatizacion y frigorias</h1>
+      <p className="mt-2 text-sm text-ink-soft">
         Dimensiona la potencia de climatizacion recomendada segun superficie y condiciones.
       </p>
 
       <div className="mt-6 grid gap-6 md:grid-cols-2">
-        <div className="rounded-xl border border-gray-700 bg-gray-800 p-5">
+        <div className="rounded-xl border border-line bg-paper p-5">
           <h2 className="text-lg font-semibold mb-3">Datos de la vivienda</h2>
           <label className="block text-sm mb-1">Superficie (m2)</label>
           <input type="number" min={10} value={m2} onChange={(e) => setM2(Math.max(10, Number(e.target.value) || 10))}
-                 className="w-full rounded border border-gray-600 bg-gray-700 px-2 py-1.5 mb-3"/>
+                 className="w-full rounded border border-line bg-paper-2 px-2 py-1.5 mb-3"/>
           <label className="block text-sm mb-1">Exposicion solar</label>
           <select value={exposure} onChange={(e) => setExposure(e.target.value as "sombra" | "normal" | "sol")}
-                  className="w-full rounded border border-gray-600 bg-gray-700 px-2 py-1.5 mb-3">
+                  className="w-full rounded border border-line bg-paper-2 px-2 py-1.5 mb-3">
             <option value="sombra">Sombra / orientacion norte</option>
             <option value="normal">Normal / mixta</option>
             <option value="sol">Sol directo / mucho cerramiento</option>
           </select>
           <label className="block text-sm mb-1">Personas habituales</label>
           <input type="number" min={1} value={occupants} onChange={(e) => setOccupants(Math.max(1, Number(e.target.value) || 1))}
-                 className="w-full rounded border border-gray-600 bg-gray-700 px-2 py-1.5 mb-3"/>
+                 className="w-full rounded border border-line bg-paper-2 px-2 py-1.5 mb-3"/>
           <label className="block text-sm mb-1">Equipos electricos adicionales</label>
           <input type="number" min={0} value={appliances} onChange={(e) => setAppliances(Math.max(0, Number(e.target.value) || 0))}
-                 className="w-full rounded border border-gray-600 bg-gray-700 px-2 py-1.5 mb-3"/>
-          <p className="text-xs text-gray-400">Cocina, PCs, iluminacion extra, etc.</p>
+                 className="w-full rounded border border-line bg-paper-2 px-2 py-1.5 mb-3"/>
+          <p className="text-xs text-muted">Cocina, PCs, iluminacion extra, etc.</p>
         </div>
 
-        <div className="rounded-xl border border-gray-700 bg-gray-800 p-5">
+        <div className="rounded-xl border border-line bg-paper p-5">
           <h2 className="text-lg font-semibold mb-3">Recomendacion</h2>
-          <div className="rounded-lg bg-gray-900 p-4 border border-gray-700">
-            <div className="text-sm text-gray-300">Potencia de refrigeracion</div>
+          <div className="rounded-lg bg-paper-2 p-4 border border-line">
+            <div className="text-sm text-ink-soft">Potencia de refrigeracion</div>
             <div className="text-2xl font-bold">{(result.cooling / 1000).toFixed(2)} kW</div>
-            <div className="text-sm text-gray-300 mt-2">Potencia de calefaccion</div>
+            <div className="text-sm text-ink-soft mt-2">Potencia de calefaccion</div>
             <div className="text-2xl font-bold">{(result.heating / 1000).toFixed(2)} kW</div>
-            <div className="text-sm text-gray-300 mt-2">Equivalente</div>
+            <div className="text-sm text-ink-soft mt-2">Equivalente</div>
             <div className="text-xl font-bold text-orange-400">{result.btu} BTU (aprox.)</div>
             <div className="mt-4 text-lg font-semibold text-cyan-300">
               Unidad recomendada: {result.unit} W
@@ -96,10 +96,10 @@ export default function ClimatizacionPage() {
             <div className="mt-3 rounded-lg border border-emerald-400/30 bg-emerald-500/10 p-3">
               <div className="text-sm font-semibold text-emerald-300">Regla rapida (130 frig/m2)</div>
               <div className="text-2xl font-bold text-emerald-200">{result.frigorias.toLocaleString("es-ES")} frig/h</div>
-              <p className="text-xs text-gray-300 mt-1">
+              <p className="text-xs text-ink-soft mt-1">
                 {m2} m2 utiles x 130 frig/m2. Unidad orientativa: {result.frigUnit} W.
               </p>
-              <p className="text-xs text-gray-300 mt-2">
+              <p className="text-xs text-ink-soft mt-2">
                 ¿Necesitas instalación profesional? Pide presupuesto en{" "}
                 <a href="https://climont.es/contacto" target="_blank" rel="noopener noreferrer" className="font-semibold text-orange-400 hover:text-orange-300 underline">
                   climont.es
@@ -107,14 +107,14 @@ export default function ClimatizacionPage() {
                 .
               </p>
             </div>
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="text-xs text-muted mt-2">
               Regla orientativa: 100 W/m2 base + ocupantes + equipos + factor solar.
             </p>
             <div className="mt-4 rounded-xl border border-orange-400/30 bg-orange-500/10 p-3">
               <p className="text-sm font-semibold text-orange-300">
                 ¿Necesitas instalación profesional?
               </p>
-              <p className="text-xs text-gray-300 mt-1">
+              <p className="text-xs text-ink-soft mt-1">
                 Envía tu proyecto a climont.es y recibe un presupuesto real de instalación.
               </p>
               <a

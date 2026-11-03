@@ -72,34 +72,34 @@ export default function AdminChatPage() {
   if (!isAdmin) return <div className="mx-auto max-w-3xl px-6 py-16">No autorizado. Tu usuario no esta en chat_admins.</div>;
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-10 text-gray-100">
+    <div className="mx-auto max-w-6xl px-6 py-10 text-ink">
       <h1 className="text-3xl font-bold mb-6">Chat de soporte (admin)</h1>
       <div className="grid gap-6 md:grid-cols-3">
-        <div className="rounded-xl border border-gray-700 bg-gray-800 p-4">
+        <div className="rounded-xl border border-line bg-paper p-4">
           <h2 className="font-semibold mb-2">Hilos</h2>
           <div className="space-y-2 max-h-96 overflow-y-auto">
             {threads.map((t) => (
-              <button key={t.id} onClick={() => setSelected(t.id)} className={`w-full text-left text-sm rounded px-2 py-1.5 ${selected === t.id ? "bg-orange-500/20 text-orange-300" : "hover:bg-gray-700"}`}>
+              <button key={t.id} onClick={() => setSelected(t.id)} className={`w-full text-left text-sm rounded px-2 py-1.5 ${selected === t.id ? "bg-orange-500/20 text-orange-300" : "hover:bg-paper-2"}`}>
                 {t.id.slice(0, 8)} · {t.user_id.slice(0, 8)}
               </button>
             ))}
-            {threads.length === 0 && <p className="text-xs text-gray-400">Sin hilos.</p>}
+            {threads.length === 0 && <p className="text-xs text-muted">Sin hilos.</p>}
           </div>
         </div>
 
-        <div className="md:col-span-2 rounded-xl border border-gray-700 bg-gray-800 p-4">
+        <div className="md:col-span-2 rounded-xl border border-line bg-paper p-4">
           {!selected ? (
-            <p className="text-sm text-gray-400">Selecciona un hilo.</p>
+            <p className="text-sm text-muted">Selecciona un hilo.</p>
           ) : (
             <>
               <div className="mb-3 flex items-center gap-2">
-                <input value={passInput} onChange={(e) => setPassInput(e.target.value)} className="rounded border border-gray-600 bg-gray-900 px-2 py-1 text-xs text-white" placeholder="clave compartida" />
+                <input value={passInput} onChange={(e) => setPassInput(e.target.value)} className="rounded border border-line bg-paper-2 px-2 py-1 text-xs text-ink" placeholder="clave compartida" />
                 <button onClick={() => { if (passInput.trim()) { setPassphrase(passInput.trim()); setPassInput(""); } }} className="rounded bg-orange-500 px-2 py-1 text-xs font-semibold text-gray-900">
                   Usar clave
                 </button>
                 {passphrase && <span className="text-xs text-green-400">clave activa</span>}
               </div>
-              <div className="h-64 overflow-y-auto space-y-2 rounded bg-gray-900 p-2 text-xs mb-3">
+              <div className="h-64 overflow-y-auto space-y-2 rounded bg-paper-2 p-2 text-xs mb-3">
                 {messages.map((m, i) => (
                   <div key={m.id || i} className={m.from === "admin" ? "text-right text-orange-300" : "text-gray-200"}>
                     {m.text}
@@ -107,7 +107,7 @@ export default function AdminChatPage() {
                 ))}
               </div>
               <div className="flex gap-2">
-                <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && reply()} className="flex-1 rounded border border-gray-600 bg-gray-900 px-2 py-1 text-xs text-white" placeholder="responder..." />
+                <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && reply()} className="flex-1 rounded border border-line bg-paper-2 px-2 py-1 text-xs text-ink" placeholder="responder..." />
                 <button onClick={reply} className="rounded bg-orange-500 px-3 py-1 text-xs font-semibold text-gray-900">Enviar</button>
               </div>
             </>
