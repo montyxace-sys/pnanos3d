@@ -14,6 +14,7 @@ export default function ClimatizacionPage() {
   const [exposure, setExposure] = useState<"sombra" | "normal" | "sol">("normal");
   const [occupants, setOccupants] = useState(3);
   const [appliances, setAppliances] = useState(1);
+  const [thermostat, setThermostat] = useState<"ninguno" | "basico" | "programable" | "inteligente">("basico");
   const [logoSrc, setLogoSrc] = useState<string | null>(null);
 
   useEffect(() => {
@@ -80,6 +81,19 @@ export default function ClimatizacionPage() {
           <input type="number" min={0} value={appliances} onChange={(e) => setAppliances(Math.max(0, Number(e.target.value) || 0))}
                  className="w-full rounded border border-line bg-paper-2 px-2 py-1.5 mb-3"/>
           <p className="text-xs text-muted">Cocina, PCs, iluminacion extra, etc.</p>
+
+
+          <label className="block text-sm mb-1">Accionamiento del equipo</label>
+          <select value={thermostat} onChange={(e) => setThermostat(e.target.value as "ninguno" | "basico" | "programable" | "inteligente")} className="w-full rounded border border-line bg-paper-2 px-2 py-1.5 mb-3">
+            <option value="ninguno">Sin termostato / manual</option>
+            <option value="basico">Termostato basico (ON/OFF)</option>
+            <option value="programable">Termostato programable</option>
+            <option value="inteligente">Termostato inteligente / app</option>
+          </select>
+          <p className="text-xs text-muted">
+            El termostato no altera el dimensionado: aporta confort y ahorro. El aislamiento solar y ocupantes siguen
+            dominando la potencia de {result.unit} W recomendada.
+          </p>
         </div>
 
         <div className="rounded-xl border border-line bg-paper p-5">
