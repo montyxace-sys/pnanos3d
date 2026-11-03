@@ -5,6 +5,7 @@ import Link from "next/link";
 import { BarChart, LineChart, DonutChart } from "@/components/Charts";
 import { Eye, Users, Globe, Monitor, Smartphone, Tablet, TrendingUp, Calendar, MapPin } from "lucide-react";
 import AdminChat from "@/components/AdminChat";
+import GoogleTools from "@/components/GoogleTools";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -32,7 +33,7 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
-  const [tab, setTab] = useState<"stats" | "chat">("stats");
+  const [tab, setTab] = useState<"stats" | "chat" | "google">("stats");
   const [range, setRange] = useState<Range>("30d");
 
   async function load() {
@@ -190,10 +191,18 @@ export default function AdminPage() {
         >
           Chat soporte
         </button>
+        <button
+          onClick={() => setTab("google")}
+          className={`px-4 py-2 text-sm font-semibold ${tab === "google" ? "border-b-2 border-orange-500 text-ink" : "text-muted hover:text-ink"}`}
+        >
+          Herramientas Google
+        </button>
       </div>
 
       {tab === "chat" ? (
         <AdminChat />
+      ) : tab === "google" ? (
+        <GoogleTools />
       ) : (
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
