@@ -85,7 +85,15 @@ h3 {
 
 @media print {
   /* Solo se imprime la hoja del plano: todo lo demás se oculta. */
-  body > *:not(#print-root) {
+  /* Solo ocultamos todo si hay un bloque imprimible #print-root (generador de planos).
+     En otras paginas (electricidad, climatizacion, ...) el navegador imprime el contenido tal cual. */
+  body:has(#print-root) > *:not(#print-root) {
+    display: none !important;
+  }
+
+  /* Chrome no imprimible en paginas normales. */
+  .fixed,
+  .no-print {
     display: none !important;
   }
 
