@@ -72,6 +72,7 @@ export const CATALOG: CatalogGroup[] = [
     label: "Baño",
     items: [
       { key: "inodoro", label: "Inodoro", w: 40, h: 70, draw: () => (<><rect x={-20} y={-35} width={40} height={18} rx={4} /><rect x={-17} y={-17} width={34} height={52} rx={14} /><circle cx={0} cy={6} r={9} fill="none" /></>) },
+      { key: "bide", label: "Bidé", w: 40, h: 55, draw: () => (<><rect x={-20} y={-27} width={40} height={55} rx={14} /><rect x={-14} y={-15} width={28} height={30} rx={10} fill="none" /><circle cx={0} cy={-10} r={4} fill="none" /></>) },
       { key: "lavabo", label: "Lavabo", w: 55, h: 45, draw: () => (<><rect x={-27} y={-22} width={55} height={45} rx={8} /><ellipse cx={0} cy={3} rx={17} ry={12} fill="none" /><circle cx={0} cy={-14} r={4} fill="none" /></>) },
       { key: "ducha", label: "Ducha", w: 90, h: 90, draw: () => (<><rect x={-45} y={-45} width={90} height={90} rx={5} /><path d="M-45 -45 L45 45" fill="none" /><circle cx={0} cy={0} r={6} fill="none" /></>) },
       { key: "banera", label: "Bañera", w: 170, h: 75, draw: () => (<><rect x={-85} y={-37} width={170} height={75} rx={16} /><rect x={-74} y={-27} width={148} height={55} rx={12} fill="none" /><circle cx={62} cy={0} r={5} fill="none" /></>) },      { key: "espejo", label: "Espejo", w: 80, h: 12, draw: () => (<><rect x={-40} y={-10} width={80} height={20} rx={4} fill="#faf9f7" stroke="#1c1f24" /><rect x={-34} y={-6} width={68} height={12} fill="#dce6f1" stroke="#4a5568" /><path d="M-18 -6 H18" fill="none" stroke="#94a3b8" strokeWidth={1.5} /></>) },
