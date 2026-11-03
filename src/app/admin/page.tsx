@@ -47,19 +47,18 @@ export default function AdminPage() {
     try {
       const days = range === "7d" ? 7 : range === "30d" ? 30 : 90;
       const since = new Date(Date.now() - days * 86400000).toISOString();
+      const u1 = `${SUPABASE_URL}/rest/v1/analytics_events?select=*&order=created_at.desc&limit=5000`;
+      const u2 = `${SUPABASE_URL}/rest/v1/contact_submissions?select=*&order=created_at.desc&limit=100`;
+      console.log("[admin] fetch", u1, u2);
       const [evRes, subRes] = await Promise.all([
-        fetch(`${SUPABASE_URL}/rest/v1/analytics_events?select=*&order=created_at.desc&limit=5000`, {
-          headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
-        }),
-        fetch(`${SUPABASE_URL}/rest/v1/contact_submissions?select=*&order=created_at.desc&limit=100`, {
-          headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
-        }),
+        fetch(u1, { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }),
+        fetch(u2, { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }),
       ]);
       const evText = await evRes.text();
       const subText = await subRes.text();
       if (!evRes.ok || !subRes.ok) {
-        console.error("admin load fail", evRes.status, evText, subRes.status, subText);
-        throw new Error("Error al cargar datos (" + evRes.status + "/" + subRes.status + "): " + (evText || subText));
+        console.error("[admin] load fail", evRes.status, evText, subRes.status, subText);
+        throw new Error("Error al cargar datos (" + evRes.status + "/" + subRes.status + "): " + (evText || subText) + "\nURL1=" + u1);
       }
       setEvents(evText ? JSON.parse(evText) : []);
       setSubmissions(subText ? JSON.parse(subText) : []);
