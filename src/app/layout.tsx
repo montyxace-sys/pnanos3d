@@ -159,8 +159,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es">
       <head>
-        <link rel="preconnect" href="https://kvfjvqxcojyzbccsbokg.supabase.co" />
-        <link rel="dns-prefetch" href="https://kvfjvqxcojyzbccsbokg.supabase.co" />
+        <link rel="preconnect" href="https://lgwaffbjlggfwwushjoz.supabase.co" />
+        <link rel="dns-prefetch" href="https://lgwaffbjlggfwwushjoz.supabase.co" />
       </head>
       <body className="min-h-screen bg-transparent text-gray-900 antialiased">
         {children}

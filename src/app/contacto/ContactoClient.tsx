@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 function generateCaptcha() {
   const a = Math.floor(Math.random() * 9) + 1;
@@ -59,7 +60,10 @@ export default function ContactoClient() {
 
       const res = await fetch(`${SUPABASE_URL}/functions/v1/contact-notify`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(SUPABASE_ANON_KEY ? { Authorization: "Bearer " + SUPABASE_ANON_KEY } : {}),
+        },
         body: JSON.stringify({ name, email, message, captchaAnswer: parseInt(captchaInput, 10), captchaExpected: captcha.answer }),
       });
 
