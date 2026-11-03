@@ -17,6 +17,6 @@
 
   <!-- Wordmark (blanco+naranja para que se lea en fondo oscuro) -->
   <text x="112" y="66" font-family="'Segoe UI', Helvetica, Arial, sans-serif" font-size="46" letter-spacing="-1">
-    <tspan font-weight="400" fill="#1d1f23">Tus</tspan><tspan font-weight="700" fill="#1d1f23">Planos</tspan><tspan font-weight="700" fill="#f6821f">3D</tspan>
+    <tspan font-weight="400" fill="#0a0c0f">Tus</tspan><tspan font-weight="700" fill="#0a0c0f">Planos</tspan><tspan font-weight="700" fill="#f6821f">3D</tspan>
   </text>
 </svg>
