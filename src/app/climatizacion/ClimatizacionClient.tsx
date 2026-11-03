@@ -54,7 +54,7 @@ export default function ClimatizacionPage() {
         {logoSrc && <img src={logoSrc} alt="TusPlanos3D" width={140} height={40} className="h-9 w-auto" />}
         <span className="text-xs font-semibold tracking-[0.16em] text-gray-400 uppercase">Generador + calculadoras</span>
       </div>
-      <h1 className="text-3xl font-bold text-white">Climatizacion minima</h1>
+      <h1 className="text-3xl font-bold text-white">Calculadora de climatizacion y frigorias</h1>
       <p className="mt-2 text-sm text-gray-300">
         Dimensiona la potencia de climatizacion recomendada segun superficie y condiciones.
       </p>

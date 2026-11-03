@@ -96,7 +96,7 @@ export default function ElectricidadClient() {
         {logoSrc && <img src={logoSrc} alt="TusPlanos3D" width={140} height={40} className="h-9 w-auto" />}
         <span className="text-xs font-semibold tracking-[0.16em] text-gray-400 uppercase">Generador + calculadoras</span>
       </div>
-      <h1 className="text-3xl font-bold text-white">Contratacion minima de electricidad</h1>
+      <h1 className="text-3xl font-bold text-white">Calculadora de potencia electrica contratada</h1>
       <p className="mt-2 text-sm text-gray-300">Calcula la potencia contratada a partir de tus aparatos y superficie.</p>
       <p className="mt-2 text-sm text-gray-300">
         Selecciona los electrodomesticos y la superficie para estimar la potencia contratada recomendada.
