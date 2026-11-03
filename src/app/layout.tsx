@@ -4,6 +4,7 @@ import Script from "next/script";
 import ChatWidget from "@/components/ChatWidget";
 import CookieBanner from "@/components/CookieBanner";
 import "./globals.css";
+import AnalyticsTracker from "@/components/AnalyticsTracker";
 import SiteFooter from "@/components/SiteFooter";
 
 const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://tusplanos3d.es").replace(/\/$/, "");
@@ -164,6 +165,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="dns-prefetch" href="https://lgwaffbjlggfwwushjoz.supabase.co" />
       </head>
       <body className="min-h-screen bg-transparent text-gray-900 antialiased">
+        <AnalyticsTracker />
         {children}
                 <SiteFooter />
 

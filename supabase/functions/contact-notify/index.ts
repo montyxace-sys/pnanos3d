@@ -57,6 +57,25 @@ Deno.serve(async (req: Request) => {
     return json({ ok: false, error: "captcha_failed" }, 400);
   }
 
+  // Registrar la submission en Supabase para el panel de admin (best-effort)
+  try {
+    const sUrl = Deno.env.get("SUPABASE_URL");
+    const sKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || Deno.env.get("SERVICE_ROLE_KEY");
+    if (sUrl && sKey) {
+      await fetch(`${sUrl}/rest/v1/contact_submissions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: sKey,
+          Authorization: `Bearer ${sKey}`,
+        },
+        body: JSON.stringify({ name, email, message }),
+      });
+    }
+  } catch (e) {
+    console.warn("contact-notify: no se pudo guardar la submission", e);
+  }
+
   const apiKey = Deno.env.get("RESEND_API_KEY");
   const to = Deno.env.get("CONTACT_TO_EMAIL") ?? "info@tusplanos3d.es";
   const from = Deno.env.get("CONTACT_FROM_EMAIL") ?? "onboarding@resend.dev";
