@@ -48,7 +48,7 @@ export default function AdminPage() {
       const days = range === "7d" ? 7 : range === "30d" ? 30 : 90;
       const since = new Date(Date.now() - days * 86400000).toISOString();
       const [evRes, subRes] = await Promise.all([
-        fetch(`${SUPABASE_URL}/rest/v1/analytics_events?select=*&created_at=gte.${encodeURIComponent(since)}&order=created_at.desc&limit=5000`, {
+        fetch(`${SUPABASE_URL}/rest/v1/analytics_events?select=*&order=created_at.desc&limit=5000`, {
           headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
         }),
         fetch(`${SUPABASE_URL}/rest/v1/contact_submissions?select=*&order=created_at.desc&limit=100`, {
@@ -77,8 +77,9 @@ export default function AdminPage() {
 
   const metrics = useMemo(() => {
     const days = range === "7d" ? 7 : range === "30d" ? 30 : 90;
-    const totalVisits = events.length;
-    const uniqueVisitors = new Set(events.map((v) => v.session_id || String(v.id))).size;
+    const filtered = events.filter((e) => new Date(e.created_at).getTime() >= Date.now() - days * 86400000);
+    const totalVisits = filtered.length;
+    const uniqueVisitors = new Set(filtered.map((v) => v.session_id || String(v.id))).size;
     const avgPerVisitor = uniqueVisitors > 0 ? (totalVisits / uniqueVisitors).toFixed(1) : "0";
 
     const nowD = new Date();
@@ -87,7 +88,7 @@ export default function AdminPage() {
       const d = new Date(nowD.getTime() - i * 86400000);
       dayMap.set(d.toISOString().slice(0, 10), 0);
     }
-    events.forEach((v) => {
+    filtered.forEach((v) => {
       const key = v.created_at.slice(0, 10);
       if (dayMap.has(key)) dayMap.set(key, (dayMap.get(key) || 0) + 1);
     });
@@ -101,7 +102,7 @@ export default function AdminPage() {
     });
 
     const pageMap = new Map<string, number>();
-    events.forEach((v) => {
+    filtered.forEach((v) => {
       const p = v.path || "/";
       pageMap.set(p, (pageMap.get(p) || 0) + 1);
     });
@@ -111,7 +112,7 @@ export default function AdminPage() {
       .slice(0, 8);
 
     const deviceMap = new Map<string, number>();
-    events.forEach((v) => {
+    filtered.forEach((v) => {
       const d = (v.device_type || "desktop").toLowerCase();
       const nice = d === "mobile" ? "Móvil" : d === "tablet" ? "Tablet" : "Escritorio";
       deviceMap.set(nice, (deviceMap.get(nice) || 0) + 1);
@@ -125,7 +126,7 @@ export default function AdminPage() {
       .filter((d) => d.value > 0);
 
     const refMap = new Map<string, number>();
-    events.forEach((v) => {
+    filtered.forEach((v) => {
       if (v.referrer) {
         try {
           const url = new URL(v.referrer);
@@ -144,14 +145,14 @@ export default function AdminPage() {
       .slice(0, 6);
 
     const hourMap = new Array(24).fill(0);
-    events.forEach((v) => {
+    filtered.forEach((v) => {
       const h = new Date(v.created_at).getHours();
       hourMap[h]++;
     });
     const hourly = hourMap.map((value, h) => ({ label: h % 3 === 0 ? `${h}h` : "", value }));
 
     const dowMap = new Array(7).fill(0);
-    events.forEach((v) => {
+    filtered.forEach((v) => {
       const d = new Date(v.created_at).getDay();
       dowMap[d]++;
     });
