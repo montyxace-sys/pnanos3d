@@ -126,7 +126,11 @@ export default function AdminPage() {
       const t2 = await r2.text();
       if (!r1.ok || !r2.ok) {
         console.error("admin load fail", r1.status, t1, r2.status, t2);
-        throw new Error("Error al cargar datos (" + r1.status + "/" + r2.status + "): " + (t1 || "").slice(0, 300));
+        setError("No se pudieron cargar las estadísticas (cache/PostgREST). Se muestran los demás elementos.");
+        setEvents([]);
+        setSubmissions([]);
+        setLoading(false);
+        return;
       }
       setEvents(t1 ? JSON.parse(t1) : []);
       setSubmissions(t2 ? JSON.parse(t2) : []);
