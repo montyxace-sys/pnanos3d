@@ -163,8 +163,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="preconnect" href="https://lgwaffbjlggfwwushjoz.supabase.co" />
         <link rel="dns-prefetch" href="https://lgwaffbjlggfwwushjoz.supabase.co" />
+        
+        <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-NVJSG5HN" crossOrigin="anonymous"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "window.dataLayer = window.dataLayer || [];" +
+              "function gtag(){window.dataLayer.push(arguments);}" +
+              "gtag(\"js\", new Date());" +
+              "gtag(\"config\", \"GTM-NVJSG5HN\");" +
+              "(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-NVJSG5HN');",
+          }}
+        />
+
       </head>
       <body className="min-h-screen bg-transparent text-gray-900 antialiased">
+        
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NVJSG5HN" height="0" width="0" style={{ display: "none", visibility: "hidden" }} title="GTM"></iframe></noscript>
+
         <AnalyticsTracker />
         {children}
                 <SiteFooter />
