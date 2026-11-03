@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import PlanEditor from "@/components/plano/PlanEditor";
 import { siteUrl } from "@/app/sitemap";
 
@@ -31,7 +32,7 @@ export default function HomePage() {
   return (
     <main className="mx-auto max-w-[1400px] px-4 py-6">
       <header className="mb-6 flex items-center gap-3">
-        <Image src="/img/logo.svg" alt="TusPlanos3D" width={205} height={50} className="h-10 w-auto brightness-125 contrast-125" />
+        <Link href="/"><Image src="/img/logo.svg" alt="TusPlanos3D - inicio" width={205} height={50} className="h-10 w-auto brightness-125 contrast-125" /></Link>
         <h1 className="text-xl font-bold text-orange-400">Generador de Planos</h1>
       </header>
       <PlanEditor />

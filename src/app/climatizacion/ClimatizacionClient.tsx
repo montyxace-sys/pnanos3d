@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 
 const STANDARD_AIR = [2000, 2500, 3500, 4500, 5000, 7000, 9000, 12000, 14000, 18000];
 
@@ -51,7 +52,7 @@ export default function ClimatizacionPage() {
   return (
     <div className="mx-auto max-w-5xl px-6 py-10 text-ink">
       <div className="mb-6 flex items-center gap-3">
-        {logoSrc && <img src={logoSrc} alt="TusPlanos3D" width={140} height={40} className="h-9 w-auto" />}
+        {logoSrc && <Link href="/"><img src={logoSrc} alt="TusPlanos3D - inicio" width={140} height={40} className="h-9 w-auto" title="Ir al inicio" /></Link>}
         <span className="text-xs font-semibold tracking-[0.16em] text-muted uppercase">Generador + calculadoras</span>
       </div>
       <h1 className="text-3xl font-bold text-ink">Calculadora de climatizacion y frigorias</h1>

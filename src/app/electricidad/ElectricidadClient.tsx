@@ -1,5 +1,6 @@
 ﻿"use client";
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 
 type Appliance = { id: string; label: string; watts: number; defaultCount?: number };
 
@@ -93,7 +94,7 @@ export default function ElectricidadClient() {
   return (
     <div className="mx-auto max-w-5xl px-6 py-10 text-ink">
       <div className="mb-6 flex items-center gap-3">
-        {logoSrc && <img src={logoSrc} alt="TusPlanos3D" width={140} height={40} className="h-9 w-auto" />}
+        {logoSrc && <Link href="/"><img src={logoSrc} alt="TusPlanos3D - inicio" width={140} height={40} className="h-9 w-auto" /></Link>}
         <span className="text-xs font-semibold tracking-[0.16em] text-muted uppercase">Generador + calculadoras</span>
       </div>
       <h1 className="text-3xl font-bold text-ink">Calculadora de potencia electrica contratada</h1>

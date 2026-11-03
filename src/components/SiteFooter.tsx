@@ -19,11 +19,11 @@ export default function SiteFooter({ site }: { site: SiteData }) {
       <div className="mx-auto grid max-w-6xl gap-10 px-6 py-14 md:grid-cols-3">
         <div className="flex items-start gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          {footerLogo && <img src={footerLogo} alt={site.siteName} width={120} height={36} className="h-9 w-auto shrink-0 opacity-95 brightness-125 contrast-125 drop-shadow-sm" />}
+          {footerLogo && <Link href="/"><img src={footerLogo} alt={`${site.siteName} - inicio`} width={120} height={36} className="h-9 w-auto shrink-0 opacity-95 brightness-125 contrast-125 drop-shadow-sm" /></Link>}
           <div>
             <p className="font-serif text-2xl">{site.siteName}</p>
-            <p className="mt-2 text-sm text-paper/70">{site.tagline}</p>
-            <p className="mt-4 text-sm text-paper/70">{site.address.join(" | ")}</p>
+            <p className="mt-2 text-sm text-ink-soft">{site.tagline}</p>
+            <p className="mt-4 text-sm text-ink-soft">{site.address.join(" | ")}</p>
           </div>
         </div>
 
@@ -33,7 +33,7 @@ export default function SiteFooter({ site }: { site: SiteData }) {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="inline-flex items-center rounded-full border border-paper/15 bg-paper/5 px-3 py-1.5 text-xs font-semibold tracking-wide text-paper/80 uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
+                  className="inline-flex items-center rounded-full border border-line bg-paper px-3 py-1.5 text-xs font-semibold tracking-wide text-ink-soft uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
                 >
                   {item.label}
                 </Link>
@@ -42,7 +42,7 @@ export default function SiteFooter({ site }: { site: SiteData }) {
             <li>
               <Link
                 href="/electricidad/"
-                className="inline-flex items-center rounded-full border border-paper/15 bg-paper/5 px-3 py-1.5 text-xs font-semibold tracking-wide text-paper/80 uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
+                className="inline-flex items-center rounded-full border border-line bg-paper px-3 py-1.5 text-xs font-semibold tracking-wide text-ink-soft uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
               >
                 Electricidad
               </Link>
@@ -50,7 +50,7 @@ export default function SiteFooter({ site }: { site: SiteData }) {
             <li>
               <Link
                 href="/ayuda/"
-                className="inline-flex items-center rounded-full border border-paper/15 bg-paper/5 px-3 py-1.5 text-xs font-semibold tracking-wide text-paper/80 uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
+                className="inline-flex items-center rounded-full border border-line bg-paper px-3 py-1.5 text-xs font-semibold tracking-wide text-ink-soft uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
               >
                 Ayuda
               </Link>
@@ -58,7 +58,7 @@ export default function SiteFooter({ site }: { site: SiteData }) {
             <li>
               <Link
                 href="/aviso-legal/"
-                className="inline-flex items-center rounded-full border border-paper/15 bg-paper/5 px-3 py-1.5 text-xs font-semibold tracking-wide text-paper/80 uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
+                className="inline-flex items-center rounded-full border border-line bg-paper px-3 py-1.5 text-xs font-semibold tracking-wide text-ink-soft uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
               >
                 Aviso legal
               </Link>
@@ -66,7 +66,7 @@ export default function SiteFooter({ site }: { site: SiteData }) {
             <li>
               <Link
                 href="/cookies/"
-                className="inline-flex items-center rounded-full border border-paper/15 bg-paper/5 px-3 py-1.5 text-xs font-semibold tracking-wide text-paper/80 uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
+                className="inline-flex items-center rounded-full border border-line bg-paper px-3 py-1.5 text-xs font-semibold tracking-wide text-ink-soft uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
               >
                 Cookies
               </Link>
@@ -74,7 +74,7 @@ export default function SiteFooter({ site }: { site: SiteData }) {
             <li>
               <Link
                 href="/contacto/"
-                className="inline-flex items-center rounded-full border border-paper/15 bg-paper/5 px-3 py-1.5 text-xs font-semibold tracking-wide text-paper/80 uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
+                className="inline-flex items-center rounded-full border border-line bg-paper px-3 py-1.5 text-xs font-semibold tracking-wide text-ink-soft uppercase transition hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft"
               >
                 Contacto
               </Link>
@@ -84,7 +84,7 @@ export default function SiteFooter({ site }: { site: SiteData }) {
 
         <div className="text-sm">
           <p className="font-semibold tracking-wide uppercase">Contacto</p>
-          <p className="mt-2 space-y-1 text-paper/70">
+          <p className="mt-2 space-y-1 text-ink-soft">
             <a href={`tel:${site.phoneHref}`} className="block hover:text-accent-soft">
               {site.phone}
             </a>
@@ -100,7 +100,7 @@ export default function SiteFooter({ site }: { site: SiteData }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={item.label}
-                  className="group flex h-10 w-10 items-center justify-center rounded-full border border-paper/20 bg-paper/5 text-paper/80 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft hover:shadow-lg"
+                  className="group flex h-10 w-10 items-center justify-center rounded-full border border-line bg-paper text-ink-soft transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-soft hover:text-accent-soft hover:shadow-lg"
                 >
                   <SocialIcon label={item.label} className="h-5 w-5" />
                 </a>
@@ -110,10 +110,10 @@ export default function SiteFooter({ site }: { site: SiteData }) {
         </div>
       </div>
 
-      <div className="border-t border-paper/15 px-6 py-5 text-center text-sm font-medium text-paper">
+      <div className="border-t border-line px-6 py-5 text-center text-sm font-medium text-ink">
         &copy; {new Date().getFullYear()} {site.siteName}. Todos los derechos reservados.
         <span className="mx-2">&bull;</span>
-        <span className="font-semibold text-paper">Diseno y desarrollo por Msoft</span>
+        <span className="font-semibold text-ink">Diseno y desarrollo por Msoft</span>
       </div>
     </footer>
   );
