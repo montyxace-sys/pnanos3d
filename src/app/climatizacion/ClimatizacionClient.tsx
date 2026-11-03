@@ -102,7 +102,7 @@ export default function ClimatizacionPage() {
               </p>
               <p className="text-xs text-ink-soft mt-2">
                 ¿Necesitas instalación profesional? Pide presupuesto en{" "}
-                <a href="https://climont.es/contacto" target="_blank" rel="noopener noreferrer" className="font-semibold text-orange-600 hover:text-orange-700 underline">
+                <a href="https://climont.es/" target="_blank" rel="noopener noreferrer" className="font-semibold text-orange-600 hover:text-orange-700 underline">
                   climont.es
                 </a>
                 .
@@ -119,7 +119,7 @@ export default function ClimatizacionPage() {
                 Envía tu proyecto a climont.es y recibe un presupuesto real de instalación.
               </p>
               <a
-                href="https://climont.es/contacto"
+                href="https://climont.es/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-2 inline-flex rounded bg-orange-500 px-3 py-1.5 text-xs font-semibold text-gray-900 hover:bg-orange-400"
