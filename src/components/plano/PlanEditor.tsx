@@ -602,7 +602,7 @@ export default function PlanEditor() {
             Mobiliario y construcción
           </h2>
           <div className="mt-3 space-y-4">
-            {CATALOG.map((group) => (
+            {[...CATALOG].sort((a, b) => (a.id === "construccion" ? -1 : b.id === "construccion" ? 1 : 0)).map((group) => (
               <section key={group.id}>
                 <h3 className="text-[11px] font-semibold tracking-wider text-accent uppercase">
                   {group.label}
