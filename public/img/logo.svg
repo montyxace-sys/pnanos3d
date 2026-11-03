@@ -12,11 +12,11 @@
     <!-- pared derecha -->
     <polygon points="50,30 88,52 88,32 50,10" fill="#c2410c" />
     <!-- canto superior -->
-    <path d="M12 32 L50 10 L88 32" fill="none" stroke="#4a4a4a" stroke-width="3" stroke-linejoin="round" />
+    <path d="M12 32 L50 10 L88 32" fill="none" stroke="#1a1a1a" stroke-width="3" stroke-linejoin="round" />
   </g>
 
   <!-- Wordmark (blanco+naranja para que se lea en fondo oscuro) -->
   <text x="112" y="66" font-family="'Segoe UI', Helvetica, Arial, sans-serif" font-size="46" letter-spacing="-1">
-    <tspan font-weight="400" fill="#0a0c0f">Tus</tspan><tspan font-weight="700" fill="#0a0c0f">Planos</tspan><tspan font-weight="700" fill="#f6821f">3D</tspan>
+    <tspan font-weight="600" fill="#000000">Tus</tspan><tspan font-weight="800" fill="#000000">Planos</tspan><tspan font-weight="800" fill="#f6821f">3D</tspan>
   </text>
 </svg>

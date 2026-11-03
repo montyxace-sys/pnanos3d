@@ -19,7 +19,7 @@ export default function SiteFooter({ site }: { site: SiteData }) {
       <div className="mx-auto grid max-w-6xl gap-10 px-6 py-14 md:grid-cols-3">
         <div className="flex items-start gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          {footerLogo && <Link href="/"><img src={footerLogo} alt={`${site.siteName} - inicio`} width={120} height={36} className="h-9 w-auto shrink-0 opacity-95 " /></Link>}
+          {footerLogo && <Link href="/"><img src={footerLogo} alt={`${site.siteName} - inicio`} width={120} height={36} className="h-9 w-auto shrink-0 " /></Link>}
           <div>
             <p className="font-serif text-2xl">{site.siteName}</p>
             <p className="mt-2 text-sm text-ink-soft">{site.tagline}</p>
