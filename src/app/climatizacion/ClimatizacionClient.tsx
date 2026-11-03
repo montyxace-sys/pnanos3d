@@ -90,19 +90,19 @@ export default function ClimatizacionPage() {
             <div className="text-sm text-ink-soft mt-2">Potencia de calefaccion</div>
             <div className="text-2xl font-bold">{(result.heating / 1000).toFixed(2)} kW</div>
             <div className="text-sm text-ink-soft mt-2">Equivalente</div>
-            <div className="text-xl font-bold text-orange-400">{result.btu} BTU (aprox.)</div>
-            <div className="mt-4 text-lg font-semibold text-cyan-300">
+            <div className="text-xl font-bold text-orange-600">{result.btu} BTU (aprox.)</div>
+            <div className="mt-4 text-lg font-semibold text-orange-600">
               Unidad recomendada: {result.unit} W
             </div>
-            <div className="mt-3 rounded-lg border border-emerald-400/30 bg-emerald-500/10 p-3">
-              <div className="text-sm font-semibold text-emerald-300">Regla rapida (130 frig/m2)</div>
-              <div className="text-2xl font-bold text-emerald-200">{result.frigorias.toLocaleString("es-ES")} frig/h</div>
+            <div className="mt-3 rounded-lg border border-emerald-200 bg-emerald-50 p-3">
+              <div className="text-sm font-semibold text-emerald-700">Regla rapida (130 frig/m2)</div>
+              <div className="text-2xl font-bold text-emerald-700">{result.frigorias.toLocaleString("es-ES")} frig/h</div>
               <p className="text-xs text-ink-soft mt-1">
                 {m2} m2 utiles x 130 frig/m2. Unidad orientativa: {result.frigUnit} W.
               </p>
               <p className="text-xs text-ink-soft mt-2">
                 ¿Necesitas instalación profesional? Pide presupuesto en{" "}
-                <a href="https://climont.es/contacto" target="_blank" rel="noopener noreferrer" className="font-semibold text-orange-400 hover:text-orange-300 underline">
+                <a href="https://climont.es/contacto" target="_blank" rel="noopener noreferrer" className="font-semibold text-orange-600 hover:text-orange-700 underline">
                   climont.es
                 </a>
                 .
@@ -111,8 +111,8 @@ export default function ClimatizacionPage() {
             <p className="text-xs text-muted mt-2">
               Regla orientativa: 100 W/m2 base + ocupantes + equipos + factor solar.
             </p>
-            <div className="mt-4 rounded-xl border border-orange-400/30 bg-orange-500/10 p-3">
-              <p className="text-sm font-semibold text-orange-300">
+            <div className="mt-4 rounded-xl border border-orange-200 bg-orange-50 p-3">
+              <p className="text-sm font-semibold text-orange-700">
                 ¿Necesitas instalación profesional?
               </p>
               <p className="text-xs text-ink-soft mt-1">
