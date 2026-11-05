@@ -616,9 +616,6 @@ export default function PlanEditor() {
           <button type="button" onClick={exportJson} className={btnPrimary}>
             Guardar copia
           </button>
-          <button type="button" onClick={exportJson} className={btn}>
-            Proyecto JSON
-          </button>
           <button type="button" onClick={() => { const b = window.location.pathname.startsWith("/pnanos3d") ? "/pnanos3d" : ""; window.location.assign(b + "/electricidad/"); }} className={btnPrimary}>
             ⚡ Electricidad
           </button>
