@@ -622,6 +622,9 @@ export default function PlanEditor() {
           <button type="button" onClick={() => { const b = window.location.pathname.startsWith("/pnanos3d") ? "/pnanos3d" : ""; window.location.assign(b + "/climatizacion/"); }} className={btn}>
             ❄️ Climatización
           </button>
+          <button type="button" onClick={() => { const b = window.location.pathname.startsWith("/pnanos3d") ? "/pnanos3d" : ""; window.location.assign(b + "/vista-3d/"); }} className={btnPrimary}>
+            📐 Vista 3D
+          </button>
           <button type="button" onClick={saveToCloud} disabled={cloudBusy} className={btnPrimary}>
             Guardar en la nube
           </button>
