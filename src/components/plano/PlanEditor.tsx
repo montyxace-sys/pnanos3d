@@ -5,6 +5,7 @@ import type { ChangeEvent, PointerEvent as ReactPointerEvent } from "react";
 import PlanSheet from "./PlanSheet";
 import PlanSvg from "./PlanSvg";
 import { CATALOG, CAT_BY_KEY } from "@/lib/plano/catalog";
+import { getBrowserSupabase } from "@/lib/supabase";
 import {
   docFileName,
   downloadBlob,
@@ -101,7 +102,13 @@ export default function PlanEditor() {
   const [doc, setDoc] = useState<PlanDoc>(() => exampleDoc());
   const [selection, setSelection] = useState<Selection>(null);
   const [drawMode, setDrawMode] = useState(false);
+  const [panMode, setPanMode] = useState(false);
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const panStartRef = useRef<{x:number;y:number;pan:{x:number;y:number}}|null>(null);
+  const pinchRef = useRef<number | null>(null);
   const [drawWallType, setDrawWallType] = useState<"carga" | "tabique" | "pladur" | "aluminio">("carga");
+  const [cloudBusy, setCloudBusy] = useState(false);
   const [preview, setPreview] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
   const [cursorPos, setCursorPos] = useState<{ x: number; y: number } | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
@@ -340,6 +347,45 @@ export default function PlanEditor() {
     setMsg(null);
   }
 
+  function saveToCloud() {
+    const sb = getBrowserSupabase();
+    if (!sb) { setMsg("Inicia sesión para guardar en la nube."); return; }
+    (async () => {
+      const { data } = await sb.auth.getSession();
+      const uid = data.session?.user?.id;
+      if (!uid) { setMsg("Sin sesión. Inicia sesión en /login."); return; }
+      setCloudBusy(true);
+      const { error } = await sb.from("projects").insert({
+        owner_id: uid,
+        title: doc.title,
+        payload: doc,
+      });
+      setCloudBusy(false);
+      if (error) { setMsg("No se pudo guardar en la nube."); return; }
+      setMsg("Proyecto guardado en la nube.");
+    })().catch(() => { setCloudBusy(false); setMsg("Error guardando en la nube"); });
+  }
+
+  function loadFromCloud() {
+    const sb = getBrowserSupabase();
+    if (!sb) { setMsg("Inicia sesión para cargar desde la nube."); return; }
+    (async () => {
+      const { data } = await sb.auth.getSession();
+      const uid = data.session?.user?.id;
+      if (!uid) { setMsg("Sin sesión. Inicia sesión en /login."); return; }
+      const { data: rows, error } = await sb.from("projects").select("id,title,updated_at").eq("owner_id", uid).order("updated_at", { ascending: false }).limit(20);
+      if (error || !rows || rows.length === 0) { setMsg("No tienes proyectos en la nube."); return; }
+      const lines = rows.map((r, i) => i + 1 + ") " + (r.title || "Sin título") + " · " + new Date(r.updated_at).toLocaleString("es-ES")).join("\n");
+      const choice = window.prompt("Proyectos guardados (escribe el número):\n" + lines, "1");
+      if (!choice) return;
+      const idx = Number(choice) - 1;
+      if (!Number.isInteger(idx) || idx < 0 || idx >= rows.length) { setMsg("Selección inválida."); return; }
+      const chosen = rows[idx];
+      const { data: proj } = await sb.from("projects").select("payload").eq("id", chosen.id).maybeSingle();
+      if (proj?.payload) { setDoc(proj.payload); setSelection(null); setMsg("Proyecto restaurado desde la nube."); }
+    })().catch(() => setMsg("Error cargando desde la nube"));
+  }
+
   function addPiece(key: string) {
     const item = CAT_BY_KEY[key];
     if (!item) return;
@@ -514,6 +560,12 @@ export default function PlanEditor() {
           <option value="aluminio">Muro de aluminio (15 cm)</option>
         </select>
 
+        <button type="button" onClick={() => setPanMode((v) => !v)} className={btnPrimary}>
+          {panMode ? "Modo mover: activo" : "Mover lienzo (2 dedos"})
+        </button>
+        <button type="button" onClick={() => setZoom((z) => Math.min(3, z + 0.1))} className={btn}>+Zoom</button>
+        <button type="button" onClick={() => setZoom((z) => Math.max(0.5, z - 0.1))} className={btn}>-Zoom</button>
+        <button type="button" onClick={() => { setPan({x:0,y:0}); setZoom(1); }} className={btn}>Ajustar</button>
         <button type="button" onClick={addRoom} className={btn}>
           Añadir estancia
         </button>
@@ -572,6 +624,12 @@ export default function PlanEditor() {
           </button>
           <button type="button" onClick={() => { const b = window.location.pathname.startsWith("/pnanos3d") ? "/pnanos3d" : ""; window.location.assign(b + "/climatizacion/"); }} className={btn}>
             ❄️ Climatización
+          </button>
+          <button type="button" onClick={saveToCloud} disabled={cloudBusy} className={btnPrimary}>
+            Guardar en la nube
+          </button>
+          <button type="button" onClick={loadFromCloud} disabled={cloudBusy} className={btn}>
+            Cargar desde nube
           </button>
           <label className={`${btn} cursor-pointer`}>
             Cargar proyecto
@@ -646,11 +704,33 @@ export default function PlanEditor() {
         {/* Lienzo */}
         <div className="min-w-0">
           <div
-            className="relative max-h-[90vh] overflow-auto border border-line bg-white"
+            className="relative max-h-[90vh] overflow-auto border border-line bg-white touch-pan-auto"
             style={{ minHeight: "520px" }}
+            onPointerDown={(e) => {
+              if (!panMode) return;
+              panStartRef.current = { x: e.clientX, y: e.clientY, pan: { ...pan } };
+              e.currentTarget.setPointerCapture(e.pointerId);
+            }}
+            onPointerMove={(e) => {
+              if (!panMode || !panStartRef.current) return;
+              setPan({ x: panStartRef.current.pan.x + (e.clientX - panStartRef.current.x), y: panStartRef.current.pan.y + (e.clientY - panStartRef.current.y) });
+            }}
+            onPointerUp={() => { panStartRef.current = null; }}
+            onWheel={(e) => { e.preventDefault(); setZoom((z) => Math.min(3, Math.max(0.4, z + (e.deltaY < 0 ? 0.15 : -0.15)))); }}
+            onTouchStart={(e) => { if (e.touches.length === 2) { const a=e.touches[0], b=e.touches[1]; const d=Math.hypot(a.clientX-b.clientX, a.clientY-b.clientY); pinchRef.current=d; } }}
+            onTouchMove={(e) => { if (e.touches.length === 2 && pinchRef.current) { const a=e.touches[0], b=e.touches[1]; const d=Math.hypot(a.clientX-b.clientX, a.clientY-b.clientY); setZoom((z)=>Math.min(3,Math.max(0.4,z*d/pinchRef.current!))); pinchRef.current=d; e.preventDefault(); } }}
+            onTouchEnd={() => { pinchRef.current=null; }}
           >
+            <div
+              style={{
+                transform: `translate(${pan.x}px, ${pan.y}px) scale(${panMode ? zoom : 1})`,
+                transformOrigin: "center center",
+                transition: panStartRef.current ? "none" : "transform 120ms ease-out",
+                cursor: panMode ? "grab" : "default",
+              }}
+            >
             <PlanSvg
-              className="block w-full"
+              className="block w-full select-none"
               doc={doc}
               selection={selection}
               interactive
@@ -665,6 +745,7 @@ export default function PlanEditor() {
               onCanvasPointerMove={onCanvasPointerMove}
               onCanvasPointerUp={onCanvasPointerUp}
             />
+            </div>
           </div>
           <p className="mt-2 text-xs leading-relaxed text-muted">
             Arrastra estancias y piezas para colocarlas · la esquina naranja redimensiona la
