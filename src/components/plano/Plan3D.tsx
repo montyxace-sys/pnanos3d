@@ -104,7 +104,33 @@ export default function Plan3D() {
       sunRef.current = dir;
 
       const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x8b8476, roughness: 0.9 });
-      const wallMatFor = (t?: string) => new THREE.MeshStandardMaterial({ color: ({ carga: 0x7a7366, tabique: 0xb0a694, pladur: 0xf3f0ea, aluminio: 0x9ca3af } as any)[t ?? "carga"] ?? 0x8b8476, roughness: 0.9 });
+      const makeWallCanvas = (kind?: string): HTMLCanvasElement => {
+        const canvas = document.createElement("canvas"); canvas.width = 256; canvas.height = 256;
+        const ctx = canvas.getContext("2d")!;
+        const palette: any = { carga: "#7a7366", tabique: "#b0a694", pladur: "#f3f0ea", aluminio: "#9ca3af" };
+        ctx.fillStyle = palette[kind ?? "carga"]; ctx.fillRect(0, 0, 256, 256);
+        if (kind === "carga" || !kind) {
+          ctx.strokeStyle = "#5c5448"; ctx.lineWidth = 2;
+          for (let y = 0; y < 256; y += 24) for (let x = 0; x < 256; x += 36) {
+            ctx.strokeRect(x + (Math.floor(y / 24) % 2 ? 18 : 0) - 1, y - 1, 34, 22);
+            if (Math.random() > 0.8) ctx.fillStyle = "rgba(0,0,0,0.04)", ctx.fillRect(x + (Math.floor(y / 24) % 2 ? 18 : 0), y, 34, 22);
+          }
+        } else if (kind === "tabique" || kind === "pladur") {
+          ctx.fillStyle = "rgba(255,255,255,0.12)";
+          for (let x = 0; x < 256; x += 18) ctx.fillRect(x, 0, 2, 256);
+        } else if (kind === "aluminio") {
+          ctx.strokeStyle = "rgba(148,163,184,.8)"; ctx.lineWidth = 1;
+          for (let y = 0; y < 256; y += 12) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(256, y); ctx.stroke(); }
+        }
+        return canvas;
+      };
+      const wallTexFor = (kind?: string): any => {
+        const canvas = makeWallCanvas(kind);
+        const tex = new THREE.CanvasTexture(canvas);
+        tex.wrapS = THREE.RepeatWrapping; tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(2.4, 1.8);
+        return new THREE.MeshStandardMaterial({ map: tex, color: 0xffffff, roughness: kind === "pladur" ? 0.85 : 0.92 });
+      };
+      const wallMatFor = (t?: string) => wallTexFor(t);
       const doorMaterial = new THREE.MeshStandardMaterial({ color: 0x1e4f87, roughness: 0.5 });
       const windowMaterial = new THREE.MeshStandardMaterial({ color: 0x53a8db, opacity: 0.7, transparent: true, roughness: 0.2 });
       const furnitureMaterial = new THREE.MeshStandardMaterial({ color: 0xf8f8f8, roughness: 0.82 });
@@ -320,7 +346,9 @@ export default function Plan3D() {
           model.add(mesh);
         });
 
-      const roofMaterial = new THREE.MeshStandardMaterial({ color: 0x9e3e22, roughness: 0.85 });
+      const roofCanvas = document.createElement("canvas"); roofCanvas.width = 256; roofCanvas.height = 256; const rc = roofCanvas.getContext("2d")!; rc.fillStyle = "#9e3e22"; rc.fillRect(0,0,256,256); rc.strokeStyle = "#7f2f19"; rc.lineWidth = 2; for(let y=0;y<256;y+=14){rc.beginPath();rc.moveTo(0,y);rc.lineTo(256,y);rc.stroke();} rc.strokeStyle="rgba(0,0,0,0.15)"; for(let x=0;x<256;x+=28){rc.beginPath();rc.moveTo(x,0);rc.lineTo(x,256);rc.stroke();}
+      const roofTexture = new THREE.CanvasTexture(roofCanvas); roofTexture.wrapS=THREE.RepeatWrapping; roofTexture.wrapT=THREE.RepeatWrapping; roofTexture.repeat.set(4,2);
+      const roofMaterial = new THREE.MeshStandardMaterial({ map: roofTexture, color: 0xffffff, roughness: 0.85 });
       const roofDepth = Math.max(span, 3);
       const roofWidth = Math.max((bounds.maxx - bounds.minx) + 0.8, 3);
       const rise = roofDepth * 0.35;
