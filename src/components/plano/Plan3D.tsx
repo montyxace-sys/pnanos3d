@@ -712,6 +712,50 @@ export default function Plan3D() {
         </button>
         <button
           onClick={() => {
+            const [cx, , cz] = centerRef.current;
+            cameraRef.current?.position.set(cx, wallHeight * 0.6, cz + 6);
+            controlsRef.current?.target.set(cx, wallHeight / 2, cz);
+            controlsRef.current?.update();
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Fachada N
+        </button>
+        <button
+          onClick={() => {
+            const [cx, , cz] = centerRef.current;
+            cameraRef.current?.position.set(cx, wallHeight * 0.6, cz - 6);
+            controlsRef.current?.target.set(cx, wallHeight / 2, cz);
+            controlsRef.current?.update();
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Fachada S
+        </button>
+        <button
+          onClick={() => {
+            const [cx, , cz] = centerRef.current;
+            cameraRef.current?.position.set(cx + 6, wallHeight * 0.6, cz);
+            controlsRef.current?.target.set(cx, wallHeight / 2, cz);
+            controlsRef.current?.update();
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Fachada E
+        </button>
+        <button
+          onClick={() => {
+            const [cx, , cz] = centerRef.current;
+            cameraRef.current?.position.set(cx - 6, wallHeight * 0.6, cz);
+            controlsRef.current?.target.set(cx, wallHeight / 2, cz);
+            controlsRef.current?.update();
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Fachada W
+        </button>
+        <button
+          onClick={() => {
             const r = rendererRef.current;
             if (!r) return;
             const url = r.domElement.toDataURL("image/png");
