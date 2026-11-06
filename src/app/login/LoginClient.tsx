@@ -9,30 +9,54 @@ function clearGuest() { localStorage.removeItem("local_user"); localStorage.remo
 
 export default function LoginClient() {
   const [user, setUser] = useState<string | null>(null);
-  const [guestNick, setGuestNick] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mode, setMode] = useState<"login" | "signup" | "forgot" | "reset">("login");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [guestNick, setGuestNick] = useState("");
+  const [processingRecovery, setProcessingRecovery] = useState(false);
 
   useEffect(() => {
-    const sb = getBrowserSupabase();
-    if (!sb) return;
-    sb.auth.getSession().then(({ data }) => {
-      if (data.session?.user?.email) setUser(data.session.user.email);
-    });
-    const { data: sub } = sb.auth.onAuthStateChange((_e, session) => {
-      setUser(session?.user?.email ?? null);
-      const isRecovery =
-        Boolean(window.location.hash.includes("type=recovery") || window.location.hash.includes("access_token") || window.location.search.includes("reset=1"));
-      if (isRecovery) setMode("reset");
-    });
-    return () => { sub.subscription.unsubscribe(); };
+    (async () => {
+      const sb = getBrowserSupabase();
+      if (!sb) return;
+      // Intercambio del codigo PKCE que Supabase manda por query (?code) al redirigir
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("code");
+      if (code && typeof window !== "undefined") {
+        setProcessingRecovery(true);
+        try {
+          const { error: exch } = await sb.auth.exchangeCodeForSession(code);
+          if (exch) throw exch;
+          params.delete("code");
+          params.delete("type");
+          params.set("reset", "1");
+          const qs = params.toString();
+          window.history.replaceState({}, document.title, `${window.location.pathname}${qs ? `?${qs}` : ""}#type=recovery`);
+        } catch {
+          // continuar igual; a veces el código ya se consumió
+        } finally {
+          setProcessingRecovery(false);
+        }
+      }
+      try {
+        const { data } = await sb.auth.getSession();
+        if (data.session?.user?.email) setUser(data.session.user.email);
+        const isRecovery = Boolean(window.location.hash.includes("type=recovery") || window.location.search.includes("reset=1"));
+        if (isRecovery) setMode("reset");
+      } catch {
+        // ignore; UI follows normal path
+      }
+      const { data: sub } = sb.auth.onAuthStateChange((_e, session) => {
+        setUser(session?.user?.email ?? null);
+      });
+      return () => { sub.subscription.unsubscribe(); };
+    })();
   }, []);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && (window.location.hash.includes("type=recovery") || window.location.hash.includes("access_token") || window.location.search.includes("reset=1"))) {
+    if (typeof window !== "undefined" && (window.location.hash.includes("type=recovery") || window.location.search.includes("reset=1"))) {
       setMode("reset");
     }
   }, []);
@@ -99,7 +123,7 @@ export default function LoginClient() {
   return (
     <div className="mx-auto max-w-md space-y-6 py-16">
       <h1 className="text-3xl font-bold">Iniciar sesión</h1>
-      {user && (
+      {user && !processingRecovery && (
         <div className="space-y-3">
           <p className="text-muted">Conectado como {user}</p>
           <button onClick={logout} className="rounded bg-paper-2 px-4 py-2 text-sm text-ink">
@@ -175,6 +199,7 @@ export default function LoginClient() {
                 placeholder="mín. 6 caracteres"
                 className="w-full rounded border border-line bg-paper-2 px-3 py-2 text-sm text-ink"
               />
+              {processingRecovery && <p className="text-xs text-muted">Procesando enlace...</p>}
               {error && <p className="text-sm text-red-400">{error}</p>}
               {notice && <p className="text-sm text-green-400">{notice}</p>}
               <button type="submit" className="w-full rounded bg-orange-500 px-4 py-2 font-semibold text-gray-900">
