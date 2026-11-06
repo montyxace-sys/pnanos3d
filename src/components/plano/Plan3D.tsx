@@ -354,6 +354,27 @@ export default function Plan3D() {
           const px = p.x / 100, pz = p.y / 100;
           const w = p.w / 100, h = p.h / 100;
           const angle = (p.rot * Math.PI) / 180;
+          if (p.key === "piscina") {
+            const w = p.w / 100, h = p.h / 100;
+            const waterMat = new THREE.MeshStandardMaterial({ color: 0x5faadb, opacity: 0.86, transparent: true, roughness: 0.2 });
+            const water = new THREE.Mesh(new THREE.PlaneGeometry(w - 0.15, h - 0.15), waterMat);
+            water.rotation.x = -Math.PI / 2;
+            water.position.set(px, 0.035, pz);
+            model.add(water);
+            const rim = new THREE.MeshStandardMaterial({ color: 0xd4d0c8, roughness: 0.75 });
+            const segments = [
+              { g: new THREE.BoxGeometry(w, 0.05, 0.08), x: px, z: pz - h / 2 },
+              { g: new THREE.BoxGeometry(w, 0.05, 0.08), x: px, z: pz + h / 2 },
+              { g: new THREE.BoxGeometry(0.08, 0.05, h - 0.16), x: px - w / 2, z: pz },
+              { g: new THREE.BoxGeometry(0.08, 0.05, h - 0.16), x: px + w / 2, z: pz },
+            ];
+            for (const seg of segments) {
+              const m = new THREE.Mesh(seg.g, rim);
+              m.position.set(seg.x, 0.055, seg.z);
+              model.add(m);
+            }
+            return;
+          }
           if (p.key === "nota") {
             const txt = p.text || "Texto";
             const fontPx = Math.max(12, Math.min(48, (p.textSize ?? 16) * 3));
