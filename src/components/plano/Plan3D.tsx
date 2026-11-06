@@ -33,6 +33,7 @@ export default function Plan3D() {
   const controlsRef = useRef<any>(null);
   const centerRef = useRef<[number, number, number]>([0, 0.5, 0]);
   const rendererRef = useRef<any>(null);
+  const modelRef = useRef<any>(null);
 
   useEffect(() => {
     setDoc(loadDoc());
@@ -52,6 +53,9 @@ export default function Plan3D() {
 
       const scene = new THREE.Scene();
       scene.background = new THREE.Color(0xeeeadf);
+      const model = new THREE.Group();
+      scene.add(model);
+      modelRef.current = model;
 
       const camera = new THREE.PerspectiveCamera(
         60,
@@ -151,7 +155,7 @@ export default function Plan3D() {
             if (edge === "top") seg.position.set(x + cursor + segLen / 2, wallHeight / 2, z + h - thick / 2);
             if (edge === "left") seg.position.set(x + thick / 2, wallHeight / 2, z + cursor + segLen / 2);
             if (edge === "right") seg.position.set(x + w - thick / 2, wallHeight / 2, z + cursor + segLen / 2);
-            scene.add(seg);
+            model.add(seg);
           }
           cursor = Math.max(cursor, o.e);
         });
@@ -164,7 +168,7 @@ export default function Plan3D() {
           if (edge === "top") seg.position.set(x + cursor + segLen / 2, wallHeight / 2, z + h - thick / 2);
           if (edge === "left") seg.position.set(x + thick / 2, wallHeight / 2, z + cursor + segLen / 2);
           if (edge === "right") seg.position.set(x + w - thick / 2, wallHeight / 2, z + cursor + segLen / 2);
-          scene.add(seg);
+          model.add(seg);
         }
 
         merged.forEach((o) => {
@@ -180,7 +184,7 @@ export default function Plan3D() {
             if (horizontal && edge === "top") panel.position.set(x + center, wallHeight * 0.45, z + h - thick / 2);
             if (!horizontal && edge === "left") panel.position.set(x + thick / 2, wallHeight * 0.45, z + center);
             if (!horizontal && edge === "right") panel.position.set(x + w - thick / 2, wallHeight * 0.45, z + center);
-            scene.add(panel);
+            model.add(panel);
           } else {
             const panel = new THREE.Mesh(
               new THREE.BoxGeometry(horizontal ? width : 0.05, 0.06, horizontal ? 0.05 : width),
@@ -190,7 +194,7 @@ export default function Plan3D() {
             if (horizontal && edge === "top") panel.position.set(x + center, wallHeight * 0.72, z + h - thick / 2);
             if (!horizontal && edge === "left") panel.position.set(x + thick / 2, wallHeight * 0.72, z + center);
             if (!horizontal && edge === "right") panel.position.set(x + w - thick / 2, wallHeight * 0.72, z + center);
-            scene.add(panel);
+            model.add(panel);
           }
         });
       };
@@ -208,7 +212,7 @@ export default function Plan3D() {
           const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, height, h), furnitureMaterial);
           mesh.position.set(px, height / 2, pz);
           mesh.rotation.y = angle;
-          scene.add(mesh);
+          model.add(mesh);
         });
 
       centerRef.current = [cosX, 0.5, cosZ];
@@ -325,6 +329,29 @@ export default function Plan3D() {
         >
           Exportar PNG
         </button>
+        <button
+          onClick={async () => {
+            const group = modelRef.current;
+            if (!group) return;
+            const mod = await import("three/examples/jsm/exporters/GLTFExporter.js");
+            const exporter = new mod.GLTFExporter();
+            exporter.parse(group, (result: any) => {
+              const payload = JSON.stringify(result, null, 2);
+              const blob = new Blob([payload], { type: "application/json" });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = "tusplanos3d-vista-3d.gltf";
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+            }, null, { binary: false });
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Exportar GLTF
+        </button>
       </div>
       <div ref={mountRef} className="relative h-[78vh] min-h-[420px] w-full overflow-hidden border border-line bg-paper-2">
         {!ready && <div className="absolute inset-0 flex items-center justify-center text-muted">Cargando motor 3D...</div>}
@@ -332,5 +359,6 @@ export default function Plan3D() {
     </div>
   );
 }
+
 
 
