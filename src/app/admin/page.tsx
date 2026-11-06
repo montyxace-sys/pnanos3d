@@ -59,6 +59,11 @@ export default function AdminPage() {
       const email = data.session?.user?.email ?? null;
       const uid = data.session?.user?.id;
       setUserEmail(email);
+      if (email && email.toLowerCase() === "montyxace@gmail.com") {
+        setIsAdmin(true);
+        setChecked(true);
+        return;
+      }
       if (email && email.toLowerCase() !== "montyxace@gmail.com") {
         setIsAdmin(false);
         setChecked(true);
@@ -74,7 +79,8 @@ export default function AdminPage() {
     const sub = sb.auth.onAuthStateChange((_e, sess) => {
       const e = sess?.user?.email ?? null;
       setUserEmail(e);
-      if (e && e.toLowerCase() !== "montyxace@gmail.com") setIsAdmin(false);
+      if (!e || e.toLowerCase() !== "montyxace@gmail.com") setIsAdmin(false);
+      else setIsAdmin(true);
     });
     return () => {
       if (sub && sub.data) sub.data.subscription.unsubscribe();
