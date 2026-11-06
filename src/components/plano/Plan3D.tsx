@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
 
@@ -18,12 +18,11 @@ function loadDoc(): PlanDoc {
 }
 
 const wallHeight = 2.5;
-const wallThick = 0.2;
 
 function wallTypeThick(t?: string): number {
   if (t === "tabique" || t === "pladur") return 0.12;
   if (t === "aluminio") return 0.15;
-  return 0.25;
+  return 0.3;
 }
 
 export default function Plan3D() {
@@ -32,7 +31,7 @@ export default function Plan3D() {
   const [ready, setReady] = useState(false);
   const cameraRef = useRef<any>(null);
   const controlsRef = useRef<any>(null);
-  const [homeView, setHomeView] = useState<{ p: number[]; c: number[] }>({ p: [], c: [] });
+  const centerRef = useRef<[number, number, number]>([0, 0.5, 0]);
 
   useEffect(() => {
     setDoc(loadDoc());
@@ -42,167 +41,208 @@ export default function Plan3D() {
   useEffect(() => {
     if (!ready) return;
     if (!mountRef.current) return;
-    let rafId = 0;
     const container = mountRef.current;
-    // Lazy load three to avoid SSR issues
-    let THREE: typeof import("three");
-    let OrbitControls: any;
-    let renderer: any;
-    let scene: any;
-    let camera: any;
-    let controls: any;
-    const groups: any[] = [];
+    let cleanup: (() => void) | null = null;
 
     (async () => {
-      THREE = await import("three");
+      const THREE = await import("three");
       const OrbitModule = await import("three/examples/jsm/controls/OrbitControls.js");
-      OrbitControls = OrbitModule.OrbitControls;
+      const OrbitControls = OrbitModule.OrbitControls;
 
-      scene = new THREE.Scene();
-      scene.background = new THREE.Color(0xf0ede6);
-      camera = new THREE.PerspectiveCamera(60, container.clientWidth / Math.max(container.clientHeight, 1), 0.1, 1000);
-      cameraRef.current = camera;
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xeeeadf);
+
+      const camera = new THREE.PerspectiveCamera(
+        60,
+        container.clientWidth / Math.max(container.clientHeight, 1),
+        0.1,
+        1000,
+      );
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
       renderer.setSize(container.clientWidth, container.clientHeight);
       container.appendChild(renderer.domElement);
 
-      // lights
-      const ambient = new THREE.AmbientLight(0xffffff, 0.45);
+      const ambient = new THREE.AmbientLight(0xffffff, 0.8);
       scene.add(ambient);
-      const dir = new THREE.DirectionalLight(0xffffff, 1);
+      const dir = new THREE.DirectionalLight(0xffffff, 0.6);
       dir.position.set(8, 18, 6);
-      dir.castShadow = true;
-      dir.shadow.mapSize.set(1024,1024);
       scene.add(dir);
 
-      // materials
-      const floorMat = new THREE.MeshStandardMaterial({ color: 0xd8d2c6, roughness: 0.9 });
-      const wallMat = new THREE.MeshStandardMaterial({ color: 0x5e5a52, roughness: 0.85 });
-      const wallHighlight = new THREE.MeshStandardMaterial({ color: 0x4a463f, roughness: 0.85 });
-      const pieceMat = new THREE.MeshStandardMaterial({ color: 0xf6821f, roughness: 0.7 });
+      const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x8b8476, roughness: 0.9 });
+      const doorMaterial = new THREE.MeshStandardMaterial({ color: 0x1e4f87, roughness: 0.5 });
+      const windowMaterial = new THREE.MeshStandardMaterial({ color: 0x53a8db, opacity: 0.7, transparent: true, roughness: 0.2 });
+      const furnitureMaterial = new THREE.MeshStandardMaterial({ color: 0xf8f8f8, roughness: 0.82 });
 
-      // compute bounds
       const rooms = doc.rooms || [];
-      const bounds = {
-        minx: 0,
-        minz: 0,
-        maxx: 0,
-        maxz: 0,
-        initialized: false,
-      };
+
+      const bounds = { minx: 0, minz: 0, maxx: 0, maxz: 0, initialized: false };
       rooms.forEach((r) => {
         const x = r.x / 100, z = r.y / 100, w = r.w / 100, h = r.h / 100;
-        if (!bounds.initialized) { bounds.minx=x; bounds.maxx=x+w; bounds.minz=z; bounds.maxz=z+h; bounds.initialized=true; }
-        bounds.minx = Math.min(bounds.minx, x); bounds.maxx = Math.max(bounds.maxx, x+w);
-        bounds.minz = Math.min(bounds.minz, z); bounds.maxz = Math.max(bounds.maxz, z+h);
+        if (!bounds.initialized) { bounds.minx = x; bounds.maxx = x + w; bounds.minz = z; bounds.maxz = z + h; bounds.initialized = true; }
+        bounds.minx = Math.min(bounds.minx, x);
+        bounds.maxx = Math.max(bounds.maxx, x + w);
+        bounds.minz = Math.min(bounds.minz, z);
+        bounds.maxz = Math.max(bounds.maxz, z + h);
       });
-      if (!bounds.initialized) { bounds.minx=-2; bounds.maxx=2; bounds.minz=-2; bounds.maxz=2;bounds.initialized=true; }
-      const pad = 1;
-      const cx = (bounds.minx + bounds.maxx) / 2;
-      const cz = (bounds.minz + bounds.maxz) / 2;
-      const span = Math.max(bounds.maxx - bounds.minx, bounds.maxz - bounds.minz) + pad * 2;
+      if (!bounds.initialized) { bounds.minx = -4; bounds.maxx = 4; bounds.minz = -4; bounds.maxz = 4; bounds.initialized = true; }
+      const cosX = (bounds.minx + bounds.maxx) / 2;
+      const cosZ = (bounds.minz + bounds.maxz) / 2;
+      const span = Math.max(bounds.maxx - bounds.minx, bounds.maxz - bounds.minz, 3);
 
-      // ground
-      const floor = new THREE.Mesh(new THREE.PlaneGeometry(span + 4, span + 4), new THREE.MeshStandardMaterial({ color: 0xebe4d7, roughness: 1 }));
+      const floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(Math.max(span + 8, 10), Math.max(span + 8, 10)),
+        new THREE.MeshStandardMaterial({ color: 0xf4f1ea, roughness: 1 }),
+      );
       floor.rotation.x = -Math.PI / 2;
-      floor.receiveShadow = true;
-      floor.position.set(cx, 0, cz);
+      floor.position.set(cosX, 0, cosZ);
       scene.add(floor);
 
-      // walls per room
-      const THICK = (room: Room) => (room.wallType === "tabique" || room.wallType === "pladur" ? 0.12 : 0.25) * (1 / 1); // meters
-      rooms.forEach((r) => {
-        const x = r.x / 100, z = r.y / 100, w = r.w / 100, h = r.h / 100;
-        const thick = wallTypeThick(r.wallType);
-        // bottom wall
-        const bw = new THREE.Mesh(new THREE.BoxGeometry(w, wallHeight, thick), wallMat);
-        bw.position.set(x + w/2, wallHeight/2, z + thick/2);
-        scene.add(bw);
-        // top wall
-        const tw = new THREE.Mesh(new THREE.BoxGeometry(w, wallHeight, thick), wallMat);
-        tw.position.set(x + w/2, wallHeight/2, z + h - thick/2);
-        scene.add(tw);
-        // left
-        const lw = new THREE.Mesh(new THREE.BoxGeometry(thick, wallHeight, h - thick*2), wallMat);
-        lw.position.set(x + thick/2, wallHeight/2, z + h/2);
-        scene.add(lw);
-        // right
-        const rw = new THREE.Mesh(new THREE.BoxGeometry(thick, wallHeight, h - thick*2), wallMat);
-        rw.position.set(x + w - thick/2, wallHeight/2, z + h/2);
-        scene.add(rw);
-      });
+      const buildWallSide = (edge: "bottom" | "top" | "left" | "right", room: Room) => {
+        const x = room.x / 100, z = room.y / 100, w = room.w / 100, h = room.h / 100;
+        const thick = wallTypeThick(room.wallType);
+        const horizontal = edge === "bottom" || edge === "top";
+        const len = horizontal ? w : h;
+        const openings = (doc.pieces || [])
+          .filter((p) => p.key === "puerta" || p.key === "ventana")
+          .map((p) => {
+            const px = p.x / 100, pz = p.y / 100;
+            const pw = p.w / 100, ph = p.h / 100;
+            const localStart = horizontal ? px - pw / 2 - x : pz - ph / 2 - z;
+            const localEnd = horizontal ? px + pw / 2 - x : pz + ph / 2 - z;
+            if (horizontal && edge === "bottom" && Math.abs(pz - z) < 0.2 && px >= x && px <= x + w) {
+              return { s: Math.max(0, localStart), e: Math.min(len, localEnd), piece: p };
+            }
+            if (horizontal && edge === "top" && Math.abs(pz - (z + h)) < 0.2 && px >= x && px <= x + w) {
+              return { s: Math.max(0, localStart), e: Math.min(len, localEnd), piece: p };
+            }
+            if (!horizontal && edge === "left" && Math.abs(px - x) < 0.2 && pz >= z && pz <= z + h) {
+              return { s: Math.max(0, localStart), e: Math.min(len, localEnd), piece: p };
+            }
+            if (!horizontal && edge === "right" && Math.abs(px - (x + w)) < 0.2 && pz >= z && pz <= z + h) {
+              return { s: Math.max(0, localStart), e: Math.min(len, localEnd), piece: p };
+            }
+            return null;
+          })
+          .filter(Boolean) as Array<{ s: number; e: number; piece: Piece }>;
 
-      // piece blockers: doors/windows cut? Render as thin panels in walls
-      doc.pieces?.forEach((p) => {
-        const px = p.x / 100, pz = p.y / 100;
-        const w = p.w/100, h = p.h/100;
-        const angle = (p.rot * Math.PI) / 180;
-        const isDoor = p.key === "puerta";
-        const isWindow = p.key === "ventana";
-        // door fill
-        if (isDoor) {
-          const dm = new THREE.Group();
-          const one = new THREE.Mesh(new THREE.BoxGeometry(0.03, wallHeight*0.8, Math.max(0.03,w)), pieceMat);
-          one.position.set(0, wallHeight*0.4, 0);
-          dm.add(one);
-          dm.position.set(px, 0, pz);
-          dm.rotation.y = angle;
-          dm.position.y = 0;
-          scene.add(dm);
-        } else if (isWindow) {
-          const gm = new THREE.Mesh(new THREE.BoxGeometry(Math.max(0.05, w), 0.05, Math.max(0.05, h)), new THREE.MeshStandardMaterial({ color: 0x4fa3db, opacity:0.5, transparent: true }));
-          gm.position.set(px, wallHeight*0.7, pz);
-          gm.rotation.y = angle;
-          scene.add(gm);
-        } else {
-          // furniture prism
-          const g = new THREE.Group();
-          const hh = 0.9;
-          const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, hh, h), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.85 }));
-          mesh.position.set(-w/2, hh/2, -h/2);
-          g.add(mesh);
-          g.position.set(px, 0, pz);
-          g.rotation.y = angle;
-          scene.add(g);
+        openings.sort((a, b) => a.s - b.s);
+        const merged: Array<{ s: number; e: number; piece: Piece }> = [];
+        openings.forEach((o) => {
+          if (merged.length && o.s <= merged[merged.length - 1].e + 0.02) {
+            const last = merged[merged.length - 1];
+            merged[merged.length - 1] = { ...last, s: Math.min(last.s, o.s), e: Math.max(last.e, o.e), piece: last.piece };
+          } else {
+            merged.push(o);
+          }
+        });
+
+        let cursor = 0;
+        merged.forEach((o) => {
+          if (o.s > cursor + 0.02) {
+            const segLen = o.s - cursor;
+            const seg = horizontal
+              ? new THREE.Mesh(new THREE.BoxGeometry(segLen, wallHeight, thick), wallMaterial)
+              : new THREE.Mesh(new THREE.BoxGeometry(thick, wallHeight, segLen), wallMaterial);
+            if (edge === "bottom") seg.position.set(x + cursor + segLen / 2, wallHeight / 2, z + thick / 2);
+            if (edge === "top") seg.position.set(x + cursor + segLen / 2, wallHeight / 2, z + h - thick / 2);
+            if (edge === "left") seg.position.set(x + thick / 2, wallHeight / 2, z + cursor + segLen / 2);
+            if (edge === "right") seg.position.set(x + w - thick / 2, wallHeight / 2, z + cursor + segLen / 2);
+            scene.add(seg);
+          }
+          cursor = Math.max(cursor, o.e);
+        });
+        if (cursor < len - 0.02) {
+          const segLen = len - cursor;
+          const seg = horizontal
+            ? new THREE.Mesh(new THREE.BoxGeometry(segLen, wallHeight, thick), wallMaterial)
+            : new THREE.Mesh(new THREE.BoxGeometry(thick, wallHeight, segLen), wallMaterial);
+          if (edge === "bottom") seg.position.set(x + cursor + segLen / 2, wallHeight / 2, z + thick / 2);
+          if (edge === "top") seg.position.set(x + cursor + segLen / 2, wallHeight / 2, z + h - thick / 2);
+          if (edge === "left") seg.position.set(x + thick / 2, wallHeight / 2, z + cursor + segLen / 2);
+          if (edge === "right") seg.position.set(x + w - thick / 2, wallHeight / 2, z + cursor + segLen / 2);
+          scene.add(seg);
         }
-      });
 
-      // camera fit
-      camera.position.set(cx + span*0.8, span*1.3, cz + span*0.8);
-      camera.lookAt(cx, 0.5, cz);
-      controls = new OrbitControls(camera, renderer.domElement);
-      controls.target.set(cx, 0.5, cz);
-      controlsRef.current = controls;
-      setHomeView({ p: [cx + span*0.8, span*1.3, cz + span*0.8], c: [cx, 0.5, cz] });
+        merged.forEach((o) => {
+          const center = (o.s + o.e) / 2;
+          const width = Math.max(o.e - o.s, 0.04);
+          const isDoor = o.piece.key === "puerta";
+          if (isDoor) {
+            const panel = new THREE.Mesh(
+              new THREE.BoxGeometry(horizontal ? width : 0.07, wallHeight * 0.86, horizontal ? 0.07 : width),
+              doorMaterial,
+            );
+            if (horizontal && edge === "bottom") panel.position.set(x + center, wallHeight * 0.45, z + thick / 2);
+            if (horizontal && edge === "top") panel.position.set(x + center, wallHeight * 0.45, z + h - thick / 2);
+            if (!horizontal && edge === "left") panel.position.set(x + thick / 2, wallHeight * 0.45, z + center);
+            if (!horizontal && edge === "right") panel.position.set(x + w - thick / 2, wallHeight * 0.45, z + center);
+            scene.add(panel);
+          } else {
+            const panel = new THREE.Mesh(
+              new THREE.BoxGeometry(horizontal ? width : 0.05, 0.06, horizontal ? 0.05 : width),
+              windowMaterial,
+            );
+            if (horizontal && edge === "bottom") panel.position.set(x + center, wallHeight * 0.72, z + thick / 2);
+            if (horizontal && edge === "top") panel.position.set(x + center, wallHeight * 0.72, z + h - thick / 2);
+            if (!horizontal && edge === "left") panel.position.set(x + thick / 2, wallHeight * 0.72, z + center);
+            if (!horizontal && edge === "right") panel.position.set(x + w - thick / 2, wallHeight * 0.72, z + center);
+            scene.add(panel);
+          }
+        });
+      };
+
+      const edges: Array<"bottom" | "top" | "left" | "right"> = ["bottom", "top", "left", "right"];
+      rooms.forEach((room) => edges.forEach((edge) => buildWallSide(edge, room)));
+
+      (doc.pieces || [])
+        .filter((p) => p.key !== "puerta" && p.key !== "ventana")
+        .forEach((p) => {
+          const px = p.x / 100, pz = p.y / 100;
+          const w = p.w / 100, h = p.h / 100;
+          const angle = (p.rot * Math.PI) / 180;
+          const height = 0.85;
+          const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, height, h), furnitureMaterial);
+          mesh.position.set(px, height / 2, pz);
+          mesh.rotation.y = angle;
+          scene.add(mesh);
+        });
+
+      centerRef.current = [cosX, 0.5, cosZ];
+
+      camera.position.set(cosX + span * 0.8, span * 1.15, cosZ + span * 0.8);
+      camera.lookAt(cosX, 0.5, cosZ);
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.target.set(cosX, 0.5, cosZ);
       controls.enableDamping = true;
+      cameraRef.current = camera;
+      controlsRef.current = controls;
 
       const onResize = () => {
         if (!container) return;
-        const ncw = container.clientWidth, nch = container.clientHeight;
-        camera.aspect = ncw / Math.max(nch, 1);
+        camera.aspect = container.clientWidth / Math.max(container.clientHeight, 1);
         camera.updateProjectionMatrix();
-        renderer.setSize(ncw, nch);
+        renderer.setSize(container.clientWidth, container.clientHeight);
       };
       window.addEventListener("resize", onResize);
 
+      let raf = 0;
       const animate = () => {
         controls.update();
         renderer.render(scene, camera);
-        rafId = requestAnimationFrame(animate);
+        raf = requestAnimationFrame(animate);
       };
       animate();
 
-      // cleanup attach via mutable object
-      (container as any).__threeCleanup__ = () => {
+      cleanup = () => {
         window.removeEventListener("resize", onResize);
-        cancelAnimationFrame(rafId);
+        cancelAnimationFrame(raf);
         controls?.dispose();
         renderer?.dispose();
         if (renderer?.domElement?.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement);
       };
+      (container as any).__threeCleanup__ = cleanup;
     })();
 
     return () => {
@@ -219,16 +259,55 @@ export default function Plan3D() {
         <h1 className="text-xl font-bold text-accent">Vista 3D del plano</h1>
       </header>
       <p className="mb-4 text-sm text-muted">
-        Vista simplificada del plano guardado en el navegador (extruido 2,5 m + muebles). Sólo crea o carga un plano desde el
-        generador y aquí se verá en 3D.
+        Modelo arquitectónico extruido a 2,5 m con paredes huecas, puertas y ventanas recortadas. Ratón/touch para orbitar.
       </p>
       <div className="mb-4 flex flex-wrap gap-2">
-        <button onClick={() => { if(cameraRef.current && controlsRef.current){ cameraRef.current.position.set(homeView.p[0]*0.6, homeView.p[1]*1.5, homeView.p[2]*0.6); controlsRef.current.target.set(homeView.c[0],1,homeView.c[2]); controlsRef.current.update(); } }} className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-ink hover:bg-paper-2">Isométrico</button>
-        <button onClick={() => { if(cameraRef.current && controlsRef.current){ cameraRef.current.position.set(homeView.c[0], Math.max(homeView.p[1],8), homeView.c[2]); controlsRef.current.target.set(homeView.c[0],1,homeView.c[2]); controlsRef.current.update(); } }} className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-ink hover:bg-paper-2">Planta</button>
-        <button onClick={() => { if(cameraRef.current && controlsRef.current){ cameraRef.current.position.set(homeView.c[0] + homeView.p[0]*0.4, 2, homeView.c[2]); controlsRef.current.target.set(homeView.c[0],1,homeView.c[2]); controlsRef.current.update(); } }} className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-ink hover:bg-paper-2">Frontal</button>
-        <button onClick={() => { if(cameraRef.current && controlsRef.current){ cameraRef.current.position.set(homeView.p[0], homeView.p[1], homeView.p[2]); controlsRef.current.target.set(homeView.c[0],1,homeView.c[2]); controlsRef.current.update(); } }} className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-ink hover:bg-paper-2">Reset</button>
+        <button
+          onClick={() => {
+            const [cx, , cz] = centerRef.current;
+            cameraRef.current?.position.set(cx + 2.4, 2.2, cz + 2.4);
+            controlsRef.current?.target.set(cx, 0.5, cz);
+            controlsRef.current?.update();
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Isométrico
+        </button>
+        <button
+          onClick={() => {
+            const [cx, , cz] = centerRef.current;
+            cameraRef.current?.position.set(cx, 9, cz);
+            controlsRef.current?.target.set(cx, 0.15, cz);
+            controlsRef.current?.update();
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Planta
+        </button>
+        <button
+          onClick={() => {
+            const [cx, , cz] = centerRef.current;
+            cameraRef.current?.position.set(cx, 1.5, cz + 3.5);
+            controlsRef.current?.target.set(cx, 0.6, cz);
+            controlsRef.current?.update();
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Frontal
+        </button>
+        <button
+          onClick={() => {
+            const [cx, , cz] = centerRef.current;
+            cameraRef.current?.position.set(cx + 1.8, 2.2, cz + 1.8);
+            controlsRef.current?.target.set(cx, 0.5, cz);
+            controlsRef.current?.update();
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Personado
+        </button>
       </div>
-      <div ref={mountRef} className="relative mb-10 h-[70vh] min-h-[420px] w-full overflow-hidden border border-line bg-paper-2">
+      <div ref={mountRef} className="relative h-[78vh] min-h-[420px] w-full overflow-hidden border border-line bg-paper-2">
         {!ready && <div className="absolute inset-0 flex items-center justify-center text-muted">Cargando motor 3D...</div>}
       </div>
     </div>

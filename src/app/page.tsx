@@ -60,6 +60,39 @@ export default function HomePage() {
         ))}
       </section>
 
+      {/* CTA: vista 3D y calculadoras */}
+      <section className="mt-12 rounded-2xl border border-line bg-paper-2 p-6 md:p-8">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-ink">Ve tu proyecto en 3D</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
+              Una vez dibujes el plano, ábrelo en el visor 3D y recorre tu vivienda como si estuvieras dentro:
+              muros extruidos en 2,5 m, puertas, ventanas incluidas, y los muebles del catálogo.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/vista-3d/"
+              className="inline-flex items-center justify-center rounded-lg border border-accent bg-accent px-5 py-2.5 text-sm font-semibold text-paper hover:bg-accent/90"
+            >
+              Ver proyecto en 3D
+            </Link>
+            <Link
+              href="/climatizacion/"
+              className="inline-flex items-center justify-center rounded-lg border border-line bg-paper px-5 py-2.5 text-sm font-semibold text-ink hover:bg-paper"
+            >
+              Calcular climatización
+            </Link>
+            <Link
+              href="/electricidad/"
+              className="inline-flex items-center justify-center rounded-lg border border-line bg-paper px-5 py-2.5 text-sm font-semibold text-ink hover:bg-paper"
+            >
+              Calcular electricidad
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ visible para SEO */}
       <section className="mt-12 max-w-3xl">
         <h2 className="text-2xl font-bold text-ink">Preguntas frecuentes</h2>
