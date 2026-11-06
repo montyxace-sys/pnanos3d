@@ -34,10 +34,13 @@ export default function Plan3D() {
   const centerRef = useRef<[number, number, number]>([0, 0.5, 0]);
   const rendererRef = useRef<any>(null);
   const modelRef = useRef<any>(null);
+  const doorHingesRef = useRef<any[]>([]);
+  const doorsOpenRef = useRef<boolean>(false);
 
   useEffect(() => {
     setDoc(loadDoc());
     setReady(true);
+    doorHingesRef.current = [];
   }, []);
 
   useEffect(() => {
@@ -176,15 +179,20 @@ export default function Plan3D() {
           const width = Math.max(o.e - o.s, 0.04);
           const isDoor = o.piece.key === "puerta";
           if (isDoor) {
-            const panel = new THREE.Mesh(
-              new THREE.BoxGeometry(horizontal ? width : 0.07, wallHeight * 0.86, horizontal ? 0.07 : width),
-              doorMaterial,
-            );
-            if (horizontal && edge === "bottom") panel.position.set(x + center, wallHeight * 0.45, z + thick / 2);
-            if (horizontal && edge === "top") panel.position.set(x + center, wallHeight * 0.45, z + h - thick / 2);
-            if (!horizontal && edge === "left") panel.position.set(x + thick / 2, wallHeight * 0.45, z + center);
-            if (!horizontal && edge === "right") panel.position.set(x + w - thick / 2, wallHeight * 0.45, z + center);
-            model.add(panel);
+            const hinge = new THREE.Group();
+            const leafWidth = Math.max(width * 0.94, 0.45);
+            const leafHeight = Math.min(wallHeight * 0.9, 2.15);
+            const leaf = new THREE.Mesh(new THREE.BoxGeometry(leafWidth, leafHeight, 0.05), doorMaterial);
+            leaf.position.set(leafWidth / 2, leafHeight / 2, 0);
+            hinge.add(leaf);
+            const baseYaw = horizontal ? 0 : Math.PI / 2;
+            hinge.rotation.y = baseYaw;
+            if (edge === "bottom") hinge.position.set(x + o.s, 0, z + thick / 2);
+            if (edge === "top") hinge.position.set(x + o.s, 0, z + h - thick / 2);
+            if (edge === "left") hinge.position.set(x + thick / 2, 0, z + o.s);
+            if (edge === "right") hinge.position.set(x + w - thick / 2, 0, z + o.s);
+            model.add(hinge);
+            doorHinges.push({ hinge, baseYaw, dir: (edge === "top" || edge === "right") ? -1 : 1 });
           } else {
             const panel = new THREE.Mesh(
               new THREE.BoxGeometry(horizontal ? width : 0.05, 0.06, horizontal ? 0.05 : width),
@@ -199,8 +207,10 @@ export default function Plan3D() {
         });
       };
 
+      const doorHinges: any[] = [];
       const edges: Array<"bottom" | "top" | "left" | "right"> = ["bottom", "top", "left", "right"];
       rooms.forEach((room) => edges.forEach((edge) => buildWallSide(edge, room)));
+      doorHingesRef.current = doorHinges;
 
       (doc.pieces || [])
         .filter((p) => p.key !== "puerta" && p.key !== "ventana")
@@ -328,6 +338,18 @@ export default function Plan3D() {
           className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
         >
           Exportar PNG
+        </button>
+        <button
+          onClick={() => {
+            const next = !doorsOpenRef.current;
+            doorHingesRef.current.forEach((entry: any) => {
+              entry.hinge.rotation.y = doorsOpenRef.current ? entry.baseYaw : entry.baseYaw + entry.dir * (Math.PI / 2);
+            });
+            doorsOpenRef.current = next;
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Puertas: abrir/cerrar
         </button>
         <button
           onClick={async () => {
