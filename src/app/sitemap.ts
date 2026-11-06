@@ -17,6 +17,7 @@ const routes: RouteConfig[] = [
   { path: "/electricidad/",  priority: 0.9, changeFrequency: "weekly"  },
   { path: "/climatizacion/", priority: 0.8, changeFrequency: "weekly"  },
   { path: "/vista-3d/",        priority: 0.9, changeFrequency: "weekly"  },
+  { path: "/elevaciones/",   priority: 0.8, changeFrequency: "weekly"  },
   { path: "/ayuda/",         priority: 0.6, changeFrequency: "monthly" },
   { path: "/contacto/",      priority: 0.7, changeFrequency: "monthly" },
   { path: "/aviso-legal/",   priority: 0.2, changeFrequency: "yearly"  },
