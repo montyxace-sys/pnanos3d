@@ -38,6 +38,8 @@ export default function Plan3D() {
   const doorsOpenRef = useRef<boolean>(false);
   const roomLabelsRef = useRef<HTMLDivElement[]>([]);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const dimXRef = useRef<HTMLDivElement>(null);
+  const dimZRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setDoc(loadDoc());
@@ -272,6 +274,13 @@ export default function Plan3D() {
       ridge.position.set(cosX, wallHeight + rise + 0.06, cosZ);
       ridge.rotation.y = Math.PI / 2;
       model.add(ridge);
+      const guideMat = new THREE.MeshStandardMaterial({ color: 0x2563eb, roughness: 0.6 });
+      const guideX = new THREE.Mesh(new THREE.BoxGeometry((bounds.maxx-bounds.minx)+0.4, 0.03, 0.03), guideMat);
+      guideX.position.set(cosX, 0.05, bounds.minz - 1.2);
+      model.add(guideX);
+      const guideZ = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.03, (bounds.maxz-bounds.minz)+0.4), guideMat);
+      guideZ.position.set(bounds.minx - 1.2, 0.05, cosZ);
+      model.add(guideZ);
       centerRef.current = [cosX, 0.5, cosZ];
 
       camera.position.set(cosX + span * 0.8, span * 1.15, cosZ + span * 0.8);
@@ -303,6 +312,32 @@ export default function Plan3D() {
           label.style.left = `${(v.x * 0.5 + 0.5) * container.clientWidth}px`;
           label.style.top = `${(v.y * -0.5 + 0.5) * container.clientHeight}px`;
         });
+        const dx = dimXRef.current;
+        if (dx) {
+          const vv = new THREE.Vector3(cosX, 0.08, bounds.minz - 1.2);
+          vv.project(camera);
+          if (vv.z < 1) {
+            dx.style.opacity = "1";
+            dx.style.left = `${(vv.x * 0.5 + 0.5) * container.clientWidth}px`;
+            dx.style.top = `${(vv.y * -0.5 + 0.5) * container.clientHeight}px`;
+            dx.textContent = `${(bounds.maxx-bounds.minx).toFixed(2).replace(".", ",")} m`;
+          } else {
+            dx.style.opacity = "0";
+          }
+        }
+        const dz = dimZRef.current;
+        if (dz) {
+          const vv = new THREE.Vector3(bounds.minx - 1.2, 0.08, cosZ);
+          vv.project(camera);
+          if (vv.z < 1) {
+            dz.style.opacity = "1";
+            dz.style.left = `${(vv.x * 0.5 + 0.5) * container.clientWidth}px`;
+            dz.style.top = `${(vv.y * -0.5 + 0.5) * container.clientHeight}px`;
+            dz.textContent = `${(bounds.maxz-bounds.minz).toFixed(2).replace(".", ",")} m`;
+          } else {
+            dz.style.opacity = "0";
+          }
+        }
       };
       const animate = () => {
         controls.update();
@@ -451,6 +486,8 @@ export default function Plan3D() {
             </div>
           ))}
         </div>
+        <div ref={dimXRef} className="absolute rounded bg-blue-600/80 px-2 py-1 text-xs font-bold text-white shadow" style={{ transform: "translate(-50%, -50%)", left: 0, top: 0, opacity: 0 }}>m</div>
+        <div ref={dimZRef} className="absolute rounded bg-blue-600/80 px-2 py-1 text-xs font-bold text-white shadow" style={{ transform: "translate(-50%, -50%)", left: 0, top: 0, opacity: 0 }}>m</div>
       </div>
     </div>
   );
