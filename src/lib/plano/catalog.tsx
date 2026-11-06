@@ -166,6 +166,13 @@ export const CATALOG: CatalogGroup[] = [
       { key: "manguera-lavabo", label: "Manguera lavabo", w: 35, h: 6, draw: () => (<><rect x={-17} y={-3} width={35} height={6} rx={3} fill="#faf9f7" stroke="#1c1f24" /><path d="M-14 0 H12" fill="none" stroke="#6b675f" strokeWidth={1.5} /></>) },
     ],
   },
+  {
+    id: "anotaciones",
+    label: "Anotaciones",
+    items: [
+      { key: "nota", label: "Texto / Nota", w: 220, h: 40, draw: () => (<><rect x={-110} y={-20} width={220} height={40} rx={4} fill="#fff7ed" stroke="#f6821f" strokeDasharray="8 6" /><path d="M-95 -8 H95" fill="none" stroke="#f6821f" strokeWidth={1.5} /></>) },
+    ],
+  },
 ]
 
 export const CAT_BY_KEY: Record<string, CatalogItem> = Object.fromEntries(

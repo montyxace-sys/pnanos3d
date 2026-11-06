@@ -140,6 +140,7 @@ export function sanitizeDoc(value: unknown): PlanDoc {
     const base = CAT_BY_KEY[key];
     const w = num(p.w);
     const h = num(p.h);
+    const text = str(p.text);
     pieces.push({
       id: str(p.id) ?? uid(),
       key,
@@ -148,6 +149,7 @@ export function sanitizeDoc(value: unknown): PlanDoc {
       w: w !== null && w > 0 ? w : base.w,
       h: h !== null && h > 0 ? h : base.h,
       rot: num(p.rot) ?? 0,
+      text: text ? text.slice(0, 200) : undefined,
     });
   }
 

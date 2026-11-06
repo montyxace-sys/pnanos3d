@@ -27,6 +27,8 @@ export type Piece = {
   h: number;
   /** Rotación en grados. */
   rot: number;
+  /** Texto opcional para anotaciones. */
+  text?: string;
 };
 
 /** Documento completo del proyecto. */

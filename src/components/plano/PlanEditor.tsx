@@ -389,14 +389,18 @@ export default function PlanEditor() {
   function addPiece(key: string) {
     const item = CAT_BY_KEY[key];
     if (!item) return;
+    const text =
+      key === "nota"
+        ? (window.prompt("Texto de la nota / anotación:", "Texto") ?? "").trim() || "Texto"
+        : undefined;
     const id = uid();
     const bounds = planBounds(doc);
     const offset = (doc.pieces.length % 6) * 30;
-    const x = snap((bounds ? bounds.x + bounds.w / 2 : 0) + offset - 80);
-    const y = snap((bounds ? bounds.y + bounds.h / 2 : 0) + offset - 60);
+    const x = snap((bounds ? bounds.x + bounds.w / 2 : 0) + offset - item.w / 2);
+    const y = snap((bounds ? bounds.y + bounds.h / 2 : 0) + offset - item.h / 2);
     setDoc((current) => ({
       ...current,
-      pieces: [...current.pieces, { id, key, x, y, w: item.w, h: item.h, rot: 0 }],
+      pieces: [...current.pieces, { id, key, x, y, w: item.w, h: item.h, rot: 0, text }],
     }));
     setSelection({ kind: "piece", id });
     setMsg(null);
@@ -443,7 +447,7 @@ export default function PlanEditor() {
     }));
   }
 
-  function updatePiece(id: string, patch: Partial<{ w: number; h: number; rot: number }>) {
+  function updatePiece(id: string, patch: Partial<{ w: number; h: number; rot: number; text: string }>) {
     setDoc((current) => ({
       ...current,
       pieces: current.pieces.map((piece) => (piece.id === id ? { ...piece, ...patch } : piece)),
@@ -829,6 +833,17 @@ export default function PlanEditor() {
                 Pieza seleccionada
               </h2>
               <p className="mt-2 text-sm font-semibold text-ink">{selectedCatalogItem.label}</p>
+              {selectedPiece.key === "nota" && (
+                <label className="mt-3 block text-xs text-muted">
+                  Texto
+                  <input
+                    type="text"
+                    value={selectedPiece.text ?? ""}
+                    onChange={(event) => updatePiece(selectedPiece.id, { text: event.target.value })}
+                    className={field}
+                  />
+                </label>
+              )}
               <div className="mt-2 grid grid-cols-2 gap-2">
                 <NumInput
                   label="Ancho"
