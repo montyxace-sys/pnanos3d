@@ -246,6 +246,34 @@ export default function Plan3D() {
             if (edge === "right") hinge.position.set(x + w - thick / 2, 0, z + o.s);
             model.add(hinge);
             doorHinges.push({ hinge, baseYaw, dir: (edge === "top" || edge === "right") ? -1 : 1 });
+          } else if (o.piece.key === "puerta-doble") {
+            const hingeBase = horizontal ? 0 : Math.PI / 2;
+            const leafW = Math.max((width / 2) * 0.96, 0.45);
+            const leafH = Math.min(wallHeight * 0.9, 2.15);
+            const leftHinge = new THREE.Group();
+            const leftLeaf = new THREE.Mesh(new THREE.BoxGeometry(leafW, leafH, 0.045), doorMaterial);
+            leftLeaf.position.set(leafW / 2, leafH / 2, 0);
+            leftHinge.add(leftLeaf);
+            leftHinge.rotation.y = hingeBase;
+            if (horizontal && edge === "bottom") leftHinge.position.set(x + o.s, 0, z + thick / 2);
+            if (horizontal && edge === "top") leftHinge.position.set(x + o.s, 0, z + h - thick / 2);
+            if (!horizontal && edge === "left") leftHinge.position.set(x + thick / 2, 0, z + o.s);
+            if (!horizontal && edge === "right") leftHinge.position.set(x + w - thick / 2, 0, z + o.s);
+            model.add(leftHinge);
+            doorHinges.push({ hinge: leftHinge, baseYaw: hingeBase, dir: (edge === "top" || edge === "right") ? -1 : 1 });
+
+            const rightHinge = new THREE.Group();
+            const rightLeaf = new THREE.Mesh(new THREE.BoxGeometry(leafW, leafH, 0.045), doorMaterial);
+            rightLeaf.position.set(leafW / 2, leafH / 2, 0);
+            rightHinge.add(rightLeaf);
+            const rightYaw = hingeBase + Math.PI;
+            rightHinge.rotation.y = rightYaw;
+            if (horizontal && edge === "bottom") rightHinge.position.set(x + o.e, 0, z + thick / 2);
+            if (horizontal && edge === "top") rightHinge.position.set(x + o.e, 0, z + h - thick / 2);
+            if (!horizontal && edge === "left") rightHinge.position.set(x + thick / 2, 0, z + o.e);
+            if (!horizontal && edge === "right") rightHinge.position.set(x + w - thick / 2, 0, z + o.e);
+            model.add(rightHinge);
+            doorHinges.push({ hinge: rightHinge, baseYaw: rightYaw, dir: (edge === "top" || edge === "left") ? 1 : -1 });
           } else {
             const paneW = Math.max(width * 0.92, 0.35);
             const paneH = 0.75;
