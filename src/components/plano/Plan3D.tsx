@@ -102,6 +102,7 @@ export default function Plan3D() {
       sunRef.current = dir;
 
       const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x8b8476, roughness: 0.9 });
+      const wallMatFor = (t?: string) => new THREE.MeshStandardMaterial({ color: ({ carga: 0x7a7366, tabique: 0xb0a694, pladur: 0xf3f0ea, aluminio: 0x9ca3af } as any)[t ?? "carga"] ?? 0x8b8476, roughness: 0.9 });
       const doorMaterial = new THREE.MeshStandardMaterial({ color: 0x1e4f87, roughness: 0.5 });
       const windowMaterial = new THREE.MeshStandardMaterial({ color: 0x53a8db, opacity: 0.7, transparent: true, roughness: 0.2 });
       const furnitureMaterial = new THREE.MeshStandardMaterial({ color: 0xf8f8f8, roughness: 0.82 });
@@ -175,8 +176,8 @@ export default function Plan3D() {
           if (o.s > cursor + 0.02) {
             const segLen = o.s - cursor;
             const seg = horizontal
-              ? new THREE.Mesh(new THREE.BoxGeometry(segLen, wallHeight, thick), wallMaterial)
-              : new THREE.Mesh(new THREE.BoxGeometry(thick, wallHeight, segLen), wallMaterial);
+              ? new THREE.Mesh(new THREE.BoxGeometry(segLen, wallHeight, thick), wallMatFor(room.wallType))
+              : new THREE.Mesh(new THREE.BoxGeometry(thick, wallHeight, segLen), wallMatFor(room.wallType));
             if (edge === "bottom") seg.position.set(x + cursor + segLen / 2, wallHeight / 2, z + thick / 2);
             if (edge === "top") seg.position.set(x + cursor + segLen / 2, wallHeight / 2, z + h - thick / 2);
             if (edge === "left") seg.position.set(x + thick / 2, wallHeight / 2, z + cursor + segLen / 2);
@@ -188,8 +189,8 @@ export default function Plan3D() {
         if (cursor < len - 0.02) {
           const segLen = len - cursor;
           const seg = horizontal
-            ? new THREE.Mesh(new THREE.BoxGeometry(segLen, wallHeight, thick), wallMaterial)
-            : new THREE.Mesh(new THREE.BoxGeometry(thick, wallHeight, segLen), wallMaterial);
+            ? new THREE.Mesh(new THREE.BoxGeometry(segLen, wallHeight, thick), wallMatFor(room.wallType))
+            : new THREE.Mesh(new THREE.BoxGeometry(thick, wallHeight, segLen), wallMatFor(room.wallType));
           if (edge === "bottom") seg.position.set(x + cursor + segLen / 2, wallHeight / 2, z + thick / 2);
           if (edge === "top") seg.position.set(x + cursor + segLen / 2, wallHeight / 2, z + h - thick / 2);
           if (edge === "left") seg.position.set(x + thick / 2, wallHeight / 2, z + cursor + segLen / 2);
