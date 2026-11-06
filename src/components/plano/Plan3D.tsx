@@ -990,6 +990,25 @@ controls.autoRotate = false;
         </button>
         <button
           onClick={() => {
+            const next = (window as any).__xray__ !== true;
+            (window as any).__xray__ = next;
+            modelRef.current?.traverse((m: any) => {
+              if (m?.material) {
+                if (Array.isArray(m.material)) {
+                  m.material.forEach((x: any) => { x.transparent = true; x.opacity = next ? 0.5 : 1; });
+                } else {
+                  m.material.transparent = true;
+                  m.material.opacity = next ? 0.5 : 1;
+                }
+              }
+            });
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Modo transparente
+        </button>
+        <button
+          onClick={() => {
             const r = rendererRef.current;
             if (!r) return;
             const url = r.domElement.toDataURL("image/png");
