@@ -233,13 +233,39 @@ export default function Plan3D() {
 
       const roomFloorColors: Record<string, number> = { concrete: 0xe8e5de, tile: 0xdbe7f1, wood: 0xdab68b, carpet: 0xcfd4c8 };
       const roomColors = [0xf5f0e6, 0xeaf0f8, 0xf6efe7, 0xf0f3e8, 0xf8f2ef];
+      const floorTextureFor = (kind?: string): any => {
+        const canvas = document.createElement("canvas"); canvas.width = 256; canvas.height = 256;
+        const ctx = canvas.getContext("2d")!;
+        if (kind === "tile") {
+          ctx.fillStyle = "#f8fafc"; ctx.fillRect(0,0,256,256);
+          ctx.strokeStyle = "#c7d2de"; ctx.lineWidth = 2;
+          for (let i=0;i<=256;i+=32){ ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,256); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(256,i); ctx.stroke(); }
+        } else if (kind === "wood") {
+          ctx.fillStyle = "#dab68b"; ctx.fillRect(0,0,256,256);
+          ctx.strokeStyle = "#b99263"; ctx.lineWidth = 2;
+          for (let i=0;i<256;i+=18){ ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,256); ctx.stroke(); }
+          ctx.fillStyle = "rgba(92,64,36,0.08)";
+          for (let i=0;i<256;i+=36) ctx.fillRect(i,0,4,256);
+        } else if (kind === "carpet") {
+          ctx.fillStyle = "#d5d9cf"; ctx.fillRect(0,0,256,256);
+          ctx.fillStyle = "#b8bdb2";
+          for (let x=0;x<256;x+=6) for (let y=0;y<256;y+=6) { if (Math.random() > 0.7) ctx.fillRect(x,y,3,3); }
+        } else {
+          ctx.fillStyle = "#e9e6de"; ctx.fillRect(0,0,256,256);
+          ctx.fillStyle = "#d9d5cc";
+          for (let x=0;x<256;x+=12) for (let y=0;y<256;y+=12) { if (Math.random() > 0.85) ctx.fillRect(x,y,2,2); }
+        }
+        const tex = new THREE.CanvasTexture(canvas);
+        tex.wrapS = THREE.RepeatWrapping; tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(3,3);
+        return tex;
+      };
       rooms.forEach((room, idx) => {
         const x = room.x / 100, z = room.y / 100, w = room.w / 100, h = room.h / 100;
         const color = roomFloorColors[room.floor ?? ""] ?? roomColors[idx % roomColors.length];
-        const rough = room.floor === "tile" ? 0.3 : room.floor === "wood" ? 0.7 : 0.95;
+        const rough = room.floor === "tile" ? 0.3 : room.floor === "wood" ? 0.65 : 0.95;
         const rfloor = new THREE.Mesh(
           new THREE.PlaneGeometry(w - wallTypeThick(room.wallType) * 2, h - wallTypeThick(room.wallType) * 2),
-          new THREE.MeshStandardMaterial({ color, roughness: rough }),
+          new THREE.MeshStandardMaterial({ color: 0xffffff, map: floorTextureFor(room.floor), roughness: rough }),
         );
         rfloor.rotation.x = -Math.PI / 2;
         rfloor.position.set(x + w / 2, 0.015, z + h / 2);
@@ -263,7 +289,7 @@ export default function Plan3D() {
             const canvas = document.createElement("canvas");
             canvas.width = 512;
             canvas.height = 128;
-            const ctx = canvas.getContext("2d");
+            const ctx = canvas.getContext("2d")!;
             if (ctx) {
               ctx.clearRect(0, 0, canvas.width, canvas.height);
               ctx.globalAlpha = 1;
@@ -392,7 +418,7 @@ export default function Plan3D() {
           const canvas = document.createElement("canvas");
           canvas.width = 256;
           canvas.height = 64;
-          const ctx = canvas.getContext("2d");
+          const ctx = canvas.getContext("2d")!;
           if (ctx) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = "#ffffff";
