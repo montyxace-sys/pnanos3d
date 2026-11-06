@@ -616,6 +616,17 @@ export default function Plan3D() {
           child.receiveShadow = true;
         }
       });
+      const edgeMat = new THREE.LineBasicMaterial({ color: 0x2c2720, opacity: 0.3, transparent: true });
+      model.traverse((child: any) => {
+        if (!child || !child.isMesh) return;
+        if (!(child.userData?.type === "wall" || child.userData?.type === "opening" || child.userData?.type === "roof" || child.userData?.type === "furniture")) return;
+        const edges = new THREE.EdgesGeometry(child.geometry, 25);
+        const line = new THREE.LineSegments(edges, edgeMat);
+        line.position.copy(child.position);
+        line.rotation.copy(child.rotation);
+        line.scale.copy(child.scale);
+        model.add(line);
+      });
       centerRef.current = [cosX, 0.5, cosZ];
 
 
