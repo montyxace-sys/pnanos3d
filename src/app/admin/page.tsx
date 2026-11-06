@@ -187,6 +187,11 @@ export default function AdminPage() {
             {authBusy ? "Entrando..." : "Entrar"}
           </button>
         </form>
+        <div className="mt-2 text-center">
+          <a href="/login" className="text-xs text-orange-500 hover:text-orange-400">
+            ¿Olvidaste tu contraseña? Recuperar en /login
+          </a>
+        </div>
       </div>
     );
   }
