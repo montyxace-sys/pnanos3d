@@ -1,0 +1,7 @@
+User-Agent: *
+Allow: /
+Disallow: /login/
+Disallow: /account/
+Disallow: /sw.js
+
+Sitemap: https://tusplanos3d.es/sitemap.xml

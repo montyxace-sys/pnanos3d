@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="TusPlanos3D">
+  <rect width="64" height="64" rx="12" fill="#1c1f24"/>
+  <g transform="translate(-3,2.6) scale(0.7)">
+    <polygon points="50,74 88,52 50,30 12,52" fill="#f6821f"/>
+    <path d="M31 63 L69 41 M31 41 L69 63" stroke="#1c1f24" stroke-width="3" stroke-linecap="round"/>
+    <polygon points="12,52 50,30 50,10 12,32" fill="#f6821f"/>
+    <polygon points="50,30 88,52 88,32 50,10" fill="#c2410c"/>
+  </g>
+</svg>
