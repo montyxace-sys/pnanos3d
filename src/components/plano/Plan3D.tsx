@@ -36,6 +36,8 @@ export default function Plan3D() {
   const modelRef = useRef<any>(null);
   const doorHingesRef = useRef<any[]>([]);
   const doorsOpenRef = useRef<boolean>(false);
+  const roomLabelsRef = useRef<HTMLDivElement[]>([]);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setDoc(loadDoc());
@@ -262,8 +264,22 @@ export default function Plan3D() {
       window.addEventListener("resize", onResize);
 
       let raf = 0;
+      const labelElements = roomLabelsRef.current;
+      const updateLabels = () => {
+        labelElements.forEach((label, index) => {
+          const room = doc.rooms[index];
+          if (!label || !room) return;
+          const v = new THREE.Vector3((room.x + room.w / 2) / 100, 0.35, (room.y + room.h / 2) / 100);
+          v.project(camera);
+          if (v.z > 1) { label.style.opacity = "0"; return; }
+          label.style.opacity = "1";
+          label.style.left = `${(v.x * 0.5 + 0.5) * container.clientWidth}px`;
+          label.style.top = `${(v.y * -0.5 + 0.5) * container.clientHeight}px`;
+        });
+      };
       const animate = () => {
         controls.update();
+        updateLabels();
         renderer.render(scene, camera);
         raf = requestAnimationFrame(animate);
       };
@@ -395,10 +411,24 @@ export default function Plan3D() {
       </div>
       <div ref={mountRef} className="relative h-[78vh] min-h-[420px] w-full overflow-hidden border border-line bg-paper-2">
         {!ready && <div className="absolute inset-0 flex items-center justify-center text-muted">Cargando motor 3D...</div>}
+        <div ref={overlayRef} className="pointer-events-none absolute inset-0 z-10">
+          {doc.rooms.map((room, index) => (
+            <div
+              key={room.id}
+              ref={(node) => { if (node) roomLabelsRef.current[index] = node; }}
+              className="absolute rounded bg-black/55 px-2 py-1 text-xs font-semibold text-white shadow backdrop-blur-sm"
+              style={{ transform: "translate(-50%, -50%)", left: 0, top: 0, opacity: 0 }}
+            >
+              {room.name || "Estancia"}{" "}
+              <span className="opacity-80">{Math.round(Math.abs(room.w * room.h) / 10000)} m²</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 }
+
 
 
 
