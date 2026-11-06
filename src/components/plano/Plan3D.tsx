@@ -40,6 +40,10 @@ export default function Plan3D() {
   const overlayRef = useRef<HTMLDivElement>(null);
   const dimXRef = useRef<HTMLDivElement>(null);
   const dimZRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<any>(null);
+  const ambientRef = useRef<any>(null);
+  const sunRef = useRef<any>(null);
+  const isNightRef = useRef<boolean>(false);
 
   useEffect(() => {
     setDoc(loadDoc());
@@ -63,6 +67,7 @@ export default function Plan3D() {
       const model = new THREE.Group();
       scene.add(model);
       modelRef.current = model;
+      sceneRef.current = scene;
 
       const camera = new THREE.PerspectiveCamera(
         60,
@@ -76,12 +81,16 @@ export default function Plan3D() {
       renderer.setSize(container.clientWidth, container.clientHeight);
       container.appendChild(renderer.domElement);
       rendererRef.current = renderer;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
       const ambient = new THREE.AmbientLight(0xffffff, 0.8);
       scene.add(ambient);
+      ambientRef.current = ambient;
       const dir = new THREE.DirectionalLight(0xffffff, 0.6);
       dir.position.set(8, 18, 6);
       scene.add(dir);
+      sunRef.current = dir;
 
       const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x8b8476, roughness: 0.9 });
       const doorMaterial = new THREE.MeshStandardMaterial({ color: 0x1e4f87, roughness: 0.5 });
@@ -417,6 +426,29 @@ export default function Plan3D() {
           className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
         >
           Personado
+        </button>
+
+        <button
+          onClick={() => {
+            const night = !isNightRef.current;
+            isNightRef.current = night;
+            const scen = sceneRef.current;
+            if (scen) {
+              scen.background.setHex(night ? 0x101828 : 0xeeeadf);
+            }
+            const ambient = ambientRef.current;
+            if (ambient) {
+              ambient.intensity = night ? 0.2 : 0.8;
+            }
+            const sun = sunRef.current;
+            if (sun) {
+              sun.intensity = night ? 0.2 : 0.6;
+              sun.color.setHex(night ? 0xfde68a : 0xffffff);
+            }
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Día / Noche
         </button>
 
         <button
