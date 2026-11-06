@@ -224,6 +224,18 @@ export default function Plan3D() {
         });
       };
 
+      const roomColors = [0xf5f0e6, 0xeaf0f8, 0xf6efe7, 0xf0f3e8, 0xf8f2ef];
+      rooms.forEach((room, idx) => {
+        const x = room.x / 100, z = room.y / 100, w = room.w / 100, h = room.h / 100;
+        const color = roomColors[idx % roomColors.length];
+        const rfloor = new THREE.Mesh(
+          new THREE.PlaneGeometry(w - wallTypeThick(room.wallType) * 2, h - wallTypeThick(room.wallType) * 2),
+          new THREE.MeshStandardMaterial({ color, roughness: 0.95 }),
+        );
+        rfloor.rotation.x = -Math.PI / 2;
+        rfloor.position.set(x + w / 2, 0.015, z + h / 2);
+        model.add(rfloor);
+      });
       const doorHinges: any[] = [];
       const edges: Array<"bottom" | "top" | "left" | "right"> = ["bottom", "top", "left", "right"];
       rooms.forEach((room) => edges.forEach((edge) => buildWallSide(edge, room)));
