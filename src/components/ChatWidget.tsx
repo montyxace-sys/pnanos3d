@@ -1,68 +1,82 @@
 ﻿"use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getBrowserSupabase } from "@/lib/supabase";
-import { decryptText, ensureThread, loadMessages, sendEncryptedMessage, subscribeThread } from "@/lib/chat";
+import { ensureThread, loadMessages, sendEncryptedMessage, subscribeThread, decryptText } from "@/lib/chat";
 
-type Msg = { id: string; from: "bot" | "user"; text: string };
+const PUBLIC_PASS = "tusplanos3d-public-chat-2026";
+
+type Msg = { id: string; from: "user" | "support"; text: string };
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<Msg[]>([{ id: "welcome", from: "bot", text: "Hola. Chat cifrado de extremo a extremo (E2EE). Inicia sesion para usarlo." }]);
+  const [messages, setMessages] = useState<Msg[]>([
+    { id: "welcome", from: "support", text: "Hola. Soy el soporte de TusPlanos3D. Puedes escribir sin registrarte." },
+  ]);
   const [typing, setTyping] = useState(false);
-  const [showChip, setShowChip] = useState(true);
-  const [user, setUser] = useState<string | null>(null);
-  const [threadId, setThreadId] = useState<string | null>(null);
-  const [passphrase, setPassphrase] = useState("");
-  const [passInput, setPassInput] = useState("");
   const [error, setError] = useState("");
+  const [threadId, setThreadId] = useState<string | null>(null);
+  const [uid, setUid] = useState<string | null>(null);
+  const [nickname, setNickname] = useState<string>("");
+  const [draftNick, setDraftNick] = useState<string>("");
 
   useEffect(() => {
     const sb = getBrowserSupabase();
     if (!sb) return;
-    sb.auth.getSession().then(async ({ data }) => {
-      const email = data.session?.user?.email ?? null;
-      setUser(email);
-      if (!email || !data.session?.user?.id) return;
-      const uid = data.session.user.id;
-      const tid = await ensureThread(sb, uid);
-      setThreadId(tid);
-      const saved = localStorage.getItem(`chat_pass_${email}`);
-      if (saved) setPassphrase(saved);
-      const { data: rows } = await loadMessages(sb, tid);
-      if (rows) {
-        const dec = await Promise.all(
-          rows.map(async (r) => ({
-            id: r.id,
-            from: (r.sender_id === uid ? "user" : "bot") as "user" | "bot",
-            text: await decryptText(saved || "", tid, r.ciphertext, r.iv),
-          }))
-        );
-        setMessages(dec);
+    (async () => {
+      try {
+        let { data } = await sb.auth.getSession();
+        let session = data.session;
+        if (!session || !session.user) {
+          const { data: anonymous, error: anonError } = await sb.auth.signInAnonymously();
+          if (anonError) throw anonError;
+          session = anonymous.session;
+        }
+        const user = session?.user;
+        if (!user) throw new Error("No user");
+        setUid(user.id);
+        const savedNick = localStorage.getItem(`chat_name_${user.id}`) || "";
+        setNickname(savedNick);
+        const tid = await ensureThread(sb, user.id);
+        setThreadId(tid);
+        const { data: rows } = await loadMessages(sb, tid);
+        if (rows) {
+          const dec = await Promise.all(
+            rows.map(async (r) => ({
+              id: r.id,
+              from: (r.sender_id === user.id ? "user" : "support") as "user" | "support",
+              text: await decryptText(PUBLIC_PASS, tid, r.ciphertext, r.iv),
+            }))
+          );
+          if (dec.length > 0) setMessages(dec);
+        }
+        const channel = subscribeThread(sb, tid, async (row) => {
+          const txt = await decryptText(PUBLIC_PASS, tid, row.ciphertext, row.iv);
+          setMessages((m) => (m.some((x) => x.id === row.id) ? m : [...m, { id: row.id, from: row.sender_id === user.id ? "user" : "support", text: txt }]));
+        });
+        return () => { sb.removeChannel(channel); };
+      } catch (err) {
+        setError("No se pudo iniciar el chat compartido. Intenta más tarde.");
       }
-      const channel = subscribeThread(sb, tid, async (row) => {
-        const txt = await decryptText(localStorage.getItem(`chat_pass_${email}`) || "", tid, row.ciphertext, row.iv);
-        setMessages((m) => (m.some((x) => x.id === row.id) ? m : [...m, { id: row.id, from: row.sender_id === uid ? "user" : "bot", text: txt }]));
-      });
-      return () => { sb.removeChannel(channel); };
-    });
+    })();
   }, []);
 
   async function send() {
     const txt = input.trim();
-    if (!txt || !threadId || !user) return;
+    if (!txt || !threadId || !uid) return;
+    const nick = nickname || "Invitado";
+    if (!nick.trim()) {
+      setError("Pon un nickname antes de enviar.");
+      return;
+    }
     const sb = getBrowserSupabase();
     if (!sb) return;
-    const { data } = await sb.auth.getSession();
-    const uid = data.session?.user?.id;
-    if (!uid) return;
-    if (!passphrase) { setError("Define una clave compartida primero."); return; }
     setInput("");
     setMessages((m) => [...m, { id: crypto.randomUUID(), from: "user", text: txt }]);
     setTyping(true);
     try {
-      await sendEncryptedMessage(sb, threadId, uid, passphrase, txt);
+      await sendEncryptedMessage(sb, threadId, uid, PUBLIC_PASS, `(${nick}) ${txt}`);
     } catch {
       setError("No se pudo enviar.");
     } finally {
@@ -70,58 +84,42 @@ export default function ChatWidget() {
     }
   }
 
-  function savePassphrase() {
-    if (!passInput.trim() || !user) return;
-    localStorage.setItem(`chat_pass_${user}`, passInput.trim());
-    setPassphrase(passInput.trim());
-    setPassInput("");
+  function saveNickname() {
+    if (!draftNick.trim()) return;
+    if (uid) localStorage.setItem(`chat_name_${uid}`, draftNick.trim());
+    setNickname(draftNick.trim());
+    setDraftNick("");
     setError("");
   }
 
-  if (!user) {
-    return (
-      <div className="fixed bottom-4 right-4 z-50">
-        <a href="/login" className="rounded-full bg-orange-500 px-4 py-2 text-sm font-semibold text-gray-900 shadow-lg">
-          Chat (inicia sesion)
-        </a>
-      </div>
-    );
-  }
+  const hasNick = Boolean(nickname.trim());
 
   return (
     <>
-      {showChip && (
-        <div className="fixed bottom-16 right-4 z-50 rounded-lg border border-orange-400/40 bg-paper/90 px-3 py-2 text-[11px] shadow" style={{ maxWidth: "240px" }}>
-          <p className="text-gray-200">Chat cifrado (E2EE). Comparte la clave con el admin fuera del chat.</p>
-          <button className="absolute -top-1 right-1 text-xs text-muted" onClick={() => setShowChip(false)}>x</button>
-        </div>
-      )}
-      <button onClick={() => { setOpen(!open); setShowChip(false); }} className="rounded-full bg-orange-500 px-3 py-2 font-semibold text-gray-900 shadow-lg" style={{ position: "fixed", bottom: "1rem", right: "1rem", zIndex: 50 }}>
+      <button onClick={() => { setOpen(!open); }} className="rounded-full bg-orange-500 px-3 py-2 font-semibold text-gray-900 shadow-lg" style={{ position: "fixed", bottom: "1rem", right: "1rem", zIndex: 50 }}>
         Chat
       </button>
       {open && (
         <div className="fixed bottom-16 right-4 z-50 w-80 rounded-lg border border-line bg-paper p-3 shadow-2xl backdrop-blur" style={{ height: "420px" }}>
           <div className="mb-2 flex items-center justify-between">
-            <strong className="text-sm text-orange-400">Chat cifrado</strong>
+            <strong className="text-sm text-orange-400">Chat Comunidad Vibecoders</strong>
             <button onClick={() => setOpen(false)} className="text-xs text-muted">cerrar</button>
           </div>
 
-          {!passphrase ? (
+          {!hasNick ? (
             <div className="mb-2 space-y-2 text-xs">
-              <p className="text-ink-soft">Define una clave compartida (no la envies por este chat):</p>
-              <input value={passInput} onChange={(e) => setPassInput(e.target.value)} className="w-full rounded border border-line bg-paper-2 px-2 py-1 text-xs text-ink" placeholder="clave..." />
-              <button onClick={savePassphrase} className="rounded bg-orange-500 px-2 py-1 text-xs font-bold text-gray-900">Guardar clave</button>
+              <p className="text-ink-soft">Pon un nickname para poder escribir:</p>
+              <input value={draftNick} onChange={(e) => setDraftNick(e.target.value)} className="w-full rounded border border-line bg-paper-2 px-2 py-1 text-xs text-ink" placeholder="Tu nickname..." />
+              <button onClick={saveNickname} className="rounded bg-orange-500 px-2 py-1 text-xs font-bold text-gray-900">Guardar nickname</button>
               {error && <p className="text-red-400">{error}</p>}
             </div>
           ) : (
-            <div className="mb-2 text-[10px] text-muted">
-              Hilo: {threadId?.slice(0, 8)}... · clave guardada localmente.
-            </div>
+            <div className="mb-2 text-[10px] text-muted">Conectado como {nickname}</div>
           )}
 
           <div className="mb-2 h-52 overflow-y-auto space-y-2 rounded bg-paper-2 p-2 text-xs">
             {messages.map((m, i) => (
-              <div key={m.id || i} className={m.from === "bot" ? "text-gray-200" : "text-right text-orange-300"}>
+              <div key={m.id || i} className={m.from === "user" ? "text-right text-orange-300" : "text-gray-200"}>
                 {m.text}
               </div>
             ))}
@@ -133,14 +131,15 @@ export default function ChatWidget() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && send()}
-              disabled={!passphrase}
+              disabled={!hasNick}
               className="flex-1 rounded border border-line bg-paper-2 px-2 py-1 text-xs text-ink focus:border-orange-400 focus:outline-none disabled:opacity-50"
-              placeholder={passphrase ? "mensaje cifrado..." : "define clave primero"}
+              placeholder={hasNick ? "mensaje..." : "define nickname primero"}
             />
-            <button onClick={send} disabled={!passphrase} className="rounded bg-orange-500 px-2 py-1 text-xs font-bold text-gray-900 disabled:opacity-50">
-              -&gt;
+            <button onClick={send} disabled={!hasNick} className="rounded bg-orange-500 px-2 py-1 text-xs font-bold text-gray-900 disabled:opacity-50">
+              Enviar
             </button>
           </div>
+          {error && <p className="mt-2 text-[10px] text-red-400">{error}</p>}
         </div>
       )}
     </>
