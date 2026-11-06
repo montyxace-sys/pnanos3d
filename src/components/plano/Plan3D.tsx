@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 type Room = { id: string; name: string; x: number; y: number; w: number; h: number; wallType?: string };
-type Piece = { id: string; key: string; x: number; y: number; w: number; h: number; rot: number };
+type Piece = { id: string; key: string; x: number; y: number; w: number; h: number; rot: number; text?: string; textColor?: string; textSize?: number };
 type PlanDoc = { title?: string; rooms: Room[]; pieces: Piece[] };
 
 function loadDoc(): PlanDoc {
@@ -220,6 +220,33 @@ export default function Plan3D() {
           const px = p.x / 100, pz = p.y / 100;
           const w = p.w / 100, h = p.h / 100;
           const angle = (p.rot * Math.PI) / 180;
+          if (p.key === "nota") {
+            const txt = p.text || "Texto";
+            const fontPx = Math.max(12, Math.min(48, (p.textSize ?? 16) * 3));
+            const canvas = document.createElement("canvas");
+            canvas.width = 512;
+            canvas.height = 128;
+            const ctx = canvas.getContext("2d");
+            if (ctx) {
+              ctx.clearRect(0, 0, canvas.width, canvas.height);
+              ctx.globalAlpha = 1;
+              ctx.font = `600 ${fontPx}px "Segoe UI", sans-serif`;
+              ctx.fillStyle = p.textColor ?? "#1c1f24";
+              ctx.textAlign = "center";
+              ctx.textBaseline = "middle";
+              ctx.translate(canvas.width / 2, canvas.height / 2);
+              ctx.rotate((p.rot * Math.PI) / 180);
+              ctx.fillText(txt, 0, 0, canvas.width - 32);
+            }
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.needsUpdate = true;
+            const material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: true });
+            const sprite = new THREE.Sprite(material);
+            sprite.position.set(px, 0.45, pz);
+            sprite.scale.set(w || 1.7, h || 0.35, 1);
+            model.add(sprite);
+            return;
+          }
           const height = 0.85;
           const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, height, h), furnitureMaterial);
           mesh.position.set(px, height / 2, pz);

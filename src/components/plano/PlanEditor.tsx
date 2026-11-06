@@ -400,7 +400,7 @@ export default function PlanEditor() {
     const y = snap((bounds ? bounds.y + bounds.h / 2 : 0) + offset - item.h / 2);
     setDoc((current) => ({
       ...current,
-      pieces: [...current.pieces, { id, key, x, y, w: item.w, h: item.h, rot: 0, text }],
+      pieces: [...current.pieces, { id, key, x, y, w: item.w, h: item.h, rot: 0, text, "textSize": key === "nota" ? 16 : undefined, "textColor": key === "nota" ? "#1c1f24" : undefined }],
     }));
     setSelection({ kind: "piece", id });
     setMsg(null);
@@ -447,7 +447,7 @@ export default function PlanEditor() {
     }));
   }
 
-  function updatePiece(id: string, patch: Partial<{ w: number; h: number; rot: number; text: string }>) {
+  function updatePiece(id: string, patch: Partial<{ w: number; h: number; rot: number; text: string; textColor: string; textSize: number }>) {
     setDoc((current) => ({
       ...current,
       pieces: current.pieces.map((piece) => (piece.id === id ? { ...piece, ...patch } : piece)),
@@ -834,15 +834,38 @@ export default function PlanEditor() {
               </h2>
               <p className="mt-2 text-sm font-semibold text-ink">{selectedCatalogItem.label}</p>
               {selectedPiece.key === "nota" && (
-                <label className="mt-3 block text-xs text-muted">
-                  Texto
-                  <input
-                    type="text"
-                    value={selectedPiece.text ?? ""}
-                    onChange={(event) => updatePiece(selectedPiece.id, { text: event.target.value })}
-                    className={field}
-                  />
-                </label>
+                <>
+                  <label className="mt-3 block text-xs text-muted">
+                    Texto
+                    <input
+                      type="text"
+                      value={selectedPiece.text ?? ""}
+                      onChange={(event) => updatePiece(selectedPiece.id, { text: event.target.value })}
+                      className={field}
+                    />
+                  </label>
+                  <label className="mt-2 block text-xs text-muted">
+                    Tamaño (px)
+                    <input
+                      type="range"
+                      min={10}
+                      max={48}
+                      step={1}
+                      value={selectedPiece.textSize ?? 16}
+                      onChange={(event) => updatePiece(selectedPiece.id, { textSize: Number(event.target.value) })}
+                      className="mt-1 w-full accent-[#f6821f]"
+                    />
+                  </label>
+                  <label className="mt-2 block text-xs text-muted">
+                    Color
+                    <input
+                      type="color"
+                      value={selectedPiece.textColor || "#1c1f24"}
+                      onChange={(event) => updatePiece(selectedPiece.id, { textColor: event.target.value })}
+                      className="mt-1 h-10 w-full cursor-pointer border border-line"
+                    />
+                  </label>
+                </>
               )}
               <div className="mt-2 grid grid-cols-2 gap-2">
                 <NumInput

@@ -29,6 +29,10 @@ export type Piece = {
   rot: number;
   /** Texto opcional para anotaciones. */
   text?: string;
+  /** Color del texto (#rrggbb). */
+  textColor?: string;
+  /** Tamaño de texto en px. */
+  textSize?: number;
 };
 
 /** Documento completo del proyecto. */

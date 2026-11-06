@@ -141,6 +141,8 @@ export function sanitizeDoc(value: unknown): PlanDoc {
     const w = num(p.w);
     const h = num(p.h);
     const text = str(p.text);
+    const textColor = str(p.textColor);
+    const textSize = num(p.textSize);
     pieces.push({
       id: str(p.id) ?? uid(),
       key,
@@ -150,6 +152,8 @@ export function sanitizeDoc(value: unknown): PlanDoc {
       h: h !== null && h > 0 ? h : base.h,
       rot: num(p.rot) ?? 0,
       text: text ? text.slice(0, 200) : undefined,
+      textColor: textColor ? textColor.slice(0, 16) : undefined,
+      textSize: textSize !== null && textSize > 8 && textSize <= 120 ? textSize : undefined,
     });
   }
 

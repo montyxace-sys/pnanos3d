@@ -223,9 +223,9 @@ export default function PlanSvg({
               <text
                 x={0}
                 y={6}
-                fontSize={Math.max(14, Math.min(24, piece.h * 0.6))}
+                fontSize={piece.textSize ?? Math.max(14, Math.min(24, piece.h * 0.6))}
                 textAnchor="middle"
-                fill="#1c1f24"
+                fill={piece.textColor || "#1c1f24"}
                 fontWeight={600}
                 pointerEvents="none"
               >
