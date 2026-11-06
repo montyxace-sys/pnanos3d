@@ -38,6 +38,8 @@ export default function Plan3D() {
   const doorsOpenRef = useRef<boolean>(false);
   const roomLabelsRef = useRef<HTMLDivElement[]>([]);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const selected3DRef = useRef<any>(null);
+  const selection3DRef = useRef<HTMLDivElement>(null);
   const dimXRef = useRef<HTMLDivElement>(null);
   const dimZRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<any>(null);
@@ -280,6 +282,7 @@ export default function Plan3D() {
           const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, height, h), furnitureMaterial);
           mesh.position.set(px, height / 2, pz);
           mesh.rotation.y = angle;
+          mesh.userData = { kind: "piece", title: p.text || p.key, size: `${Math.round(w * 100)} x ${Math.round(h * 100)} cm` };
           model.add(mesh);
         });
 
@@ -318,7 +321,37 @@ export default function Plan3D() {
       const floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 
       const handleMeasureClick = (event: MouseEvent) => {
-        if (!measureMode.current) return;
+        if (!measureMode.current) {
+          const rect = renderer.domElement.getBoundingClientRect();
+          pointer.x = ((event.clientX - rect.left) / Math.max(rect.width, 1)) * 2 - 1;
+          pointer.y = -((event.clientY - rect.top) / Math.max(rect.height, 1)) * 2 + 1;
+          raycaster.setFromCamera(pointer, camera);
+          const hits = raycaster.intersectObjects(model.children, true);
+          const hit = hits.find((h) => h.object?.userData?.kind === "piece");
+          const cur = selected3DRef.current;
+          if (cur && cur.material && cur.material.emissive) {
+            cur.material.emissive.set(cur.userData?._origEmissive ?? 0);
+          }
+          if (!hit) {
+            selected3DRef.current = null;
+            if (selection3DRef.current) selection3DRef.current.style.opacity = "0";
+            return;
+          }
+          const obj = hit.object;
+          if (selected3DRef.current === obj) return;
+          if (!obj.userData._origSaved) {
+            obj.userData._origEmissive = (obj as any).material?.emissive ? (obj as any).material.emissive.getHex() : 0;
+            obj.userData._origSaved = true;
+          }
+          if ((obj as any).material?.emissive) (obj as any).material.emissive.set(0xf6821f);
+          selected3DRef.current = obj;
+          const card = selection3DRef.current;
+          if (card) {
+            card.textContent = `${obj.userData.title ?? "Pieza"} · ${obj.userData.size ?? ""}`;
+            card.style.opacity = "1";
+          }
+          return;
+        }
         const rect = renderer.domElement.getBoundingClientRect();
         pointer.x = ((event.clientX - rect.left) / Math.max(rect.width, 1)) * 2 - 1;
         pointer.y = -((event.clientY - rect.top) / Math.max(rect.height, 1)) * 2 + 1;
@@ -440,6 +473,22 @@ export default function Plan3D() {
       };
       const animate = () => {
         controls.update();
+        const sel = selected3DRef.current;
+        const selCard = selection3DRef.current;
+        if (sel && selCard) {
+          const v = new THREE.Vector3();
+          sel.getWorldPosition(v);
+          v.project(camera);
+          if (v.z < 1) {
+            selCard.style.opacity = "1";
+            selCard.style.left = `${(v.x * 0.5 + 0.5) * container.clientWidth}px`;
+            selCard.style.top = `${(v.y * -0.5 + 0.5) * container.clientHeight}px`;
+          } else {
+            selCard.style.opacity = "0";
+          }
+        } else if (selCard) {
+          selCard.style.opacity = "0";
+        }
         updateLabels();
         renderer.render(scene, camera);
         raf = requestAnimationFrame(animate);
@@ -623,6 +672,7 @@ export default function Plan3D() {
         </div>
         <div ref={dimXRef} className="absolute rounded bg-blue-600/80 px-2 py-1 text-xs font-bold text-white shadow" style={{ transform: "translate(-50%, -50%)", left: 0, top: 0, opacity: 0 }}>m</div>
         <div ref={dimZRef} className="absolute rounded bg-blue-600/80 px-2 py-1 text-xs font-bold text-white shadow" style={{ transform: "translate(-50%, -50%)", left: 0, top: 0, opacity: 0 }}>m</div>
+        <div ref={selection3DRef} className="absolute rounded bg-black/75 px-3 py-1.5 text-xs font-semibold text-white shadow backdrop-blur-sm" style={{ transform: "translate(-50%, -125%)", left: 0, top: 0, opacity: 0 }}>Pieza</div>
       </div>
     </div>
   );
