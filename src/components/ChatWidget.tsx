@@ -96,8 +96,8 @@ export default function ChatWidget() {
 
   return (
     <>
-      <button onClick={() => { setOpen(!open); }} className="rounded-full bg-orange-500 px-3 py-2 font-semibold text-gray-900 shadow-lg" style={{ position: "fixed", bottom: "1rem", right: "1rem", zIndex: 50 }}>
-        Chat
+      <button onClick={() => { setOpen(!open); }} className="rounded-full bg-orange-500 px-5 py-3 text-sm font-bold text-gray-900 shadow-xl ring-2 ring-orange-300/60 hover:bg-orange-400 transition-all" style={{ position: "fixed", bottom: "1.5rem", right: "1.5rem", zIndex: 60 }}>
+        Chat Comunidad Vibecoders
       </button>
       {open && (
         <div className="fixed bottom-16 right-4 z-50 w-80 rounded-lg border border-line bg-paper p-3 shadow-2xl backdrop-blur" style={{ height: "420px" }}>
