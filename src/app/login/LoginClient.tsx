@@ -4,18 +4,16 @@ import { useEffect, useState } from "react";
 import { getBrowserSupabase } from "@/lib/supabase";
 import Link from "next/link";
 
-function markGuest(nick: string) { localStorage.setItem("local_user", nick); localStorage.setItem("chat_name_guest", nick); }
-function getGuest() { return localStorage.getItem("local_user"); }
+function getGuest() { return typeof window !== "undefined" ? localStorage.getItem("local_user") : null; }
 function clearGuest() { localStorage.removeItem("local_user"); localStorage.removeItem("chat_name_guest"); }
 
 export default function LoginClient() {
   const [user, setUser] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [mode, setMode] = useState<"login" | "signup" | "forgot" | "reset">("login");
   const [error, setError] = useState("");
-  const [guestNick, setGuestNick] = useState("");
-  const [guest, setGuest] = useState<string | null>(null);
+  const [notice, setNotice] = useState("");
 
   useEffect(() => {
     const sb = getBrowserSupabase();
@@ -31,7 +29,9 @@ export default function LoginClient() {
   }, []);
 
   useEffect(() => {
-    setGuest(getGuest());
+    if (typeof window !== "undefined" && (window.location.hash.includes("type=recovery") || window.location.search.includes("reset=1"))) {
+      setMode("reset");
+    }
   }, []);
 
   async function submit(e: React.FormEvent) {
@@ -39,6 +39,14 @@ export default function LoginClient() {
     const sb = getBrowserSupabase();
     if (!sb) return alert("Configura Supabase (.env).");
     setError("");
+    setNotice("");
+    if (mode === "reset") {
+      if (!password || password.length < 6) { setError("La contraseña debe tener al menos 6 caracteres."); return; }
+      const { error } = await sb.auth.updateUser({ password });
+      if (error) setError(error.message);
+      else { setError(""); setNotice("Contraseña actualizada correctamente. Ya puedes iniciar sesión."); setMode("login"); setPassword(""); }
+      return;
+    }
     const { error } =
       mode === "signup"
         ? await sb.auth.signUp({ email, password })
@@ -50,18 +58,30 @@ export default function LoginClient() {
     }
   }
 
+  async function forgot(e: React.FormEvent) {
+    e.preventDefault();
+    const sb = getBrowserSupabase();
+    if (!sb) return;
+    if (!email) { setError("Introduce tu email."); return; }
+    setError("");
+    setNotice("");
+    const redirectTo = `${window.location.origin}/login?reset=1`;
+    const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo });
+    if (error) setError(error.message);
+    else setNotice("Te enviamos un enlace para recuperar la contraseña. Revisa tu correo.");
+  }
+
   async function logout() {
     const sb = getBrowserSupabase();
     if (sb) await sb.auth.signOut();
     clearGuest();
     setUser(null);
-    setGuest(null);
   }
 
   function continueGuest() {
-    if (!guestNick.trim()) return;
-    markGuest(guestNick.trim());
-    setGuest(guestNick.trim());
+    const nick = prompt("Nickname para el modo local/sin cuenta:");
+    if (!nick || !nick.trim()) return;
+    localStorage.setItem("local_user", nick.trim());
     window.location.href = "/";
   }
 
@@ -71,39 +91,72 @@ export default function LoginClient() {
       {user && (
         <div className="space-y-3">
           <p className="text-muted">Conectado como {user}</p>
-          <button onClick={logout} className="rounded bg-paper-2 px-4 py-2 text-sm text-ink">Cerrar sesión</button>
+          <button onClick={logout} className="rounded bg-paper-2 px-4 py-2 text-sm text-ink">
+            Cerrar sesión
+          </button>
         </div>
       )}
-      {!user && guest && (
-        <div className="space-y-3">
-          <p className="text-muted">Sesión invitado activa: {guest}</p>
-          <button onClick={logout} className="rounded bg-paper-2 px-4 py-2 text-sm text-ink">Cerrar sesión invitado</button>
-        </div>
-      )}
-      {!user && !guest && (
+      {!user && (
         <>
-          <form onSubmit={submit} className="space-y-3">
-            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@ejemplo.com" className="w-full rounded border border-line bg-paper-2 px-3 py-2 text-sm text-ink" />
-            <input type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="contraseña (mín. 6)" className="w-full rounded border border-line bg-paper-2 px-3 py-2 text-sm text-ink" />
-            {error && <p className="text-sm text-red-400">{error}</p>}
-            <button type="submit" className="w-full rounded bg-orange-500 px-4 py-2 font-semibold text-gray-900">
-              {mode === "signup" ? "Crear cuenta (nube)" : "Entrar (nube)"}
-            </button>
-            <button type="button" onClick={() => setMode(mode === "signup" ? "login" : "signup")} className="w-full text-xs text-muted hover:text-orange-400">
-              {mode === "signup" ? "Ya tengo cuenta" : "Crear cuenta nueva"}
-            </button>
-          </form>
+          {(mode === "login" || mode === "signup") && (
+            <form onSubmit={submit} className="space-y-3">
+              <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@ejemplo.com" className="w-full rounded border border-line bg-paper-2 px-3 py-2 text-sm text-ink" />
+              <input type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="contraseña (mín. 6)" className="w-full rounded border border-line bg-paper-2 px-3 py-2 text-sm text-ink" />
+              {error && <p className="text-sm text-red-400">{error}</p>}
+              {notice && <p className="text-sm text-green-400">{notice}</p>}
+              <button type="submit" className="w-full rounded bg-orange-500 px-4 py-2 font-semibold text-gray-900">
+                {mode === "signup" ? "Crear cuenta (nube)" : "Entrar (nube)"}
+              </button>
+              <button type="button" onClick={() => setMode(mode === "signup" ? "login" : "signup")} className="w-full text-xs text-muted hover:text-orange-400">
+                {mode === "signup" ? "Ya tengo cuenta" : "Crear cuenta nueva"}
+              </button>
+              <button type="button" onClick={() => setMode("forgot")} className="w-full text-xs text-muted hover:text-orange-400">
+                ¿Olvidaste tu contraseña?
+              </button>
+            </form>
+          )}
+
+          {mode === "reset" && (
+            <form onSubmit={submit} className="space-y-3">
+              <p className="text-sm text-muted">Define una contraseña nueva para tu cuenta.</p>
+              <input type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="nueva contraseña (mín. 6)" className="w-full rounded border border-line bg-paper-2 px-3 py-2 text-sm text-ink" />
+              {error && <p className="text-sm text-red-400">{error}</p>}
+              {notice && <p className="text-sm text-green-400">{notice}</p>}
+              <button type="submit" className="w-full rounded bg-orange-500 px-4 py-2 font-semibold text-gray-900">
+                Actualizar contraseña
+              </button>
+              <button type="button" onClick={() => setMode("login")} className="w-full text-xs text-muted hover:text-orange-400">
+                Volver al login
+              </button>
+            </form>
+          )}
+
+          {mode === "forgot" && (
+            <form onSubmit={forgot} className="space-y-3">
+              <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@ejemplo.com" className="w-full rounded border border-line bg-paper-2 px-3 py-2 text-sm text-ink" />
+              {error && <p className="text-sm text-red-400">{error}</p>}
+              {notice && <p className="text-sm text-green-400">{notice}</p>}
+              <button type="submit" className="w-full rounded bg-orange-500 px-4 py-2 font-semibold text-gray-900">
+                Recuperar contraseña
+              </button>
+              <button type="button" onClick={() => setMode("login")} className="w-full text-xs text-muted hover:text-orange-400">
+                Volver al login
+              </button>
+            </form>
+          )}
 
           <div className="rounded-xl border border-line bg-paper p-4">
             <p className="text-sm font-medium mb-2">modo local / invitado</p>
             <p className="text-xs text-muted mb-2">Sin cuenta: se guarda en este navegador/local storage.</p>
-            <input value={guestNick} onChange={(e) => setGuestNick(e.target.value)} placeholder="Tu nickname/superusuario" className="w-full rounded border border-line bg-paper-2 px-3 py-2 text-sm text-ink" />
             <button onClick={continueGuest} className="mt-2 w-full rounded bg-accent px-4 py-2 font-semibold text-paper">
               Continuar como invitado (local)
             </button>
           </div>
         </>
       )}
+      {error && <p className="text-sm text-red-400">{error}</p>}
+      {notice && <p className="text-sm text-green-400">{notice}</p>}
+
       <div className="mt-4 text-center">
         <Link href="/" className="text-xs text-accent underline">Volver al generador</Link>
       </div>
