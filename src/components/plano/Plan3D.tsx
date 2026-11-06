@@ -733,8 +733,16 @@ controls.autoRotate = false;
         <h1 className="text-xl font-bold text-accent">Vista 3D del plano</h1>
       </header>
       <p className="mb-4 text-sm text-muted">
-        Modelo arquitectónico extruido a 2,5 m con paredes huecas, puertas y ventanas recortadas. Ratón/touch para orbitar.
+        El visor lee el plano guardado en tu navegador y lo extruye a 2,5 m con muros, puertas/ventanas, objetos y tejado. Usa "Cargar proyecto 2D" si actualizaste el plano.
       </p>
+      <div className="mb-4 flex flex-wrap gap-2">
+        <button
+          onClick={() => setDoc(loadDoc())}
+          className="rounded border border-accent bg-accent px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-paper hover:bg-accent/90"
+        >
+          Cargar proyecto actual (2D)
+        </button>
+      </div>
       <div className="mb-4 flex flex-wrap gap-2">
         <button
           onClick={() => {
