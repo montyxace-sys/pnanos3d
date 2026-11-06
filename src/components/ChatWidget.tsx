@@ -93,7 +93,7 @@ export default function ChatWidget() {
         Chat Comunidad Vibecoders
       </button>
       {open && (
-        <div className="fixed bottom-16 right-4 z-50 w-80 rounded-lg border border-line bg-paper p-3 shadow-2xl backdrop-blur" style={{ height: "420px" }}>
+        <div className="fixed bottom-16 right-4 z-50 w-96 max-w-[90vw] rounded-xl border border-line bg-paper p-4 shadow-2xl backdrop-blur" style={{ height: "560px" }}>
           <div className="mb-2 flex items-center justify-between">
             <strong className="text-sm text-orange-400">Chat Comunidad Vibecoders</strong>
             <button onClick={() => setOpen(false)} className="text-xs text-muted">cerrar</button>
@@ -110,7 +110,7 @@ export default function ChatWidget() {
             <div className="mb-2 text-[10px] text-muted">Conectado como {nickname}</div>
           )}
 
-          <div className="mb-2 h-52 overflow-y-auto space-y-2 rounded bg-paper-2 p-2 text-xs">
+          <div className="mb-2 h-72 overflow-y-auto space-y-2 rounded bg-paper-2 p-3 text-sm">
             {messages.map((m) => (
               <div key={m.id} className={m.from === "user" ? "text-right" : "text-left text-muted"}>
                 <span className="block text-[10px] opacity-70">{m.text}</span>
