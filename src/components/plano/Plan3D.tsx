@@ -247,15 +247,57 @@ export default function Plan3D() {
             model.add(hinge);
             doorHinges.push({ hinge, baseYaw, dir: (edge === "top" || edge === "right") ? -1 : 1 });
           } else {
-            const panel = new THREE.Mesh(
-              new THREE.BoxGeometry(horizontal ? width : 0.05, 0.06, horizontal ? 0.05 : width),
+            const paneW = Math.max(width * 0.92, 0.35);
+            const paneH = 0.75;
+            const pane = new THREE.Mesh(
+              new THREE.BoxGeometry(horizontal ? paneW : 0.04, paneH, horizontal ? 0.04 : paneW),
               windowMaterial,
             );
-            if (horizontal && edge === "bottom") panel.position.set(x + center, wallHeight * 0.72, z + thick / 2);
-            if (horizontal && edge === "top") panel.position.set(x + center, wallHeight * 0.72, z + h - thick / 2);
-            if (!horizontal && edge === "left") panel.position.set(x + thick / 2, wallHeight * 0.72, z + center);
-            if (!horizontal && edge === "right") panel.position.set(x + w - thick / 2, wallHeight * 0.72, z + center);
-            model.add(panel);
+            const paneY = 0.95;
+            if (horizontal && edge === "bottom") pane.position.set(x + center, paneY, z + thick / 2);
+            if (horizontal && edge === "top") pane.position.set(x + center, paneY, z + h - thick / 2);
+            if (!horizontal && edge === "left") pane.position.set(x + thick / 2, paneY, z + center);
+            if (!horizontal && edge === "right") pane.position.set(x + w - thick / 2, paneY, z + center);
+            pane.rotation.x = horizontal ? 0 : 0;
+            pane.rotation.y = horizontal ? 0 : 0;
+            // Marco
+            const frameMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.55 });
+            const frameThickness = 0.03;
+            if (horizontal) {
+              const topFrame = new THREE.Mesh(new THREE.BoxGeometry(width + 0.1, frameThickness, thick + 0.08), frameMat);
+              topFrame.position.set(x + center, paneY + paneH / 2 + frameThickness / 2, (edge === "bottom" ? z + thick / 2 : z + h - thick / 2));
+              model.add(topFrame);
+              const bottomFrame = new THREE.Mesh(new THREE.BoxGeometry(width + 0.1, frameThickness, thick + 0.08), frameMat);
+              bottomFrame.position.set(x + center, paneY - paneH / 2 - frameThickness / 2, (edge === "bottom" ? z + thick / 2 : z + h - thick / 2));
+              model.add(bottomFrame);
+              const leftFrame = new THREE.Mesh(new THREE.BoxGeometry(frameThickness, paneH, thick + 0.08), frameMat);
+              leftFrame.position.set(x + center - width / 2 - frameThickness / 4, paneY, (edge === "bottom" ? z + thick / 2 : z + h - thick / 2));
+              model.add(leftFrame);
+              const rightFrame = new THREE.Mesh(new THREE.BoxGeometry(frameThickness, paneH, thick + 0.08), frameMat);
+              rightFrame.position.set(x + center + width / 2 + frameThickness / 4, paneY, (edge === "bottom" ? z + thick / 2 : z + h - thick / 2));
+              model.add(rightFrame);
+              // Montante central
+              const cross = new THREE.Mesh(new THREE.BoxGeometry(frameThickness, paneH, thick + 0.08), frameMat);
+              cross.position.set(x + center, paneY, (edge === "bottom" ? z + thick / 2 : z + h - thick / 2));
+              model.add(cross);
+            } else {
+              const topFrame = new THREE.Mesh(new THREE.BoxGeometry(thick + 0.08, frameThickness, width + 0.1), frameMat);
+              topFrame.position.set((edge === "left" ? x + thick / 2 : x + w - thick / 2), paneY + paneH / 2 + frameThickness / 2, z + center);
+              model.add(topFrame);
+              const bottomFrame = new THREE.Mesh(new THREE.BoxGeometry(thick + 0.08, frameThickness, width + 0.1), frameMat);
+              bottomFrame.position.set((edge === "left" ? x + thick / 2 : x + w - thick / 2), paneY - paneH / 2 - frameThickness / 2, z + center);
+              model.add(bottomFrame);
+              const leftFrame = new THREE.Mesh(new THREE.BoxGeometry(thick + 0.08, paneH, frameThickness), frameMat);
+              leftFrame.position.set((edge === "left" ? x + thick / 2 : x + w - thick / 2), paneY, z + center - width / 2 - frameThickness / 4);
+              model.add(leftFrame);
+              const rightFrame = new THREE.Mesh(new THREE.BoxGeometry(thick + 0.08, paneH, frameThickness), frameMat);
+              rightFrame.position.set((edge === "left" ? x + thick / 2 : x + w - thick / 2), paneY, z + center + width / 2 + frameThickness / 4);
+              model.add(rightFrame);
+              const cross = new THREE.Mesh(new THREE.BoxGeometry(thick + 0.08, paneH, frameThickness), frameMat);
+              cross.position.set((edge === "left" ? x + thick / 2 : x + w - thick / 2), paneY, z + center);
+              model.add(cross);
+            }
+            model.add(pane);
           }
         });
       };
