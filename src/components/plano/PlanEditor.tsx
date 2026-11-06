@@ -503,6 +503,41 @@ export default function PlanEditor() {
     window.print();
   }
 
+  function exportPng() {
+    const svg = svgRef.current;
+    if (!svg) return;
+    const clone = svg.cloneNode(true) as SVGSVGElement;
+    clone.querySelectorAll("[data-no-export]").forEach((node) => node.remove());
+    clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    const viewBox = clone.getAttribute("viewBox");
+    let width = 1600, height = 1200;
+    if (viewBox) {
+      const parts = viewBox.split(/\s+/).map(Number);
+      if (parts.length === 4) { width = Math.round(parts[2]); height = Math.round(parts[3]); }
+    }
+    clone.setAttribute("width", String(width));
+    clone.setAttribute("height", String(height));
+    const data = new XMLSerializer().serializeToString(clone);
+    const blob = new Blob([data], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => {
+      const scale = 2;
+      const canvas = document.createElement("canvas");
+      canvas.width = width * scale;
+      canvas.height = height * scale;
+      const ctx = canvas.getContext("2d")!;
+      ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob((b) => {
+        if (b) downloadBlob(b, docFileName(doc, "png"));
+        URL.revokeObjectURL(url);
+      }, "image/png");
+    };
+    img.onerror = () => URL.revokeObjectURL(url);
+    img.src = url;
+  }
+
   function exportSvg() {
     const svg = svgRef.current;
     if (!svg) return;
@@ -649,6 +684,9 @@ export default function PlanEditor() {
         <span className="ml-auto flex flex-wrap items-center gap-2">
           <button type="button" onClick={exportPdf} className={btnPrimary}>
             Descargar PDF
+          </button>
+          <button type="button" onClick={exportPng} className={btn}>
+            PNG
           </button>
           <button type="button" onClick={exportSvg} className={btn}>
             SVG
