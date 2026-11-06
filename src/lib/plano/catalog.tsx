@@ -169,6 +169,25 @@ export const CATALOG: CatalogGroup[] = [
     ],
   },
   {
+    id: "exterior",
+    label: "Exterior / Patio",
+    items: [
+      { key: "maceta", label: "Maceta", w: 45, h: 45, draw: () => (<><circle cx={0} cy={0} r={22} fill="#faf9f7" /><rect x={-14} y={-2} width={28} height={14} rx={3} fill="#92400e" stroke="#78350f" /><path d="M-20 16 H20" fill="none" stroke="#92400e" strokeWidth={2.5} /></>) },
+      { key: "planta-ext", label: "Planta", w: 60, h: 60, draw: () => (<><circle cx={0} cy={0} r={22} fill="#22c55e" /><circle cx={0} cy={0} r={14} fill="#16a34a" /><path d="M0 0 V-8" fill="none" stroke="#166534" strokeWidth={2} /><circle cx={-8} cy={-2} r={3} fill="#166534" /><circle cx={10} cy={-5} r={3} fill="#166534" /></>) },
+      { key: "fuente", label: "Fuente", w: 90, h: 90, draw: () => (<><circle cx={0} cy={0} r={45} fill="#dcecf8" stroke="#1c1f24" /><circle cx={0} cy={0} r={18} fill="#faf9f7" stroke="#1c1f24" /><circle cx={0} cy={0} r={6} fill="#f6821f" /><path d="M-18 -12 C-10 -24 10 -24 18 -12 M-12 12 C-4 4 4 4 12 12" fill="none" stroke="#4f96e6" strokeWidth={2.5} /></>) },
+      { key: "barbacoa", label: "Barbacoa", w: 120, h: 60, draw: () => (<><rect x={-60} y={-30} width={120} height={60} rx={8} fill="#faf9f7" stroke="#1c1f24" /><rect x={-48} y={-18} width={96} height={24} rx={4} fill="#d1d5db" stroke="#6b7280" /><path d="M-36 -26 V-52 M-12 -26 V-52 M12 -26 V-52 M6 -26 V-52 M36 -26 V-52" fill="none" stroke="#6b7280" strokeWidth={3} /></>) },
+      { key: "piscina", label: "Piscina", w: 300, h: 200, draw: () => (<><rect x={-150} y={-100} width={300} height={200} rx={18} fill="#dcecf8" stroke="#1c1f24" strokeWidth={4} /><rect x={-136} y={-86} width={272} height={172} rx={14} fill="none" stroke="#93c5fd" /><path d="M-120 -30 H120 M-110 30 H110" fill="none" stroke="#4f96e6" strokeWidth={2.5} strokeDasharray="14 10" /></>) },
+      { key: "parasol", label: "Sombrilla/Parásol", w: 150, h: 150, draw: () => (<><circle cx={0} cy={0} r={10} fill="#faf9f7" stroke="#1c1f24" /><path d="M-70 0 A 70 70 0 0 1 75 0" fill="#fbbf24" stroke="#1c1f24" /><path d="M-70 0 A 70 70 0 0 0 75 0" fill="#fbbf24" stroke="#1c1f24" /><path d="M0 0 V-75" fill="none" stroke="#78350f" strokeWidth={3} /></>) },
+      { key: "pergola", label: "Pérgola", w: 200, h: 150, draw: () => (<><rect x={-100} y={-65} width={200} height={130} rx={6} fill="none" stroke="#1c1f24" strokeDasharray="14 10" /><path d="M-90 -55 H90 M-90 -20 H90 M-90 15 H90 M-90 50 H90" fill="none" stroke="#22c55e" strokeWidth={2.5} /></>) },
+      { key: "banco-ext", label: "Banco exterior", w: 120, h: 40, draw: () => (<><rect x={-60} y={-20} width={120} height={40} rx={6} fill="#faf9f7" stroke="#1c1f24" /><path d="M-48 -10 H48 M-48 0 H48 M-48 10 H48" fill="none" stroke="#92400e" strokeWidth={2} /></>) },
+      { key: "celosia", label: "Celosía", w: 200, h: 12, draw: () => (<><rect x={-100} y={-6} width={200} height={12} rx={2} fill="#faf9f7" stroke="#92400e" /><path d="M-94 -6 L-82 6 M-78 -6 L-66 6 M-62 -6 L-50 6 M-46 -6 L-34 6 M-30 -6 L-18 6 M-14 -6 L-2 6 M2 -6 L14 6 M18 -6 L30 6 M34 -6 L46 6 M50 -6 L62 6 M66 -6 L78 6 M82 -6 L94 6" fill="none" stroke="#92400e" strokeWidth={1.5} /></>) },
+      { key: "arbol", label: "Árbol", w: 90, h: 90, draw: () => (<><circle cx={0} cy={0} r={44} fill="#16a34a" stroke="#166534" /><circle cx={-12} cy={-8} r={14} fill="#22c55e" /><circle cx={18} cy={-4} r={16} fill="#22c55e" /><circle cx={0} cy={18} r={12} fill="#15803d" /><rect x={-4.5} y={42} width={9} height={18} rx={3} fill="#92400e" stroke="#78350f" /></>) },
+      { key: "arbusto", label: "Arbusto", w: 60, h: 25, draw: () => (<><ellipse cx={0} cy={0} rx={30} ry={12} fill="#22c55e" stroke="#166534" /><circle cx={-12} cy={-3} r={7} fill="#4ade80" /><circle cx={8} cy={-2} r={8} fill="#4ade80" /><circle cx={20} cy={0} r={6} fill="#4ade80" /></>) },
+      { key: "huerto", label: "Huerto / Bancales", w: 250, h: 140, draw: () => (<><rect x={-125} y={-70} width={250} height={140} rx={8} fill="#92400e" stroke="#78350f" /><rect x={-112} y={-56} width={224} height={112} rx={6} fill="#3f6212" stroke="#14532d" /><path d="M-112 -28 H112 M-112 -2 H112 M-112 24 H112 M-75 -56 V56 M-37 -56 V56 M1 -56 V56 M37 -56 V56 M75 -56 V56" fill="none" stroke="#65a30d" strokeWidth={1.5} /></>) },
+      { key: "jardinera", label: "Jardinera", w: 120, h: 35, draw: () => (<><rect x={-60} y={-17} width={120} height={35} rx={6} fill="#92400e" stroke="#78350f" /><rect x={-52} y={-10} width={104} height={20} rx={4} fill="#3f6212" stroke="#14532d" /><circle cx={-30} cy={-2} r={5} fill="#22c55e" /><circle cx={-10} cy={-2} r={5} fill="#22c55e" /><circle cx={10} cy={-2} r={5} fill="#22c55e" /><circle cx={30} cy={-2} r={5} fill="#22c55e" /></>) },
+    ],
+  },
+  {
     id: "anotaciones",
     label: "Anotaciones",
     items: [
