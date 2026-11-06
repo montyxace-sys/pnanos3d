@@ -1,95 +1,88 @@
 ﻿"use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { getBrowserSupabase } from "@/lib/supabase";
-import { ensureThread, loadMessages, sendEncryptedMessage, subscribeThread, decryptText } from "@/lib/chat";
+import { useEffect, useState } from "react";
 
-const PUBLIC_PASS = "tusplanos3d-public-chat-2026";
+type Msg = { id: string; from: "user" | "community"; text: string; nick: string; time: string };
 
-type Msg = { id: string; from: "user" | "support"; text: string };
+const STORAGE_KEY = "chat:vibecoders:community:v1";
+const NICK_KEY = "chat:vibecoders:nick";
+
+function nowLabel() {
+  return new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+}
+
+function loadMessages() {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const list = JSON.parse(raw) as Msg[];
+    return Array.isArray(list) ? list : [];
+  } catch {
+    return [];
+  }
+}
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Msg[]>([
-    { id: "welcome", from: "support", text: "Hola. Soy el soporte de TusPlanos3D. Puedes escribir sin registrarte." },
+    { id: "welcome", from: "community", text: "Hola. Bienvenido/a a Chat Comunidad Vibecoders.", nick: "Vibecoders", time: nowLabel() },
   ]);
   const [typing, setTyping] = useState(false);
   const [error, setError] = useState("");
-  const [threadId, setThreadId] = useState<string | null>(null);
-  const [uid, setUid] = useState<string | null>(null);
-  const [nickname, setNickname] = useState<string>("");
-  const [draftNick, setDraftNick] = useState<string>("");
+  const [nickname, setNickname] = useState("");
 
   useEffect(() => {
-    const sb = getBrowserSupabase();
-    if (!sb) return;
-    (async () => {
-      try {
-        let { data } = await sb.auth.getSession();
-        let session = data.session;
-        if (!session || !session.user) {
-          const { data: anonymous, error: anonError } = await sb.auth.signInAnonymously();
-          if (anonError) throw anonError;
-          session = anonymous.session;
-        }
-        const user = session?.user;
-        if (!user) throw new Error("No user");
-        setUid(user.id);
-        const savedNick = localStorage.getItem(`chat_name_${user.id}`) || "";
-        setNickname(savedNick);
-        const tid = await ensureThread(sb, user.id);
-        setThreadId(tid);
-        const { data: rows } = await loadMessages(sb, tid);
-        if (rows) {
-          const dec = await Promise.all(
-            rows.map(async (r) => ({
-              id: r.id,
-              from: (r.sender_id === user.id ? "user" : "support") as "user" | "support",
-              text: await decryptText(PUBLIC_PASS, tid, r.ciphertext, r.iv),
-            }))
-          );
-          if (dec.length > 0) setMessages(dec);
-        }
-        const channel = subscribeThread(sb, tid, async (row) => {
-          const txt = await decryptText(PUBLIC_PASS, tid, row.ciphertext, row.iv);
-          setMessages((m) => (m.some((x) => x.id === row.id) ? m : [...m, { id: row.id, from: row.sender_id === user.id ? "user" : "support", text: txt }]));
-        });
-        return () => { sb.removeChannel(channel); };
-      } catch (err) {
-        setError("No se pudo iniciar el chat compartido. Intenta más tarde.");
+    if (typeof window === "undefined") return;
+    const saved = localStorage.getItem(NICK_KEY) || "";
+    setNickname(saved);
+    const list = loadMessages();
+    if (list.length > 0) setMessages(list);
+    const channel = new BroadcastChannel("chat:vibecoders");
+    channel.onmessage = (ev) => {
+      if (ev.data?.type === "msg" && ev.data.msg) {
+        setMessages((m) => (m.some((x) => x.id === ev.data.msg.id) ? m : [...m, ev.data.msg]));
       }
-    })();
+    };
+    return () => channel.close();
   }, []);
 
-  async function send() {
+  function saveNickname(value: string) {
+    const clean = value.trim().slice(0, 24);
+    if (!clean) return;
+    localStorage.setItem(NICK_KEY, clean);
+    setNickname(clean);
+    setError("");
+  }
+
+  function send() {
     const txt = input.trim();
-    if (!txt || !threadId || !uid) return;
+    if (!txt) return;
     const nick = nickname || "Invitado";
     if (!nick.trim()) {
       setError("Pon un nickname antes de enviar.");
       return;
     }
-    const sb = getBrowserSupabase();
-    if (!sb) return;
+    const msg: Msg = {
+      id: crypto.randomUUID(),
+      from: "user",
+      text: txt,
+      nick: nick.trim(),
+      time: nowLabel(),
+    };
     setInput("");
-    setMessages((m) => [...m, { id: crypto.randomUUID(), from: "user", text: txt }]);
-    setTyping(true);
+    const list = [...messages, msg];
+    setMessages(list);
     try {
-      await sendEncryptedMessage(sb, threadId, uid, PUBLIC_PASS, `(${nick}) ${txt}`);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      const channel = new BroadcastChannel("chat:vibecoders");
+      channel.postMessage({ type: "msg", msg });
+      channel.close();
     } catch {
-      setError("No se pudo enviar.");
-    } finally {
-      setTyping(false);
+      setError("No se pudo guardar/enviar el mensaje localmente.");
     }
-  }
-
-  function saveNickname() {
-    if (!draftNick.trim()) return;
-    if (uid) localStorage.setItem(`chat_name_${uid}`, draftNick.trim());
-    setNickname(draftNick.trim());
-    setDraftNick("");
-    setError("");
+    setTyping(false);
   }
 
   const hasNick = Boolean(nickname.trim());
@@ -109,8 +102,8 @@ export default function ChatWidget() {
           {!hasNick ? (
             <div className="mb-2 space-y-2 text-xs">
               <p className="text-ink-soft">Pon un nickname para poder escribir:</p>
-              <input value={draftNick} onChange={(e) => setDraftNick(e.target.value)} className="w-full rounded border border-line bg-paper-2 px-2 py-1 text-xs text-ink" placeholder="Tu nickname..." />
-              <button onClick={saveNickname} className="rounded bg-orange-500 px-2 py-1 text-xs font-bold text-gray-900">Guardar nickname</button>
+              <input value={nickname} onChange={(e) => setNickname(e.target.value)} className="w-full rounded border border-line bg-paper-2 px-2 py-1 text-xs text-ink" placeholder="Tu nickname..." />
+              <button onClick={() => saveNickname(nickname)} className="rounded bg-orange-500 px-2 py-1 text-xs font-bold text-gray-900">Guardar nickname</button>
               {error && <p className="text-red-400">{error}</p>}
             </div>
           ) : (
@@ -118,9 +111,9 @@ export default function ChatWidget() {
           )}
 
           <div className="mb-2 h-52 overflow-y-auto space-y-2 rounded bg-paper-2 p-2 text-xs">
-            {messages.map((m, i) => (
-              <div key={m.id || i} className={m.from === "user" ? "text-right text-orange-300" : "text-gray-200"}>
-                {m.text}
+            {messages.map((m) => (
+              <div key={m.id} className={m.from === "user" ? "text-right" : "text-left text-muted"}>
+                <span className="block text-[10px] opacity-70">{m.text}</span>
               </div>
             ))}
             {typing && <div className="text-muted">escribiendo...</div>}
@@ -133,13 +126,14 @@ export default function ChatWidget() {
               onKeyDown={(e) => e.key === "Enter" && send()}
               disabled={!hasNick}
               className="flex-1 rounded border border-line bg-paper-2 px-2 py-1 text-xs text-ink focus:border-orange-400 focus:outline-none disabled:opacity-50"
-              placeholder={hasNick ? "mensaje..." : "define nickname primero"}
+              placeholder={hasNick ? "mensaje (se queda guardado)..." : "define nickname primero"}
             />
             <button onClick={send} disabled={!hasNick} className="rounded bg-orange-500 px-2 py-1 text-xs font-bold text-gray-900 disabled:opacity-50">
               Enviar
             </button>
           </div>
           {error && <p className="mt-2 text-[10px] text-red-400">{error}</p>}
+          <p className="mt-2 text-[9px] text-muted/60">Se guarda localmente en este navegador y se comparte entre pestañas.</p>
         </div>
       )}
     </>
