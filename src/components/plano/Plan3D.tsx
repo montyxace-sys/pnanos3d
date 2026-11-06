@@ -38,6 +38,7 @@ export default function Plan3D() {
   const doorsOpenRef = useRef<boolean>(false);
   const roomLabelsRef = useRef<HTMLDivElement[]>([]);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const compassRef = useRef<HTMLDivElement>(null);
   const selected3DRef = useRef<any>(null);
   const selection3DRef = useRef<HTMLDivElement>(null);
   const [layers, setLayers] = useState<{walls:boolean; roof:boolean; furniture:boolean; notes:boolean; dimensions:boolean; measure:boolean; floor:boolean}>({walls:true, roof:true, furniture:true, notes:true, dimensions:true, measure:true, floor:true });
@@ -566,6 +567,14 @@ controls.autoRotate = false;
           selCard.style.opacity = "0";
         }
         updateLabels();
+        const compass = compassRef.current;
+        if (compass) {
+          const c = centerRef.current;
+          const camX = camera.position.x - c[0];
+          const camZ = camera.position.z - c[2];
+          const angle = Math.atan2(camX, camZ) * 180 / Math.PI;
+          compass.style.transform = `rotate(${-angle}deg)`;
+        }
         renderer.render(scene, camera);
         raf = requestAnimationFrame(animate);
       };
@@ -913,6 +922,15 @@ controls.autoRotate = false;
         <div ref={dimXRef} className="absolute rounded bg-blue-600/80 px-2 py-1 text-xs font-bold text-white shadow" style={{ transform: "translate(-50%, -50%)", left: 0, top: 0, opacity: 0 }}>m</div>
         <div ref={dimZRef} className="absolute rounded bg-blue-600/80 px-2 py-1 text-xs font-bold text-white shadow" style={{ transform: "translate(-50%, -50%)", left: 0, top: 0, opacity: 0 }}>m</div>
         <div ref={selection3DRef} className="absolute rounded bg-black/75 px-3 py-1.5 text-xs font-semibold text-white shadow backdrop-blur-sm" style={{ transform: "translate(-50%, -125%)", left: 0, top: 0, opacity: 0 }}>Pieza</div>
+        <div className="pointer-events-none absolute right-3 top-3 h-20 w-20 rounded-full border border-line bg-paper/85 shadow backdrop-blur-sm">
+          <div ref={compassRef} className="relative h-full w-full transition-transform duration-75">
+            <span className="absolute left-1/2 top-1 text-[10px] font-bold text-ink" style={{ transform: "translateX(-50%)" }}>N</span>
+            <span className="absolute right-2 top-1/2 text-[10px] font-bold text-ink" style={{ transform: "translateY(-50%)" }}>E</span>
+            <span className="absolute left-1/2 bottom-1 text-[10px] font-bold text-ink" style={{ transform: "translateX(-50%)" }}>S</span>
+            <span className="absolute left-2 top-1/2 text-[10px] font-bold text-ink" style={{ transform: "translateY(-50%)" }}>O</span>
+            <span className="absolute left-1/2 top-1/2 h-8 w-0.5 bg-orange-500" style={{ transform: "translate(-50%, -100%)" }} />
+          </div>
+        </div>
       </div>
     </div>
   );
