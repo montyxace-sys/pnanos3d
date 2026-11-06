@@ -440,7 +440,7 @@ export default function PlanEditor() {
     setSelection({ kind: selection.kind, id });
   }
 
-  function updateRoom(id: string, patch: Partial<{ name: string; w: number; h: number }>) {
+  function updateRoom(id: string, patch: Partial<{ name: string; w: number; h: number; floor: 'concrete' | 'tile' | 'wood' | 'carpet' }>) {
     setDoc((current) => ({
       ...current,
       rooms: current.rooms.map((room) => (room.id === id ? { ...room, ...patch } : room)),
@@ -813,9 +813,22 @@ export default function PlanEditor() {
                   }
                 />
               </div>
-              <p className="mt-2 text-xs text-muted">
-                Superficie: <strong>{fmt(roomArea(selectedRoom))} m²</strong>
-              </p>
+              <label className="mt-3 block text-xs text-muted">
+    Suelo
+    <select
+      value={selectedRoom.floor ?? "concrete"}
+      onChange={(event) => updateRoom(selectedRoom.id, { floor: event.target.value as any })}
+      className={field}
+    >
+      <option value="concrete">Hormigón / gris</option>
+      <option value="tile">Azulejo / claro</option>
+      <option value="wood">Madera</option>
+      <option value="carpet">Moqueta</option>
+    </select>
+  </label>
+  <p className="mt-2 text-xs text-muted">
+    Superficie: <strong>{fmt(roomArea(selectedRoom))} m²</strong>
+  </p>
               <div className="mt-3 flex gap-2">
                 <button type="button" onClick={duplicateSelection} className={btn}>
                   Duplicar

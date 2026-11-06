@@ -119,6 +119,8 @@ export function sanitizeDoc(value: unknown): PlanDoc {
     const h = num(r.h);
     if (x === null || y === null || w === null || h === null || w <= 0 || h <= 0) continue;
     const name = str(r.name)?.trim();
+    const floor = str(r.floor);
+    const safeFloor = floor === "concrete" || floor === "tile" || floor === "wood" || floor === "carpet" ? floor : undefined;
     rooms.push({
       id: str(r.id) ?? uid(),
       name: name ? name.slice(0, 60) : `Estancia ${rooms.length + 1}`,
@@ -126,6 +128,7 @@ export function sanitizeDoc(value: unknown): PlanDoc {
       y,
       w,
       h,
+      floor: safeFloor,
     });
   }
 

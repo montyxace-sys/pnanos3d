@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-type Room = { id: string; name: string; x: number; y: number; w: number; h: number; wallType?: string };
+type Room = { id: string; name: string; x: number; y: number; w: number; h: number; wallType?: string; floor?: 'concrete' | 'tile' | 'wood' | 'carpet' };
 type Piece = { id: string; key: string; x: number; y: number; w: number; h: number; rot: number; text?: string; textColor?: string; textSize?: number };
 type PlanDoc = { title?: string; rooms: Room[]; pieces: Piece[] };
 
@@ -224,13 +224,15 @@ export default function Plan3D() {
         });
       };
 
+      const roomFloorColors: Record<string, number> = { concrete: 0xe8e5de, tile: 0xdbe7f1, wood: 0xdab68b, carpet: 0xcfd4c8 };
       const roomColors = [0xf5f0e6, 0xeaf0f8, 0xf6efe7, 0xf0f3e8, 0xf8f2ef];
       rooms.forEach((room, idx) => {
         const x = room.x / 100, z = room.y / 100, w = room.w / 100, h = room.h / 100;
-        const color = roomColors[idx % roomColors.length];
+        const color = roomFloorColors[room.floor ?? ""] ?? roomColors[idx % roomColors.length];
+        const rough = room.floor === "tile" ? 0.3 : room.floor === "wood" ? 0.7 : 0.95;
         const rfloor = new THREE.Mesh(
           new THREE.PlaneGeometry(w - wallTypeThick(room.wallType) * 2, h - wallTypeThick(room.wallType) * 2),
-          new THREE.MeshStandardMaterial({ color, roughness: 0.95 }),
+          new THREE.MeshStandardMaterial({ color, roughness: rough }),
         );
         rfloor.rotation.x = -Math.PI / 2;
         rfloor.position.set(x + w / 2, 0.015, z + h / 2);
