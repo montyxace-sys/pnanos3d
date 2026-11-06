@@ -1100,6 +1100,17 @@ controls.autoRotate = false;
         </div>
         <div ref={dimXRef} className="absolute rounded bg-blue-600/80 px-2 py-1 text-xs font-bold text-white shadow" style={{ transform: "translate(-50%, -50%)", left: 0, top: 0, opacity: 0 }}>m</div>
         <div ref={dimZRef} className="absolute rounded bg-blue-600/80 px-2 py-1 text-xs font-bold text-white shadow" style={{ transform: "translate(-50%, -50%)", left: 0, top: 0, opacity: 0 }}>m</div>
+        <div className="pointer-events-none absolute left-3 bottom-3 rounded-xl border border-white/10 bg-black/55 px-3 py-2 text-xs text-white shadow backdrop-blur-md">
+          <div className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-white/85">HUD modelo</div>
+          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
+            <span>Área total</span><span className="text-right font-bold">{(doc.rooms.reduce((a, r) => a + (r.w * r.h) / 10000, 0)).toFixed(1)} m²</span>
+            <span>Estancias</span><span className="text-right font-bold">{doc.rooms.length}</span>
+            <span>Puertas</span><span className="text-right font-bold">{doc.pieces.filter((p) => p.key === "puerta").length}</span>
+            <span>Ventanas</span><span className="text-right font-bold">{doc.pieces.filter((p) => p.key === "ventana").length}</span>
+            <span>Mobiliario</span><span className="text-right font-bold">{doc.pieces.filter((p) => p.key !== "puerta" && p.key !== "ventana" && p.key !== "nota").length}</span>
+            <span>Anotaciones</span><span className="text-right font-bold">{doc.pieces.filter((p) => p.key === "nota").length}</span>
+          </div>
+        </div>
         <div ref={selection3DRef} className="absolute rounded bg-black/75 px-3 py-1.5 text-xs font-semibold text-white shadow backdrop-blur-sm" style={{ transform: "translate(-50%, -125%)", left: 0, top: 0, opacity: 0 }}>Pieza</div>
         <div className="pointer-events-none absolute right-3 top-3 h-20 w-20 rounded-full border border-line bg-paper/85 shadow backdrop-blur-sm">
           <div ref={compassRef} className="relative h-full w-full transition-transform duration-75">
