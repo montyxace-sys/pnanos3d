@@ -481,6 +481,12 @@ export default function Plan3D() {
         measurePointsRef.current = [];
       };
 
+      model.traverse((child: any) => {
+        if (child && child.isMesh && !child.userData?._noShadow) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+        }
+      });
       centerRef.current = [cosX, 0.5, cosZ];
 
 
