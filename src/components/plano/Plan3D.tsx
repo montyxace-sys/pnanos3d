@@ -40,6 +40,9 @@ export default function Plan3D() {
   const overlayRef = useRef<HTMLDivElement>(null);
   const selected3DRef = useRef<any>(null);
   const selection3DRef = useRef<HTMLDivElement>(null);
+  const [layers, setLayers] = useState<{walls:boolean; roof:boolean; furniture:boolean; notes:boolean; dimensions:boolean; measure:boolean; floor:boolean}>({walls:true, roof:true, furniture:true, notes:true, dimensions:true, measure:true, floor:true });
+  const layersStateRef = useRef(layers);
+
   const dimXRef = useRef<HTMLDivElement>(null);
   const dimZRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<any>(null);
@@ -125,7 +128,8 @@ export default function Plan3D() {
       );
       floor.rotation.x = -Math.PI / 2;
       floor.position.set(cosX, 0, cosZ);
-      scene.add(floor);
+      floor.userData = { type: "floor" };
+      model.add(floor);
 
       const buildWallSide = (edge: "bottom" | "top" | "left" | "right", room: Room) => {
         const x = room.x / 100, z = room.y / 100, w = room.w / 100, h = room.h / 100;
@@ -238,6 +242,7 @@ export default function Plan3D() {
         );
         rfloor.rotation.x = -Math.PI / 2;
         rfloor.position.set(x + w / 2, 0.015, z + h / 2);
+        rfloor.userData = { type: "floor" };
         model.add(rfloor);
       });
       const doorHinges: any[] = [];
@@ -282,7 +287,7 @@ export default function Plan3D() {
           const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, height, h), furnitureMaterial);
           mesh.position.set(px, height / 2, pz);
           mesh.rotation.y = angle;
-          mesh.userData = { kind: "piece", title: p.text || p.key, size: `${Math.round(w * 100)} x ${Math.round(h * 100)} cm` };
+          mesh.userData = { kind: "piece", title: p.text || p.key, size: `${Math.round(w * 100)} x ${Math.round(h * 100)} cm`, type: "furniture" };
           model.add(mesh);
         });
 
@@ -299,17 +304,21 @@ export default function Plan3D() {
       const roof = new THREE.Mesh(roofGeometry, roofMaterial);
       roof.position.set(cosX, wallHeight, cosZ);
       roof.rotation.y = -Math.PI / 2;
+      roof.userData = { type: "roof" };
       model.add(roof);
       const ridge = new THREE.Mesh(new THREE.BoxGeometry(roofWidth, 0.12, 0.18), new THREE.MeshStandardMaterial({ color: 0x7f2f19, roughness: 0.8 }));
       ridge.position.set(cosX, wallHeight + rise + 0.06, cosZ);
       ridge.rotation.y = Math.PI / 2;
+      ridge.userData = { type: "roof" };
       model.add(ridge);
       const guideMat = new THREE.MeshStandardMaterial({ color: 0x2563eb, roughness: 0.6 });
       const guideX = new THREE.Mesh(new THREE.BoxGeometry((bounds.maxx-bounds.minx)+0.4, 0.03, 0.03), guideMat);
       guideX.position.set(cosX, 0.05, bounds.minz - 1.2);
+      guideX.userData = { type: "dimension" };
       model.add(guideX);
       const guideZ = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.03, (bounds.maxz-bounds.minz)+0.4), guideMat);
       guideZ.position.set(bounds.minx - 1.2, 0.05, cosZ);
+      guideZ.userData = { type: "dimension" };
       model.add(guideZ);
       const measureGroup = new THREE.Group();
       model.add(measureGroup);
@@ -367,6 +376,7 @@ export default function Plan3D() {
           clearMeasureRef.current();
         }
         const marker = new THREE.Mesh(new THREE.SphereGeometry(0.08, 16, 16), markerMaterial);
+        marker.userData = { type: "measure" };
         marker.position.copy(p);
         measureGroup.add(marker);
         measurePointsRef.current.push(p);
@@ -375,6 +385,7 @@ export default function Plan3D() {
           const p1 = measurePointsRef.current[1];
           const geom = new THREE.BufferGeometry().setFromPoints([p0, p1]);
           const line = new THREE.Line(geom, lineMaterial);
+          line.userData = { type: "measure" };
           measureGroup.add(line);
           const distance = p0.distanceTo(p1);
           const canvas = document.createElement("canvas");
@@ -394,6 +405,7 @@ export default function Plan3D() {
           const texture = new THREE.CanvasTexture(canvas);
           texture.needsUpdate = true;
           const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: false }));
+          sprite.userData = { type: "measure" };
           sprite.position.copy(p0.clone().add(p1).multiplyScalar(0.5));
           sprite.position.y = 0.4;
           sprite.scale.set(0.9, 0.22, 1);
@@ -603,6 +615,101 @@ export default function Plan3D() {
           Día / Noche
         </button>
 
+        <button
+          onClick={() => {
+            const next = !layers.walls;
+            setLayers((prev) => ({ ...prev, walls: next }));
+            layersStateRef.current = { ...layersStateRef.current, walls: next };
+            const types = ["wall", "opening"];
+            modelRef.current?.traverse((m: any) => {
+              if (types.includes(m.userData?.type)) m.visible = next;
+            });
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Muros
+        </button>
+        <button
+          onClick={() => {
+            const next = !layers.roof;
+            setLayers((prev) => ({ ...prev, roof: next }));
+            layersStateRef.current = { ...layersStateRef.current, roof: next };
+            modelRef.current?.traverse((m: any) => {
+              if (m.userData?.type === "roof") m.visible = next;
+            });
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Tejado
+        </button>
+        <button
+          onClick={() => {
+            const next = !layers.furniture;
+            setLayers((prev) => ({ ...prev, furniture: next }));
+            layersStateRef.current = { ...layersStateRef.current, furniture: next };
+            modelRef.current?.traverse((m: any) => {
+              if (m.userData?.type === "furniture") m.visible = next;
+            });
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Muebles
+        </button>
+        <button
+          onClick={() => {
+            const next = !layers.notes;
+            setLayers((prev) => ({ ...prev, notes: next }));
+            layersStateRef.current = { ...layersStateRef.current, notes: next };
+            modelRef.current?.traverse((m: any) => {
+              if (m.userData?.type === "note") m.visible = next;
+            });
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Notas
+        </button>
+        <button
+          onClick={() => {
+            const next = !layers.floor;
+            setLayers((prev) => ({ ...prev, floor: next }));
+            layersStateRef.current = { ...layersStateRef.current, floor: next };
+            modelRef.current?.traverse((m: any) => {
+              if (m.userData?.type === "floor") m.visible = next;
+            });
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Suelos
+        </button>
+        <button
+          onClick={() => {
+            const next = !layers.dimensions;
+            setLayers((prev) => ({ ...prev, dimensions: next }));
+            layersStateRef.current = { ...layersStateRef.current, dimensions: next };
+            const cardX = dimXRef.current; const cardZ = dimZRef.current;
+            if (cardX) cardX.style.opacity = next ? "1" : "0";
+            if (cardZ) cardZ.style.opacity = next ? "1" : "0";
+            modelRef.current?.traverse((m: any) => {
+              if (m.userData?.type === "dimension") m.visible = next;
+            });
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Cotas
+        </button>
+        <button
+          onClick={() => {
+            const next = !layers.measure;
+            setLayers((prev) => ({ ...prev, measure: next }));
+            layersStateRef.current = { ...layersStateRef.current, measure: next };
+            modelRef.current?.traverse((m: any) => {
+              if (m.userData?.type === "measure") m.visible = next;
+            });
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Medidas
+        </button>
         <button
           onClick={() => {
             const r = rendererRef.current;
