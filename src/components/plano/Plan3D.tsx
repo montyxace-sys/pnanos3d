@@ -32,6 +32,7 @@ export default function Plan3D() {
   const cameraRef = useRef<any>(null);
   const controlsRef = useRef<any>(null);
   const centerRef = useRef<[number, number, number]>([0, 0.5, 0]);
+  const rendererRef = useRef<any>(null);
 
   useEffect(() => {
     setDoc(loadDoc());
@@ -59,10 +60,11 @@ export default function Plan3D() {
         1000,
       );
 
-      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
       renderer.setSize(container.clientWidth, container.clientHeight);
       container.appendChild(renderer.domElement);
+      rendererRef.current = renderer;
 
       const ambient = new THREE.AmbientLight(0xffffff, 0.8);
       scene.add(ambient);
@@ -306,6 +308,23 @@ export default function Plan3D() {
         >
           Personado
         </button>
+
+        <button
+          onClick={() => {
+            const r = rendererRef.current;
+            if (!r) return;
+            const url = r.domElement.toDataURL("image/png");
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "tusplanos3d-vista-3d.png";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Exportar PNG
+        </button>
       </div>
       <div ref={mountRef} className="relative h-[78vh] min-h-[420px] w-full overflow-hidden border border-line bg-paper-2">
         {!ready && <div className="absolute inset-0 flex items-center justify-center text-muted">Cargando motor 3D...</div>}
@@ -313,3 +332,5 @@ export default function Plan3D() {
     </div>
   );
 }
+
+
