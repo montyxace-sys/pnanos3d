@@ -440,6 +440,19 @@ export default function Plan3D() {
             model.add(g);
             return;
           }
+          if (p.key === "curva90" || p.key === "curva180") {
+            const theta = p.key === "curva180" ? Math.PI : Math.PI / 2;
+            const radius = Math.max(0.65, Math.max(w, h) * 0.38);
+            const geom = new THREE.TorusGeometry(radius * 0.88, 0.09, 8, 64, theta);
+            const mesh = new THREE.Mesh(geom, wallMatFor("carga"));
+            mesh.scale.y = wallHeight / 0.18;
+            mesh.position.set(px, wallHeight / 2, pz);
+            mesh.rotation.x = Math.PI / 2;
+            mesh.rotation.y = angle;
+            mesh.userData = { kind: "piece", title: p.key === "curva180" ? "Curva 180°" : "Curva 90°", size: `${Math.round(w * 100)} x ${Math.round(h * 100)} cm`, type: "furniture" };
+            model.add(mesh);
+            return;
+          }
           if (p.key === "nota") {
             const txt = p.text || "Texto";
             const fontPx = Math.max(12, Math.min(48, (p.textSize ?? 16) * 3));
