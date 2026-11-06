@@ -57,6 +57,12 @@ export default function AdminPage() {
       const email = data.session?.user?.email ?? null;
       const uid = data.session?.user?.id;
       setUserEmail(email);
+      if (email && email.toLowerCase() !== "montyxace@gmail.com") {
+        setIsAdmin(false);
+        setChecked(true);
+        if (sb) await sb.auth.signOut();
+        return;
+      }
       if (uid) {
         const { data: admin } = await sb.from("chat_admins").select("user_id").eq("user_id", uid).maybeSingle();
         setIsAdmin(Boolean(admin));
@@ -64,7 +70,9 @@ export default function AdminPage() {
       setChecked(true);
     })();
     const sub = sb.auth.onAuthStateChange((_e, sess) => {
-      setUserEmail(sess?.user?.email ?? null);
+      const e = sess?.user?.email ?? null;
+      setUserEmail(e);
+      if (e && e.toLowerCase() !== "montyxace@gmail.com") setIsAdmin(false);
     });
     return () => {
       if (sub && sub.data) sub.data.subscription.unsubscribe();
@@ -83,6 +91,10 @@ export default function AdminPage() {
     setAuthBusy(true);
     setAuthError("");
     try {
+      if (authEmail.toLowerCase() !== "montyxace@gmail.com") {
+        setAuthError("Este panel solo puede ser usado por el administrador principal.");
+        return;
+      }
       const { error } = await sb.auth.signInWithPassword({ email: authEmail, password: authPass });
       if (error) { setAuthError(error.message); return; }
       const { data } = await sb.auth.getSession();
@@ -92,6 +104,7 @@ export default function AdminPage() {
       if (!uid) { setAuthError("Sin sesión"); return; }
       const { data: admin } = await sb.from("chat_admins").select("user_id").eq("user_id", uid).maybeSingle();
       if (!admin) { setAuthError("Tu usuario no está en chat_admins."); return; }
+      if ((email ?? "").toLowerCase() !== "montyxace@gmail.com") { setAuthError("Este panel solo puede ser usado por el administrador principal."); return; }
       setIsAdmin(true);
     } finally {
       setAuthBusy(false);
