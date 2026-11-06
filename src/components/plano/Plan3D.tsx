@@ -375,6 +375,71 @@ export default function Plan3D() {
             }
             return;
           }
+          if (p.key === "piscina" || p.key === "fuente" || p.key === "maceta" || p.key === "maceta-grande" || p.key === "jardinera" || p.key === "parasol" || p.key === "arbol" || p.key === "arbusto" || p.key === "cesped") {
+            const g = new THREE.Group();
+            if (p.key === "piscina") {
+              const waterMat = new THREE.MeshStandardMaterial({ color: 0x5faadb, opacity: 0.85, transparent: true, roughness: 0.2 });
+              const water = new THREE.Mesh(new THREE.PlaneGeometry(w - 0.15, h - 0.15), waterMat);
+              water.rotation.x = -Math.PI / 2;
+              water.position.set(0, 0.035, 0);
+              g.add(water);
+              const rim = new THREE.MeshStandardMaterial({ color: 0xd4d0c8, roughness: 0.75 });
+              const segs = [
+                { g: new THREE.BoxGeometry(w, 0.05, 0.08), x: 0, z: -h / 2 },
+                { g: new THREE.BoxGeometry(w, 0.05, 0.08), x: 0, z: h / 2 },
+                { g: new THREE.BoxGeometry(0.08, 0.05, h - 0.16), x: -w / 2, z: 0 },
+                { g: new THREE.BoxGeometry(0.08, 0.05, h - 0.16), x: w / 2, z: 0 },
+              ];
+              for (const seg of segs) {
+                const m = new THREE.Mesh(seg.g, rim);
+                m.position.set(seg.x, 0.055, seg.z);
+                g.add(m);
+              }
+            } else if (p.key === "fuente") {
+              const basin = new THREE.Mesh(new THREE.CylinderGeometry(Math.max(w, h) * 0.45, Math.max(w, h) * 0.4, 0.08, 32), new THREE.MeshStandardMaterial({ color: 0xdcecf8, roughness: 0.25 }));
+              basin.position.y = 0.04;
+              g.add(basin);
+              const col = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.7, 16), new THREE.MeshStandardMaterial({ color: 0xe5e7eb, roughness: 0.45 }));
+              col.position.y = 0.38;
+              g.add(col);
+            } else if (p.key === "maceta" || p.key === "maceta-grande" || p.key === "jardinera") {
+              const radius = Math.min(w, h) * 0.4;
+              const pot = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius * 0.82, 0.25, 32), new THREE.MeshStandardMaterial({ color: 0x92400e, roughness: 0.9 }));
+              pot.position.y = 0.125;
+              g.add(pot);
+              const soil = new THREE.Mesh(new THREE.CylinderGeometry(radius * 0.9, radius * 0.9, 0.04, 32), new THREE.MeshStandardMaterial({ color: 0x56633b, roughness: 1 }));
+              soil.position.y = 0.25;
+              g.add(soil);
+            } else if (p.key === "parasol") {
+              const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.85, 8), new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.85 }));
+              mast.position.y = 0.425;
+              g.add(mast);
+              const canopy = new THREE.Mesh(new THREE.ConeGeometry(Math.max(w, h) * 0.48, 0.04, 8), new THREE.MeshStandardMaterial({ color: 0xfbbf24, roughness: 0.65 }));
+              canopy.position.y = 0.85;
+              g.add(canopy);
+            } else if (p.key === "arbol") {
+              const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.04, 0.45, 10), new THREE.MeshStandardMaterial({ color: 0x92400e, roughness: 0.9 }));
+              trunk.position.y = 0.225;
+              g.add(trunk);
+              const canopy = new THREE.Mesh(new THREE.SphereGeometry(Math.max(w, h) * 0.4, 16, 16), new THREE.MeshStandardMaterial({ color: 0x16a34a, roughness: 0.9 }));
+              canopy.position.y = 0.7;
+              g.add(canopy);
+            } else if (p.key === "arbusto") {
+              const bush = new THREE.Mesh(new THREE.SphereGeometry(Math.max(w, h) * 0.35, 12, 12), new THREE.MeshStandardMaterial({ color: 0x22c55e, roughness: 1 }));
+              bush.position.y = 0.22;
+              g.add(bush);
+            } else if (p.key === "cesped") {
+              const g2 = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshStandardMaterial({ color: 0x22c55e, roughness: 0.95 }));
+              g2.rotation.x = -Math.PI / 2;
+              g2.position.y = 0.015;
+              g.add(g2);
+              return;
+            }
+            g.position.set(px, 0, pz);
+            g.rotation.y = angle;
+            model.add(g);
+            return;
+          }
           if (p.key === "nota") {
             const txt = p.text || "Texto";
             const fontPx = Math.max(12, Math.min(48, (p.textSize ?? 16) * 3));
