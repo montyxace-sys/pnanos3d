@@ -25,7 +25,7 @@ interface PlanSvgProps {
   svgRef?: Ref<SVGSVGElement>;
   className?: string;
   onShapePointerDown?: ShapeHandler;
-  onHandlePointerDown?: (id: string, e: ReactPointerEvent) => void;
+  onHandlePointerDown?: (id: string, corner: "nw" | "ne" | "sw" | "se", e: ReactPointerEvent) => void;
   onCanvasPointerDown?: (e: ReactPointerEvent) => void;
   onCanvasPointerMove?: (e: ReactPointerEvent) => void;
   onCanvasPointerUp?: (e: ReactPointerEvent) => void;
@@ -357,7 +357,7 @@ export default function PlanSvg({
           style={{ cursor: "nwse-resize" }}
           onPointerDown={(e) => {
             e.stopPropagation();
-            onHandlePointerDown(resizeTarget.id, e);
+            onHandlePointerDown(resizeTarget.id, "se", e);
           }}
         />
       )}

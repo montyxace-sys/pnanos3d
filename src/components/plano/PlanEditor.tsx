@@ -26,7 +26,7 @@ import type { PlanDoc, Selection } from "@/lib/plano/types";
 type DragState =
   | { mode: "move-room"; id: string; ox: number; oy: number }
   | { mode: "move-piece"; id: string; ox: number; oy: number }
-  | { mode: "resize-room"; id: string }
+  | { mode: "resize-room"; id: string; corner: "nw" | "ne" | "sw" | "se"; orig: { x:number;y:number;w:number;h:number } }
   | { mode: "draw"; sx: number; sy: number }
   | null;
 
@@ -217,11 +217,12 @@ export default function PlanEditor() {
     svg.setPointerCapture(e.pointerId);
   }
 
-  function onHandlePointerDown(id: string, e: ReactPointerEvent) {
+  function onHandlePointerDown(id: string, corner: "nw" | "ne" | "sw" | "se", e: ReactPointerEvent) {
     if (drawMode) return;
     const svg = svgRef.current;
     if (!svg) return;
-    dragRef.current = { mode: "resize-room", id };
+        const room = doc.rooms.find((item) => item.id === id);
+    dragRef.current = { mode: "resize-room", id, corner, orig: room ? { x: room.x, y: room.y, w: room.w, h: room.h } : { x: 0, y: 0, w: 0, h: 0 } };
     svg.setPointerCapture(e.pointerId);
   }
 
@@ -283,17 +284,24 @@ export default function PlanEditor() {
         pieces: current.pieces.map((piece) => (piece.id === drag.id ? { ...piece, x, y } : piece)),
       }));
     } else if (drag.mode === "resize-room") {
+      const o = drag.orig;
+      const nx = snap(p.x);
+      const ny = snap(p.y);
       setDoc((current) => ({
         ...current,
-        rooms: current.rooms.map((room) =>
-          room.id === drag.id
-            ? {
-                ...room,
-                w: Math.max(40, snap(p.x - room.x)),
-                h: Math.max(40, snap(p.y - room.y)),
-              }
-            : room,
-        ),
+        rooms: current.rooms.map((room) => {
+          if (room.id !== drag.id) return room;
+          if (drag.corner === "se") {
+            return { ...room, w: Math.max(40, nx - room.x), h: Math.max(40, ny - room.y) };
+          }
+          if (drag.corner === "nw") {
+            return { ...room, x: Math.min(o.x + o.w - 40, nx), y: Math.min(o.y + o.h - 40, ny), w: Math.max(40, o.x + o.w - nx), h: Math.max(40, o.y + o.h - ny) };
+          }
+          if (drag.corner === "ne") {
+            return { ...room, y: Math.min(o.y + o.h - 40, ny), w: Math.max(40, nx - room.x), h: Math.max(40, o.y + o.h - ny) };
+          }
+          return { ...room, x: Math.min(o.x + o.w - 40, nx), w: Math.max(40, o.x + o.w - nx), h: Math.max(40, ny - room.y) };
+        }),
       }));
     }
   }
