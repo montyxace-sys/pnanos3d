@@ -30,6 +30,9 @@ export default function Plan3D() {
   const mountRef = useRef<HTMLDivElement>(null);
   const [doc, setDoc] = useState<PlanDoc>(loadDoc);
   const [ready, setReady] = useState(false);
+  const cameraRef = useRef<any>(null);
+  const controlsRef = useRef<any>(null);
+  const [homeView, setHomeView] = useState<{ p: number[]; c: number[] }>({ p: [], c: [] });
 
   useEffect(() => {
     setDoc(loadDoc());
@@ -58,7 +61,10 @@ export default function Plan3D() {
       scene = new THREE.Scene();
       scene.background = new THREE.Color(0xf0ede6);
       camera = new THREE.PerspectiveCamera(60, container.clientWidth / Math.max(container.clientHeight, 1), 0.1, 1000);
-      renderer = new THREE.WebGLRenderer({ antialias: true });
+      cameraRef.current = camera;
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
       renderer.setSize(container.clientWidth, container.clientHeight);
       container.appendChild(renderer.domElement);
@@ -68,11 +74,14 @@ export default function Plan3D() {
       scene.add(ambient);
       const dir = new THREE.DirectionalLight(0xffffff, 1);
       dir.position.set(8, 18, 6);
+      dir.castShadow = true;
+      dir.shadow.mapSize.set(1024,1024);
       scene.add(dir);
 
       // materials
       const floorMat = new THREE.MeshStandardMaterial({ color: 0xd8d2c6, roughness: 0.9 });
       const wallMat = new THREE.MeshStandardMaterial({ color: 0x5e5a52, roughness: 0.85 });
+      const wallHighlight = new THREE.MeshStandardMaterial({ color: 0x4a463f, roughness: 0.85 });
       const pieceMat = new THREE.MeshStandardMaterial({ color: 0xf6821f, roughness: 0.7 });
 
       // compute bounds
@@ -99,6 +108,7 @@ export default function Plan3D() {
       // ground
       const floor = new THREE.Mesh(new THREE.PlaneGeometry(span + 4, span + 4), new THREE.MeshStandardMaterial({ color: 0xebe4d7, roughness: 1 }));
       floor.rotation.x = -Math.PI / 2;
+      floor.receiveShadow = true;
       floor.position.set(cx, 0, cz);
       scene.add(floor);
 
@@ -165,6 +175,8 @@ export default function Plan3D() {
       camera.lookAt(cx, 0.5, cz);
       controls = new OrbitControls(camera, renderer.domElement);
       controls.target.set(cx, 0.5, cz);
+      controlsRef.current = controls;
+      setHomeView({ p: [cx + span*0.8, span*1.3, cz + span*0.8], c: [cx, 0.5, cz] });
       controls.enableDamping = true;
 
       const onResize = () => {
@@ -210,6 +222,12 @@ export default function Plan3D() {
         Vista simplificada del plano guardado en el navegador (extruido 2,5 m + muebles). Sólo crea o carga un plano desde el
         generador y aquí se verá en 3D.
       </p>
+      <div className="mb-4 flex flex-wrap gap-2">
+        <button onClick={() => { if(cameraRef.current && controlsRef.current){ cameraRef.current.position.set(homeView.p[0]*0.6, homeView.p[1]*1.5, homeView.p[2]*0.6); controlsRef.current.target.set(homeView.c[0],1,homeView.c[2]); controlsRef.current.update(); } }} className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-ink hover:bg-paper-2">Isométrico</button>
+        <button onClick={() => { if(cameraRef.current && controlsRef.current){ cameraRef.current.position.set(homeView.c[0], Math.max(homeView.p[1],8), homeView.c[2]); controlsRef.current.target.set(homeView.c[0],1,homeView.c[2]); controlsRef.current.update(); } }} className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-ink hover:bg-paper-2">Planta</button>
+        <button onClick={() => { if(cameraRef.current && controlsRef.current){ cameraRef.current.position.set(homeView.c[0] + homeView.p[0]*0.4, 2, homeView.c[2]); controlsRef.current.target.set(homeView.c[0],1,homeView.c[2]); controlsRef.current.update(); } }} className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-ink hover:bg-paper-2">Frontal</button>
+        <button onClick={() => { if(cameraRef.current && controlsRef.current){ cameraRef.current.position.set(homeView.p[0], homeView.p[1], homeView.p[2]); controlsRef.current.target.set(homeView.c[0],1,homeView.c[2]); controlsRef.current.update(); } }} className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-ink hover:bg-paper-2">Reset</button>
+      </div>
       <div ref={mountRef} className="relative mb-10 h-[70vh] min-h-[420px] w-full overflow-hidden border border-line bg-paper-2">
         {!ready && <div className="absolute inset-0 flex items-center justify-center text-muted">Cargando motor 3D...</div>}
       </div>
