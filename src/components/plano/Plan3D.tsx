@@ -225,6 +225,24 @@ export default function Plan3D() {
           model.add(mesh);
         });
 
+      const roofMaterial = new THREE.MeshStandardMaterial({ color: 0x9e3e22, roughness: 0.85 });
+      const roofDepth = Math.max(span, 3);
+      const roofWidth = Math.max((bounds.maxx - bounds.minx) + 0.8, 3);
+      const rise = roofDepth * 0.35;
+      const roofShape = new THREE.Shape();
+      roofShape.moveTo(-roofDepth / 2, 0);
+      roofShape.lineTo(0, rise);
+      roofShape.lineTo(roofDepth / 2, 0);
+      roofShape.closePath();
+      const roofGeometry = new THREE.ExtrudeGeometry(roofShape, { depth: roofWidth, bevelEnabled: false });
+      const roof = new THREE.Mesh(roofGeometry, roofMaterial);
+      roof.position.set(cosX, wallHeight, cosZ);
+      roof.rotation.y = -Math.PI / 2;
+      model.add(roof);
+      const ridge = new THREE.Mesh(new THREE.BoxGeometry(roofWidth, 0.12, 0.18), new THREE.MeshStandardMaterial({ color: 0x7f2f19, roughness: 0.8 }));
+      ridge.position.set(cosX, wallHeight + rise + 0.06, cosZ);
+      ridge.rotation.y = Math.PI / 2;
+      model.add(ridge);
       centerRef.current = [cosX, 0.5, cosZ];
 
       camera.position.set(cosX + span * 0.8, span * 1.15, cosZ + span * 0.8);
