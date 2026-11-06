@@ -664,6 +664,16 @@ controls.autoRotate = false;
             if (scen) {
               scen.background.setHex(night ? 0x101828 : 0xeeeadf);
             }
+            modelRef.current?.traverse((m: any) => {
+              if (m?.material?.color?.getHex?.() === 0x53a8db) {
+                if (!m.userData?._origEmissiveWindow) {
+                  m.userData = { ...(m.userData || {}), _origEmissiveWindow: m.material.emissive ? m.material.emissive.getHex() : 0 };
+                }
+                if (m.material.emissive) {
+                  m.material.emissive.setHex(night ? 0x53a8db : 0x000000);
+                }
+              }
+            });
             const ambient = ambientRef.current;
             if (ambient) {
               ambient.intensity = night ? 0.2 : 0.8;
