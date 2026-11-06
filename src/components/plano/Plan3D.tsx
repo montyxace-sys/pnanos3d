@@ -49,6 +49,8 @@ export default function Plan3D() {
   const ambientRef = useRef<any>(null);
   const sunRef = useRef<any>(null);
   const isNightRef = useRef<boolean>(false);
+  const autoRotateRef = useRef<boolean>(false);
+  const [autoRotateOn, setAutoRotateOn] = useState<boolean>(false);
   const measureMode = useRef<boolean>(false);
   const [measureOn, setMeasureOn] = useState<boolean>(false);
   const measurePointsRef = useRef<any[]>([]);
@@ -459,6 +461,7 @@ export default function Plan3D() {
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.target.set(cosX, 0.5, cosZ);
       controls.enableDamping = true;
+controls.autoRotate = false;
       cameraRef.current = camera;
       controlsRef.current = controls;
 
@@ -780,6 +783,21 @@ export default function Plan3D() {
           className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
         >
           Fachada W
+        </button>
+        <button
+          onClick={() => {
+            const next = !autoRotateOn;
+            autoRotateRef.current = next;
+            setAutoRotateOn(next);
+            const controls = controlsRef.current;
+            if (controls) {
+              controls.autoRotate = next;
+              controls.autoRotateSpeed = 2.2;
+            }
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          {autoRotateOn ? "Recorrido (on)" : "Recorrido automático"}
         </button>
         <button
           onClick={() => {
