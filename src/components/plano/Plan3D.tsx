@@ -44,6 +44,10 @@ export default function Plan3D() {
   const ambientRef = useRef<any>(null);
   const sunRef = useRef<any>(null);
   const isNightRef = useRef<boolean>(false);
+  const measureMode = useRef<boolean>(false);
+  const [measureOn, setMeasureOn] = useState<boolean>(false);
+  const measurePointsRef = useRef<any[]>([]);
+  const clearMeasureRef = useRef<() => void>(() => {});
 
   useEffect(() => {
     setDoc(loadDoc());
@@ -290,7 +294,79 @@ export default function Plan3D() {
       const guideZ = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.03, (bounds.maxz-bounds.minz)+0.4), guideMat);
       guideZ.position.set(bounds.minx - 1.2, 0.05, cosZ);
       model.add(guideZ);
+      const measureGroup = new THREE.Group();
+      model.add(measureGroup);
+
+      const raycaster = new THREE.Raycaster();
+      const pointer = new THREE.Vector2();
+      const markerMaterial = new THREE.MeshBasicMaterial({ color: 0x2563eb });
+      const lineMaterial = new THREE.LineBasicMaterial({ color: 0x2563eb, linewidth: 2 });
+      const floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+
+      const handleMeasureClick = (event: MouseEvent) => {
+        if (!measureMode.current) return;
+        const rect = renderer.domElement.getBoundingClientRect();
+        pointer.x = ((event.clientX - rect.left) / Math.max(rect.width, 1)) * 2 - 1;
+        pointer.y = -((event.clientY - rect.top) / Math.max(rect.height, 1)) * 2 + 1;
+        raycaster.setFromCamera(pointer, camera);
+        const hit = new THREE.Vector3();
+        if (!raycaster.ray.intersectPlane(floorPlane, hit)) return;
+        const p = new THREE.Vector3(
+          Math.round(hit.x * 10) / 10,
+          0.05,
+          Math.round(hit.z * 10) / 10,
+        );
+        if (measurePointsRef.current.length === 2) {
+          clearMeasureRef.current();
+        }
+        const marker = new THREE.Mesh(new THREE.SphereGeometry(0.08, 16, 16), markerMaterial);
+        marker.position.copy(p);
+        measureGroup.add(marker);
+        measurePointsRef.current.push(p);
+        if (measurePointsRef.current.length === 2) {
+          const p0 = measurePointsRef.current[0];
+          const p1 = measurePointsRef.current[1];
+          const geom = new THREE.BufferGeometry().setFromPoints([p0, p1]);
+          const line = new THREE.Line(geom, lineMaterial);
+          measureGroup.add(line);
+          const distance = p0.distanceTo(p1);
+          const canvas = document.createElement("canvas");
+          canvas.width = 256;
+          canvas.height = 64;
+          const ctx = canvas.getContext("2d");
+          if (ctx) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.font = "bold 24px sans-serif";
+            ctx.fillStyle = "#1d4ed8";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(`${distance.toFixed(2).replace(".", ",")} m`, canvas.width / 2, canvas.height / 2);
+          }
+          const texture = new THREE.CanvasTexture(canvas);
+          texture.needsUpdate = true;
+          const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: false }));
+          sprite.position.copy(p0.clone().add(p1).multiplyScalar(0.5));
+          sprite.position.y = 0.4;
+          sprite.scale.set(0.9, 0.22, 1);
+          measureGroup.add(sprite);
+        }
+      };
+      renderer.domElement.addEventListener("click", handleMeasureClick);
+
+      clearMeasureRef.current = () => {
+        const group = measureGroup;
+        while (group.children.length > 0) {
+          const child = group.children.pop();
+          (child as any)?.geometry?.dispose?.();
+          (child as any)?.material?.dispose?.();
+        }
+        measurePointsRef.current = [];
+      };
+
       centerRef.current = [cosX, 0.5, cosZ];
+
 
       camera.position.set(cosX + span * 0.8, span * 1.15, cosZ + span * 0.8);
       camera.lookAt(cosX, 0.5, cosZ);
@@ -358,6 +434,7 @@ export default function Plan3D() {
 
       cleanup = () => {
         window.removeEventListener("resize", onResize);
+        renderer.domElement.removeEventListener("click", handleMeasureClick);
         cancelAnimationFrame(raf);
         controls?.dispose();
         renderer?.dispose();
@@ -426,6 +503,18 @@ export default function Plan3D() {
           className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
         >
           Personado
+        </button>
+
+        <button
+          onClick={() => {
+            const next = !measureOn;
+            measureMode.current = next;
+            setMeasureOn(next);
+            if (!next) clearMeasureRef.current();
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          {measureOn ? "Medir (on)" : "Medir 3D"}
         </button>
 
         <button
