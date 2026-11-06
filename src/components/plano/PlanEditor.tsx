@@ -355,7 +355,21 @@ export default function PlanEditor() {
     setMsg(null);
   }
 
+  function isGuest() {
+    return !!(typeof window !== "undefined" && localStorage.getItem("local_user"));
+  }
   function saveToCloud() {
+    const guestNick = isGuest();
+    if (guestNick) {
+      try {
+        const key = "projects_guest";
+        const list = JSON.parse(localStorage.getItem(key) || "[]");
+        list.unshift({ id: uid(), title: doc.title, payload: doc, created_at: new Date().toISOString() });
+        localStorage.setItem(key, JSON.stringify(list.slice(0, 20)));
+        setMsg("Proyecto guardado en modo local (invitado).");
+      } catch { setMsg("No se pudo guardar localmente."); }
+      return;
+    }
     const sb = getBrowserSupabase();
     if (!sb) { setMsg("Inicia sesión para guardar en la nube."); return; }
     (async () => {
@@ -375,6 +389,20 @@ export default function PlanEditor() {
   }
 
   function loadFromCloud() {
+    if (isGuest()) {
+      try {
+        const list = JSON.parse(localStorage.getItem("projects_guest") || "[]");
+        if (!Array.isArray(list) || list.length === 0) { setMsg("No hay proyectos locales guardados."); return; }
+        const lines = list.map((r: any, i: number) => `${i + 1}) ${r.title || "Sin título"} · ${new Date(r.created_at).toLocaleString("es-ES")}`).join("\n");
+        const choice = window.prompt("Proyectos guardados localmente (invitado)\n(escribe el número):\n" + lines, "1");
+        if (!choice) return;
+        const idx = Number(choice) - 1;
+        if (!Number.isInteger(idx) || idx < 0 || idx >= list.length) { setMsg("Selección inválida."); return; }
+        const chosen = list[idx];
+        if (chosen?.payload) { setDoc(chosen.payload); setSelection(null); setMsg("Proyecto restaurado localmente."); }
+      } catch { setMsg("Error cargando proyecto local."); }
+      return;
+    }
     const sb = getBrowserSupabase();
     if (!sb) { setMsg("Inicia sesión para cargar desde la nube."); return; }
     (async () => {
