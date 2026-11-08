@@ -26,7 +26,7 @@ import type { PlanDoc, Selection } from "@/lib/plano/types";
 type DragState =
   | { mode: "move-room"; id: string; ox: number; oy: number }
   | { mode: "move-piece"; id: string; ox: number; oy: number }
-  | { mode: "resize-room"; id: string }
+  | { mode: "resize-room"; id: string; corner: "nw" | "ne" | "sw" | "se"; orig: { x:number;y:number;w:number;h:number } }
   | { mode: "draw"; sx: number; sy: number }
   | null;
 
@@ -217,11 +217,12 @@ export default function PlanEditor() {
     svg.setPointerCapture(e.pointerId);
   }
 
-  function onHandlePointerDown(id: string, e: ReactPointerEvent) {
+  function onHandlePointerDown(id: string, corner: "nw" | "ne" | "sw" | "se", e: ReactPointerEvent) {
     if (drawMode) return;
     const svg = svgRef.current;
     if (!svg) return;
-    dragRef.current = { mode: "resize-room", id };
+        const room = doc.rooms.find((item) => item.id === id);
+    dragRef.current = { mode: "resize-room", id, corner, orig: room ? { x: room.x, y: room.y, w: room.w, h: room.h } : { x: 0, y: 0, w: 0, h: 0 } };
     svg.setPointerCapture(e.pointerId);
   }
 
@@ -283,17 +284,24 @@ export default function PlanEditor() {
         pieces: current.pieces.map((piece) => (piece.id === drag.id ? { ...piece, x, y } : piece)),
       }));
     } else if (drag.mode === "resize-room") {
+      const o = drag.orig;
+      const nx = snap(p.x);
+      const ny = snap(p.y);
       setDoc((current) => ({
         ...current,
-        rooms: current.rooms.map((room) =>
-          room.id === drag.id
-            ? {
-                ...room,
-                w: Math.max(40, snap(p.x - room.x)),
-                h: Math.max(40, snap(p.y - room.y)),
-              }
-            : room,
-        ),
+        rooms: current.rooms.map((room) => {
+          if (room.id !== drag.id) return room;
+          if (drag.corner === "se") {
+            return { ...room, w: Math.max(40, nx - room.x), h: Math.max(40, ny - room.y) };
+          }
+          if (drag.corner === "nw") {
+            return { ...room, x: Math.min(o.x + o.w - 40, nx), y: Math.min(o.y + o.h - 40, ny), w: Math.max(40, o.x + o.w - nx), h: Math.max(40, o.y + o.h - ny) };
+          }
+          if (drag.corner === "ne") {
+            return { ...room, y: Math.min(o.y + o.h - 40, ny), w: Math.max(40, nx - room.x), h: Math.max(40, o.y + o.h - ny) };
+          }
+          return { ...room, x: Math.min(o.x + o.w - 40, nx), w: Math.max(40, o.x + o.w - nx), h: Math.max(40, ny - room.y) };
+        }),
       }));
     }
   }
@@ -347,7 +355,21 @@ export default function PlanEditor() {
     setMsg(null);
   }
 
+  function isGuest() {
+    return !!(typeof window !== "undefined" && localStorage.getItem("local_user"));
+  }
   function saveToCloud() {
+    const guestNick = isGuest();
+    if (guestNick) {
+      try {
+        const key = "projects_guest";
+        const list = JSON.parse(localStorage.getItem(key) || "[]");
+        list.unshift({ id: uid(), title: doc.title, payload: doc, created_at: new Date().toISOString() });
+        localStorage.setItem(key, JSON.stringify(list.slice(0, 20)));
+        setMsg("Proyecto guardado en modo local (invitado).");
+      } catch { setMsg("No se pudo guardar localmente."); }
+      return;
+    }
     const sb = getBrowserSupabase();
     if (!sb) { setMsg("Inicia sesión para guardar en la nube."); return; }
     (async () => {
@@ -367,6 +389,20 @@ export default function PlanEditor() {
   }
 
   function loadFromCloud() {
+    if (isGuest()) {
+      try {
+        const list = JSON.parse(localStorage.getItem("projects_guest") || "[]");
+        if (!Array.isArray(list) || list.length === 0) { setMsg("No hay proyectos locales guardados."); return; }
+        const lines = list.map((r: any, i: number) => `${i + 1}) ${r.title || "Sin título"} · ${new Date(r.created_at).toLocaleString("es-ES")}`).join("\n");
+        const choice = window.prompt("Proyectos guardados localmente (invitado)\n(escribe el número):\n" + lines, "1");
+        if (!choice) return;
+        const idx = Number(choice) - 1;
+        if (!Number.isInteger(idx) || idx < 0 || idx >= list.length) { setMsg("Selección inválida."); return; }
+        const chosen = list[idx];
+        if (chosen?.payload) { setDoc(chosen.payload); setSelection(null); setMsg("Proyecto restaurado localmente."); }
+      } catch { setMsg("Error cargando proyecto local."); }
+      return;
+    }
     const sb = getBrowserSupabase();
     if (!sb) { setMsg("Inicia sesión para cargar desde la nube."); return; }
     (async () => {
@@ -389,14 +425,18 @@ export default function PlanEditor() {
   function addPiece(key: string) {
     const item = CAT_BY_KEY[key];
     if (!item) return;
+    const text =
+      key === "nota"
+        ? (window.prompt("Texto de la nota / anotación:", "Texto") ?? "").trim() || "Texto"
+        : undefined;
     const id = uid();
     const bounds = planBounds(doc);
     const offset = (doc.pieces.length % 6) * 30;
-    const x = snap((bounds ? bounds.x + bounds.w / 2 : 0) + offset - 80);
-    const y = snap((bounds ? bounds.y + bounds.h / 2 : 0) + offset - 60);
+    const x = snap((bounds ? bounds.x + bounds.w / 2 : 0) + offset - item.w / 2);
+    const y = snap((bounds ? bounds.y + bounds.h / 2 : 0) + offset - item.h / 2);
     setDoc((current) => ({
       ...current,
-      pieces: [...current.pieces, { id, key, x, y, w: item.w, h: item.h, rot: 0 }],
+      pieces: [...current.pieces, { id, key, x, y, w: item.w, h: item.h, rot: 0, text, "textSize": key === "nota" ? 16 : undefined, "textColor": key === "nota" ? "#1c1f24" : undefined }],
     }));
     setSelection({ kind: "piece", id });
     setMsg(null);
@@ -436,14 +476,14 @@ export default function PlanEditor() {
     setSelection({ kind: selection.kind, id });
   }
 
-  function updateRoom(id: string, patch: Partial<{ name: string; w: number; h: number }>) {
+  function updateRoom(id: string, patch: Partial<{ name: string; w: number; h: number; floor: 'concrete' | 'tile' | 'wood' | 'carpet' }>) {
     setDoc((current) => ({
       ...current,
       rooms: current.rooms.map((room) => (room.id === id ? { ...room, ...patch } : room)),
     }));
   }
 
-  function updatePiece(id: string, patch: Partial<{ w: number; h: number; rot: number }>) {
+  function updatePiece(id: string, patch: Partial<{ w: number; h: number; rot: number; text: string; textColor: string; textSize: number }>) {
     setDoc((current) => ({
       ...current,
       pieces: current.pieces.map((piece) => (piece.id === id ? { ...piece, ...patch } : piece)),
@@ -461,6 +501,41 @@ export default function PlanEditor() {
   function exportPdf() {
     setMsg(null);
     window.print();
+  }
+
+  function exportPng() {
+    const svg = svgRef.current;
+    if (!svg) return;
+    const clone = svg.cloneNode(true) as SVGSVGElement;
+    clone.querySelectorAll("[data-no-export]").forEach((node) => node.remove());
+    clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    const viewBox = clone.getAttribute("viewBox");
+    let width = 1600, height = 1200;
+    if (viewBox) {
+      const parts = viewBox.split(/\s+/).map(Number);
+      if (parts.length === 4) { width = Math.round(parts[2]); height = Math.round(parts[3]); }
+    }
+    clone.setAttribute("width", String(width));
+    clone.setAttribute("height", String(height));
+    const data = new XMLSerializer().serializeToString(clone);
+    const blob = new Blob([data], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => {
+      const scale = 2;
+      const canvas = document.createElement("canvas");
+      canvas.width = width * scale;
+      canvas.height = height * scale;
+      const ctx = canvas.getContext("2d")!;
+      ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob((b) => {
+        if (b) downloadBlob(b, docFileName(doc, "png"));
+        URL.revokeObjectURL(url);
+      }, "image/png");
+    };
+    img.onerror = () => URL.revokeObjectURL(url);
+    img.src = url;
   }
 
   function exportSvg() {
@@ -610,6 +685,9 @@ export default function PlanEditor() {
           <button type="button" onClick={exportPdf} className={btnPrimary}>
             Descargar PDF
           </button>
+          <button type="button" onClick={exportPng} className={btn}>
+            PNG
+          </button>
           <button type="button" onClick={exportSvg} className={btn}>
             SVG
           </button>
@@ -624,6 +702,9 @@ export default function PlanEditor() {
           </button>
           <button type="button" onClick={() => { const b = window.location.pathname.startsWith("/pnanos3d") ? "/pnanos3d" : ""; window.location.assign(b + "/vista-3d/"); }} className={btnPrimary}>
             📐 Vista 3D
+          </button>
+          <button type="button" onClick={() => { const b = window.location.pathname.startsWith("/pnanos3d") ? "/pnanos3d" : ""; window.location.assign(b + "/elevaciones/"); }} className={btn}>
+            Fachadas 2D
           </button>
           <button type="button" onClick={saveToCloud} disabled={cloudBusy} className={btnPrimary}>
             Guardar en la nube
@@ -809,9 +890,22 @@ export default function PlanEditor() {
                   }
                 />
               </div>
-              <p className="mt-2 text-xs text-muted">
-                Superficie: <strong>{fmt(roomArea(selectedRoom))} m²</strong>
-              </p>
+              <label className="mt-3 block text-xs text-muted">
+    Suelo
+    <select
+      value={selectedRoom.floor ?? "concrete"}
+      onChange={(event) => updateRoom(selectedRoom.id, { floor: event.target.value as any })}
+      className={field}
+    >
+      <option value="concrete">Hormigón / gris</option>
+      <option value="tile">Azulejo / claro</option>
+      <option value="wood">Madera</option>
+      <option value="carpet">Moqueta</option>
+    </select>
+  </label>
+  <p className="mt-2 text-xs text-muted">
+    Superficie: <strong>{fmt(roomArea(selectedRoom))} m²</strong>
+  </p>
               <div className="mt-3 flex gap-2">
                 <button type="button" onClick={duplicateSelection} className={btn}>
                   Duplicar
@@ -829,6 +923,40 @@ export default function PlanEditor() {
                 Pieza seleccionada
               </h2>
               <p className="mt-2 text-sm font-semibold text-ink">{selectedCatalogItem.label}</p>
+              {selectedPiece.key === "nota" && (
+                <>
+                  <label className="mt-3 block text-xs text-muted">
+                    Texto
+                    <input
+                      type="text"
+                      value={selectedPiece.text ?? ""}
+                      onChange={(event) => updatePiece(selectedPiece.id, { text: event.target.value })}
+                      className={field}
+                    />
+                  </label>
+                  <label className="mt-2 block text-xs text-muted">
+                    Tamaño (px)
+                    <input
+                      type="range"
+                      min={10}
+                      max={48}
+                      step={1}
+                      value={selectedPiece.textSize ?? 16}
+                      onChange={(event) => updatePiece(selectedPiece.id, { textSize: Number(event.target.value) })}
+                      className="mt-1 w-full accent-[#f6821f]"
+                    />
+                  </label>
+                  <label className="mt-2 block text-xs text-muted">
+                    Color
+                    <input
+                      type="color"
+                      value={selectedPiece.textColor || "#1c1f24"}
+                      onChange={(event) => updatePiece(selectedPiece.id, { textColor: event.target.value })}
+                      className="mt-1 h-10 w-full cursor-pointer border border-line"
+                    />
+                  </label>
+                </>
+              )}
               <div className="mt-2 grid grid-cols-2 gap-2">
                 <NumInput
                   label="Ancho"

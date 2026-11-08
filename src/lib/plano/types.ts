@@ -13,6 +13,7 @@ export type Room = {
   w: number;
   h: number;
   wallType?: 'carga' | 'tabique' | 'pladur' | 'aluminio';
+  floor?: 'concrete' | 'tile' | 'wood' | 'carpet';
 };
 
 /** Pieza colocada sobre el plano (mobiliario o elemento de construcción). */
@@ -27,6 +28,12 @@ export type Piece = {
   h: number;
   /** Rotación en grados. */
   rot: number;
+  /** Texto opcional para anotaciones. */
+  text?: string;
+  /** Color del texto (#rrggbb). */
+  textColor?: string;
+  /** Tamaño de texto en px. */
+  textSize?: number;
 };
 
 /** Documento completo del proyecto. */

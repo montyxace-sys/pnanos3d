@@ -32,7 +32,7 @@ export default function HomePage() {
   return (
     <main className="mx-auto max-w-[1400px] px-4 py-6">
       <header className="mb-6 flex items-center gap-3">
-        <Link href="/"><Image src="/img/logo.svg" alt="TusPlanos3D - inicio" width={205} height={50} className="h-10 w-auto " /></Link>
+        <Link href="/"><Image src="/img/logo.svg" alt="TusPlanos3D - inicio" width={235} height={58} className="h-12 w-auto" /></Link>
         <h1 className="text-xl font-bold text-orange-400">Generador de Planos</h1>
       </header>
       <PlanEditor />

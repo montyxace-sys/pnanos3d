@@ -39,6 +39,8 @@ export default function AdminPage() {
   const [authEmail, setAuthEmail] = useState("");
   const [authPass, setAuthPass] = useState("");
   const [authError, setAuthError] = useState("");
+  const [recoveryCode, setRecoveryCode] = useState("");
+  const [localAdmin, setLocalAdmin] = useState(false);
   const [authBusy, setAuthBusy] = useState(false);
 
   // stats
@@ -57,6 +59,17 @@ export default function AdminPage() {
       const email = data.session?.user?.email ?? null;
       const uid = data.session?.user?.id;
       setUserEmail(email);
+      if (email && email.toLowerCase() === "montyxace@gmail.com") {
+        setIsAdmin(true);
+        setChecked(true);
+        return;
+      }
+      if (email && email.toLowerCase() !== "montyxace@gmail.com") {
+        setIsAdmin(false);
+        setChecked(true);
+        if (sb) await sb.auth.signOut();
+        return;
+      }
       if (uid) {
         const { data: admin } = await sb.from("chat_admins").select("user_id").eq("user_id", uid).maybeSingle();
         setIsAdmin(Boolean(admin));
@@ -64,7 +77,10 @@ export default function AdminPage() {
       setChecked(true);
     })();
     const sub = sb.auth.onAuthStateChange((_e, sess) => {
-      setUserEmail(sess?.user?.email ?? null);
+      const e = sess?.user?.email ?? null;
+      setUserEmail(e);
+      if (!e || e.toLowerCase() !== "montyxace@gmail.com") setIsAdmin(false);
+      else setIsAdmin(true);
     });
     return () => {
       if (sub && sub.data) sub.data.subscription.unsubscribe();
@@ -83,6 +99,10 @@ export default function AdminPage() {
     setAuthBusy(true);
     setAuthError("");
     try {
+      if (authEmail.toLowerCase() !== "montyxace@gmail.com") {
+        setAuthError("Este panel solo puede ser usado por el administrador principal.");
+        return;
+      }
       const { error } = await sb.auth.signInWithPassword({ email: authEmail, password: authPass });
       if (error) { setAuthError(error.message); return; }
       const { data } = await sb.auth.getSession();
@@ -92,12 +112,18 @@ export default function AdminPage() {
       if (!uid) { setAuthError("Sin sesión"); return; }
       const { data: admin } = await sb.from("chat_admins").select("user_id").eq("user_id", uid).maybeSingle();
       if (!admin) { setAuthError("Tu usuario no está en chat_admins."); return; }
+      if ((email ?? "").toLowerCase() !== "montyxace@gmail.com") { setAuthError("Este panel solo puede ser usado por el administrador principal."); return; }
       setIsAdmin(true);
     } finally {
       setAuthBusy(false);
     }
   }
 
+  function grantLocalRecovery() {
+    const expected = "TusP3d-Admin-Recovery-2026!";
+    if (recoveryCode.trim() !== expected) { setAuthError("Codigo incorrecto."); return; }
+    setLocalAdmin(true); setAuthError(""); setRecoveryCode("");
+  }
   async function signout() {
     const sb = getBrowserSupabase();
     if (sb) await sb.auth.signOut();
@@ -147,7 +173,7 @@ export default function AdminPage() {
   if (!checked) {
     return <div className="mx-auto max-w-md px-6 py-16 text-ink">Cargando...</div>;
   }
-  if (!isAdmin || !userEmail) {
+  if ((!isAdmin || !userEmail) && !localAdmin) {
     return (
       <div className="mx-auto max-w-md px-6 py-16 text-ink">
         <h1 className="text-3xl font-bold mb-6">Acceso administrador</h1>
@@ -187,6 +213,11 @@ export default function AdminPage() {
             {authBusy ? "Entrando..." : "Entrar"}
           </button>
         </form>
+        <div className="mt-2 text-center">
+          <a href="/login" className="text-xs text-orange-500 hover:text-orange-400">
+            ¿Olvidaste tu contraseña? Recuperar en /login
+          </a>
+        </div>
       </div>
     );
   }

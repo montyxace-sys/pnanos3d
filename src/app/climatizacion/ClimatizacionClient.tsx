@@ -47,7 +47,9 @@ export default function ClimatizacionPage() {
     // Regla rapida: 130 frigorias por m2 util
     const frigorias = Math.round(m2 * 130);
     const frigUnit = recommendUnit(Math.round(frigorias * 0.293)); // 1 frig ~ 0.293 W aprox
-    return { cooling, heating, unit, btu, frigorias, frigUnit };
+    const kcal = frigorias; // 1 frig ~ 1 kcal/h aprox
+    const coolingKcal = Math.round(cooling * 0.859845); // W -> kcal/h
+    return { cooling, heating, unit, btu, frigorias, kcal, coolingKcal, frigUnit };
   }, [m2, exposure, occupants, appliances]);
 
   return (
@@ -111,8 +113,18 @@ export default function ClimatizacionPage() {
             <div className="mt-3 rounded-lg border border-emerald-200 bg-emerald-50 p-3">
               <div className="text-sm font-semibold text-emerald-700">Regla rapida (130 frig/m2)</div>
               <div className="text-2xl font-bold text-emerald-700">{result.frigorias.toLocaleString("es-ES")} frig/h</div>
-              <p className="text-xs text-ink-soft mt-1">
-                {m2} m2 utiles x 130 frig/m2. Unidad orientativa: {result.frigUnit} W.
+              <div className="mt-2 grid grid-cols-2 gap-2 text-xs text-ink-soft">
+                <div>
+                  <span className="block font-semibold">Frigorías</span>
+                  {result.frigorias.toLocaleString("es-ES")} frig/h
+                </div>
+                <div>
+                  <span className="block font-semibold">kcal/h</span>
+                  {result.coolingKcal.toLocaleString("es-ES")} kcal/h potencia · {result.kcal.toLocaleString("es-ES")} kcal/h regla
+                </div>
+              </div>
+              <p className="text-xs text-ink-soft mt-2">
+                Potencia frigorífica (kW): {(result.cooling / 1000).toFixed(2)} kW; unidad orientativa: {result.frigUnit} W.
               </p>
               <p className="text-xs text-ink-soft mt-2">
                 ¿Necesitas instalación profesional? Pide presupuesto en{" "}

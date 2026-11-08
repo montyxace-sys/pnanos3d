@@ -119,6 +119,8 @@ export function sanitizeDoc(value: unknown): PlanDoc {
     const h = num(r.h);
     if (x === null || y === null || w === null || h === null || w <= 0 || h <= 0) continue;
     const name = str(r.name)?.trim();
+    const floor = str(r.floor);
+    const safeFloor = floor === "concrete" || floor === "tile" || floor === "wood" || floor === "carpet" ? floor : undefined;
     rooms.push({
       id: str(r.id) ?? uid(),
       name: name ? name.slice(0, 60) : `Estancia ${rooms.length + 1}`,
@@ -126,6 +128,7 @@ export function sanitizeDoc(value: unknown): PlanDoc {
       y,
       w,
       h,
+      floor: safeFloor,
     });
   }
 
@@ -140,6 +143,9 @@ export function sanitizeDoc(value: unknown): PlanDoc {
     const base = CAT_BY_KEY[key];
     const w = num(p.w);
     const h = num(p.h);
+    const text = str(p.text);
+    const textColor = str(p.textColor);
+    const textSize = num(p.textSize);
     pieces.push({
       id: str(p.id) ?? uid(),
       key,
@@ -148,6 +154,9 @@ export function sanitizeDoc(value: unknown): PlanDoc {
       w: w !== null && w > 0 ? w : base.w,
       h: h !== null && h > 0 ? h : base.h,
       rot: num(p.rot) ?? 0,
+      text: text ? text.slice(0, 200) : undefined,
+      textColor: textColor ? textColor.slice(0, 16) : undefined,
+      textSize: textSize !== null && textSize > 8 && textSize <= 120 ? textSize : undefined,
     });
   }
 

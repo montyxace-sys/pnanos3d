@@ -962,9 +962,11 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
       const bend = torus(0.045, 0.01, chrome, 0.04, 1.0, 0);
       bend.rotation.y = Math.PI / 2;
       break;
+    case "mesa-ext":
     case "mesa-jardin":
       gardenTable();
       break;
+    case "silla-ext":
     case "silla-jardin":
       gardenChair();
       break;
@@ -974,6 +976,7 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     case "hamaca":
       hammock();
       break;
+    case "parasol":
     case "sombrilla":
       parasol();
       break;
@@ -996,9 +999,7 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
       lampPost();
       break;
     default:
-      box(w, 0.72, d, fabric, 0, 0.36, 0);
-      box(w - 0.08, 0.06, d - 0.08, fabricLight, 0, 0.75, 0);
-      break;
+      return null;
   }
 
   return g;
