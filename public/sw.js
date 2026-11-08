@@ -1,5 +1,5 @@
 // Service Worker básico para TusPlanos3D
-const CACHE = "tusplanos3d-v3";
+const CACHE = "tusplanos3d-v4";
 const ASSETS = [
   "/",
   "/manifest.json",

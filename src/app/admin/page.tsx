@@ -319,7 +319,7 @@ export default function AdminPage() {
           Estadísticas
         </button>
         <button onClick={() => setTab("chat")} className={`px-4 py-2 text-sm font-semibold ${tab === "chat" ? "border-b-2 border-orange-500 text-ink" : "text-muted hover:text-ink"}`}>
-          Chat soporte
+          Chat comunidad
         </button>
         <button onClick={() => setTab("google")} className={`px-4 py-2 text-sm font-semibold ${tab === "google" ? "border-b-2 border-orange-500 text-ink" : "text-muted hover:text-ink"}`}>
           Herramientas Google

@@ -9,7 +9,7 @@ type Msg = { id: string; from: "bot" | "user"; text: string };
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<Msg[]>([{ id: "welcome", from: "bot", text: "Hola. Chat cifrado de extremo a extremo (E2EE). Inicia sesion para usarlo." }]);
+  const [messages, setMessages] = useState<Msg[]>([{ id: "welcome", from: "bot", text: "Hola. Bienvenido al Chat comunidad de TusPlanos3D.es. Cifrado de extremo a extremo (E2EE): inicia sesión para usarlo." }]);
   const [typing, setTyping] = useState(false);
   const [showChip, setShowChip] = useState(true);
   const [user, setUser] = useState<string | null>(null);
@@ -82,7 +82,7 @@ export default function ChatWidget() {
     return (
       <div className="fixed bottom-4 right-4 z-50">
         <a href="/login" className="rounded-full bg-orange-500 px-4 py-2 text-sm font-semibold text-gray-900 shadow-lg">
-          Chat (inicia sesion)
+          Chat comunidad
         </a>
       </div>
     );
@@ -92,17 +92,17 @@ export default function ChatWidget() {
     <>
       {showChip && (
         <div className="fixed bottom-16 right-4 z-50 rounded-lg border border-orange-400/40 bg-paper/90 px-3 py-2 text-[11px] shadow" style={{ maxWidth: "240px" }}>
-          <p className="text-gray-200">Chat cifrado (E2EE). Comparte la clave con el admin fuera del chat.</p>
+          <p className="text-gray-200">Chat comunidad de TusPlanos3D.es · cifrado (E2EE). Comparte la clave con el admin fuera del chat.</p>
           <button className="absolute -top-1 right-1 text-xs text-muted" onClick={() => setShowChip(false)}>x</button>
         </div>
       )}
       <button onClick={() => { setOpen(!open); setShowChip(false); }} className="rounded-full bg-orange-500 px-3 py-2 font-semibold text-gray-900 shadow-lg" style={{ position: "fixed", bottom: "1rem", right: "1rem", zIndex: 50 }}>
-        Chat
+        Chat comunidad
       </button>
       {open && (
         <div className="fixed bottom-16 right-4 z-50 w-80 rounded-lg border border-line bg-paper p-3 shadow-2xl backdrop-blur" style={{ height: "420px" }}>
           <div className="mb-2 flex items-center justify-between">
-            <strong className="text-sm text-orange-400">Chat cifrado</strong>
+            <strong className="text-sm text-orange-400">Chat comunidad TusPlanos3D.es</strong>
             <button onClick={() => setOpen(false)} className="text-xs text-muted">cerrar</button>
           </div>
 

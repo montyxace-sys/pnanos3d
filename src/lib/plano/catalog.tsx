@@ -166,6 +166,23 @@ export const CATALOG: CatalogGroup[] = [
       { key: "manguera-lavabo", label: "Manguera lavabo", w: 35, h: 6, draw: () => (<><rect x={-17} y={-3} width={35} height={6} rx={3} fill="#faf9f7" stroke="#1c1f24" /><path d="M-14 0 H12" fill="none" stroke="#6b675f" strokeWidth={1.5} /></>) },
     ],
   },
+  {
+    id: "exterior",
+    label: "Exterior / Jardín",
+    items: [
+      { key: "mesa-jardin", label: "Mesa jardín", w: 160, h: 90, draw: () => (<><rect x={-80} y={-45} width={160} height={90} rx={8} />{Array.from({ length: 7 }, (_, i) => (<path key={i} d={`M-80 ${-45 + (i + 1) * 11.25} H80`} fill="none" />))}</>) },
+      { key: "silla-jardin", label: "Silla jardín", w: 55, h: 55, draw: () => (<><rect x={-27} y={-27} width={54} height={54} rx={8} /><rect x={-27} y={-27} width={54} height={12} rx={4} fill="none" /><path d="M-27 -15 H27" fill="none" /></>) },
+      { key: "tumbona", label: "Tumbona", w: 70, h: 190, draw: () => (<><rect x={-35} y={-95} width={70} height={190} rx={10} /><path d="M-35 -55 H35" fill="none" /><rect x={-28} y={-88} width={56} height={22} rx={6} /></>) },
+      { key: "hamaca", label: "Hamaca", w: 260, h: 110, draw: () => (<><path d="M-120 -40 V52 M120 -40 V52" fill="none" strokeWidth={5} /><path d="M-120 -34 Q0 52 120 -34" fill="none" strokeWidth={4} /><path d="M-120 -18 Q0 68 120 -18" fill="none" /></>) },
+      { key: "sombrilla", label: "Sombrilla", w: 240, h: 240, draw: () => (<><circle cx={0} cy={0} r={110} fill="none" /><path d="M0 -110 V110 M-110 0 H110 M-78 -78 L78 78 M78 -78 L-78 78" fill="none" /><circle cx={0} cy={0} r={7} /></>) },
+      { key: "barbacoa", label: "Barbacoa", w: 80, h: 60, draw: () => (<><circle cx={0} cy={0} r={28} /><path d="M-22 -12 H22 M-22 -4 H22 M-22 4 H22 M-22 12 H22" fill="none" /><path d="M-20 20 L-26 30 M20 20 L26 30" fill="none" strokeWidth={2} /><path d="M-42 -8 H-30 M30 -8 H42" fill="none" /></>) },
+      { key: "jardinera", label: "Jardinera", w: 100, h: 40, draw: () => (<><rect x={-50} y={-18} width={100} height={36} rx={5} /><circle cx={-25} cy={-2} r={14} /><circle cx={0} cy={-6} r={16} /><circle cx={26} cy={-2} r={13} /></>) },
+      { key: "arbol", label: "Árbol", w: 200, h: 200, draw: () => (<><circle cx={0} cy={-6} r={62} /><circle cx={-40} cy={12} r={34} /><circle cx={40} cy={10} r={32} /><circle cx={0} cy={-6} r={9} fill="none" /></>) },
+      { key: "seto", label: "Seto", w: 200, h: 40, draw: () => (<><rect x={-100} y={-19} width={200} height={38} rx={18} />{Array.from({ length: 8 }, (_, i) => (<circle key={i} cx={-84 + i * 24} cy={0} r={16} fill="none" />))}</>) },
+      { key: "piscina", label: "Piscina", w: 300, h: 200, draw: () => (<><rect x={-150} y={-100} width={300} height={200} rx={10} /><rect x={-136} y={-86} width={272} height={172} rx={6} fill="none" /><path d="M-124 -60 H124 M-124 -30 H124 M-124 0 H124 M-124 30 H124 M-124 60 H124" fill="none" strokeDasharray="12 10" /><path d="M-136 84 H-100 M-136 70 H-100 M-136 56 H-100" fill="none" /></>) },
+      { key: "farol", label: "Farol", w: 30, h: 30, draw: () => (<><circle cx={0} cy={0} r={11} /><circle cx={0} cy={0} r={4} fill="none" /><path d="M0 -20 V-15 M0 15 V20 M-20 0 H-15 M15 0 H20" fill="none" strokeWidth={2} /></>) },
+    ],
+  },
 ]
 
 export const CAT_BY_KEY: Record<string, CatalogItem> = Object.fromEntries(
