@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="470" height="100" viewBox="0 0 470 100" role="img" aria-labelledby="logoTitle">
-  <title id="logoTitle">TusPlanos3D.es - inicio</title>
+  <title id="logoTitle">TusPlanos3D.es — inicio</title>
 
   <!-- Marca: estancia en isometría con la planta marcada en el suelo -->
   <g>
@@ -17,6 +17,6 @@
 
   <!-- Wordmark (blanco+naranja para que se lea en fondo oscuro) -->
   <text x="112" y="66" font-family="'Segoe UI', Helvetica, Arial, sans-serif" font-size="46" letter-spacing="-1">
-    <tspan font-weight="600" fill="#000000">Tus</tspan><tspan font-weight="800" fill="#000000">Planos</tspan><tspan font-weight="800" fill="#f6821f">3D</tspan><tspan font-weight="700" fill="#111827" font-size="28" dy="-24">.es</tspan>
+    <tspan font-weight="600" fill="#000000">Tus</tspan><tspan font-weight="800" fill="#000000">Planos</tspan><tspan font-weight="800" fill="#f6821f">3D</tspan><tspan font-weight="700" font-size="36" fill="#f6821f">.es</tspan>
   </text>
 </svg>

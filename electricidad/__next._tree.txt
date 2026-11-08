@@ -1,4 +1,4 @@
-:HL["/_next/static/chunks/29wcbka2g1ldf.css","style"]
+:HL["/_next/static/chunks/23lti_qxzie9t.css","style"]
 2:[["children",{"s":"__PAGE__","h":160}]]
 1:[["children",{"s":"electricidad","h":64,"c":"$Q2"}]]
-0:{"b":"XamDzT2BWqGKk3bfh7PRl","t":{"t":{"s":"","h":16,"c":"$Q1"}}}
+0:{"b":"behAsJ3ECdEWKOsgrljux","t":{"t":{"s":"","h":16,"c":"$Q1"}}}
