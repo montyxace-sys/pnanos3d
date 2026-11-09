@@ -998,6 +998,114 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     case "farol":
       lampPost();
       break;
+    case "invernadero": {
+      const gh = 2.4, roofH = 0.7;
+      box(w, 0.08, d, stoneLight, 0, 0.04, 0);
+      box(w, gh, 0.05, glass, 0, gh / 2 + 0.08, -d / 2 + 0.025);
+      box(w, gh, 0.05, glass, 0, gh / 2 + 0.08, d / 2 - 0.025);
+      box(0.05, gh, d, glass, -w / 2 + 0.025, gh / 2 + 0.08, 0);
+      box(0.05, gh, d, glass, w / 2 - 0.025, gh / 2 + 0.08, 0);
+      const roof = new T.Mesh(new T.BoxGeometry(w + 0.1, 0.06, d + 0.1), mat(0xbfe3ee, 0.2, 0.1));
+      roof.position.set(0, gh + 0.08, 0);
+      g.add(roof);
+      for (let i = 0; i < 4; i++) {
+        box(w * 0.85, 0.012, 0.012, steel, 0, gh * (0.25 + i * 0.18), -d / 2 + 0.03);
+      }
+      box(w * 0.3, 0.02, d * 0.9, mat(0x7c848c, 0.4, 0.6), 0, 0.02, 0);
+      break;
+    }
+    case "pergola": {
+      const ph = 2.4;
+      for (const sx of [-1, 1]) {
+        for (const sz of [-1, 1]) {
+          box(0.12, ph, 0.12, woodDark, sx * (w / 2 - 0.1), ph / 2, sz * (d / 2 - 0.1));
+        }
+      }
+      for (let i = 0; i < 5; i++) {
+        box(w, 0.1, 0.12, wood, 0, ph - 0.05, -d / 2 + (d / 5) * (i + 0.5));
+      }
+      for (let i = 0; i < 4; i++) {
+        box(0.1, ph * 0.6, 0.1, woodDark, -w / 2 + (w / 4) * (i + 0.5), ph * 0.7, 0);
+      }
+      break;
+    }
+    case "escalera-piscina-ladrillo": {
+      const steps = 5;
+      for (let i = 0; i < steps; i++) {
+        const h = 0.08 + i * 0.06;
+        box(w * (0.9 - i * 0.08), h, d / steps, mat(0xc77b3c, 0.9), 0, h / 2, -d / 2 + (d / steps) * (i + 0.5));
+      }
+      box(w * 0.3, 0.04, d, mat(0x92400e, 0.9), -w * 0.35, 0.02, 0);
+      break;
+    }
+    case "escalera-piscina-metal": {
+      const steps = 5;
+      for (const sx of [-1, 1]) {
+        box(0.05, 1.0, 0.05, steel, sx * (w / 2 - 0.04), 0.5, 0);
+      }
+      for (let i = 0; i < steps; i++) {
+        box(w * 0.85, 0.04, 0.18, steel, 0, 0.12 + i * 0.16, -d / 2 + (d / steps) * (i + 0.5));
+      }
+      box(w * 0.9, 0.05, 0.1, steelDark, 0, 1.02, 0);
+      break;
+    }
+    case "banco-ext":
+    case "bancada-ext":
+      box(w, 0.45, d, teak, 0, 0.225, 0);
+      box(w * 0.92, 0.06, d * 0.85, teakDark, 0, 0.48, 0);
+      for (const sx of [-1, 1]) {
+        box(0.05, 0.45, 0.05, teakDark, sx * (w / 2 - 0.06), 0.225, d / 2 - 0.06);
+        box(0.05, 0.45, 0.05, teakDark, sx * (w / 2 - 0.06), 0.225, -d / 2 + 0.06);
+      }
+      break;
+    case "armario-ext":
+    case "armario-bajo":
+      box(w, key === "armario-ext" ? 1.7 : 0.9, d, mat(0xfaf9f7, 0.7), 0, (key === "armario-ext" ? 1.7 : 0.9) / 2, 0);
+      box(w * 0.95, (key === "armario-ext" ? 1.6 : 0.8), 0.02, mat(0xd3d7db, 0.42, 0.5), 0, (key === "armario-ext" ? 1.7 : 0.9) / 2, d / 2 + 0.01);
+      box(w * 0.02, (key === "armario-ext" ? 1.6 : 0.8), d, mat(0x9aa1a8, 0.6), 0, (key === "armario-ext" ? 1.7 : 0.9) / 2, 0);
+      break;
+    case "cajon-patio":
+    case "leniero":
+      box(w, 0.5, d, key === "leniero" ? teak : mat(0xfaf9f7, 0.7), 0, 0.25, 0);
+      box(w * 0.92, 0.04, d * 0.92, key === "leniero" ? teakDark : mat(0xd3d7db, 0.42, 0.5), 0, 0.52, 0);
+      break;
+    case "cepillo-patio":
+      box(w, 0.4, d, mat(0xfaf9f7, 0.7), 0, 0.2, 0);
+      box(w * 0.85, 0.04, d * 0.85, mat(0xd3d7db, 0.42, 0.5), 0, 0.42, 0);
+      break;
+    case "celosia":
+      box(w, 0.08, d, mat(0x92400e, 0.9), 0, 0.04, 0);
+      for (let i = -4; i <= 4; i++) {
+        box(w, 0.012, 0.012, mat(0xc77b3c, 0.9), 0, 0.04, (d / 9) * i);
+        box(0.012, 0.012, d, mat(0xc77b3c, 0.9), (w / 9) * i, 0.04, 0);
+      }
+      break;
+    case "porta-jardin":
+      box(w, 1.2, d, mat(0x92400e, 0.9), 0, 0.6, 0);
+      box(w * 0.9, 1.0, 0.04, mat(0xc77b3c, 0.9), 0, 0.6, d / 2 + 0.02);
+      box(0.06, 1.1, 0.06, mat(0x78350f, 0.9), -w / 2 + 0.1, 0.55, 0);
+      box(0.06, 1.1, 0.06, mat(0x78350f, 0.9), w / 2 - 0.1, 0.55, 0);
+      break;
+    case "cerramiento-ext":
+      box(w, 1.6, d, mat(0xfde68a, 0.85), 0, 0.8, 0);
+      for (let i = -6; i <= 6; i++) {
+        box(0.04, 1.5, 0.04, mat(0xc2410c, 0.85), (w / 7) * i, 0.8, 0);
+      }
+      break;
+    case "barandilla":
+      box(w, 0.9, d, mat(0xfaf9f7, 0.7), 0, 0.45, 0);
+      for (let i = -8; i <= 8; i++) {
+        box(0.02, 0.85, 0.02, mat(0x94a3b8, 0.6), (w / 9) * i, 0.45, 0);
+      }
+      box(w, 0.06, d * 1.1, mat(0x6b7280, 0.6), 0, 0.9, 0);
+      break;
+    case "huerto":
+      box(w, 0.3, d, mat(0x92400e, 0.9), 0, 0.15, 0);
+      box(w - 0.1, 0.12, d - 0.1, mat(0x3f6212, 0.95), 0, 0.36, 0);
+      for (let i = 0; i < 3; i++) {
+        box(w * 0.8, 0.02, 0.02, mat(0x65a30d, 0.95), 0, 0.42, -d / 3 + (d / 3) * (i + 0.5));
+      }
+      break;
     default:
       return null;
   }
