@@ -426,10 +426,12 @@ export default function Plan3D() {
           if (custom) {
             custom.position.set(px, 0, pz);
             custom.rotation.y = (-p.rot * Math.PI) / 180;
+            custom.userData = { type: "furniture", kind: "piece", title: p.key };
             custom.traverse((m: any) => {
               if (m.isMesh) {
                 m.castShadow = true;
                 m.receiveShadow = true;
+                m.userData = { ...(m.userData || {}), type: "furniture" };
               }
             });
             model.add(custom);
