@@ -3,7 +3,7 @@ import { siteUrl } from "@/app/sitemap";
 import ContactoClient from "./ContactoClient";
 
 export const metadata: Metadata = {
-  title: "Contacto | TusPlanos3D",
+  title: "Contacto",
   description:
     "Contacta con TusPlanos3D: formulario de contacto para consultas sobre planos, electricidad, climatización y colaboraciones. Respuesta en menos de 24 horas.",
   alternates: {

@@ -21,7 +21,22 @@ export default function ElevationsPage() {
         </Link>
         <h1 className="text-2xl font-bold text-ink">Elevaciones / Fachadas</h1>
       </header>
-      {!doc && <p className="text-muted">Abre un proyecto en el generador y vuelve aquí para ver los alzados.</p>}
+      {!doc && (
+        <div className="space-y-3 text-muted">
+          <p>
+            Aquí puedes ver los <strong>alzados y fachadas</strong> de la vivienda que estés dibujando en el
+            generador de planos. Cada muro se proyecta en vertical con sus huecos de puertas y ventanas para
+            comprobar alturas y proporciones antes de la obra.
+          </p>
+          <p>
+            Abre un proyecto en el <Link href="/" className="text-accent underline">generador de planos</Link> y
+            vuelve a esta página para ver los alzados. También puedes revisar el proyecto en{" "}
+            <Link href="/vista-3d/" className="text-accent underline">3D</Link> o calcular la{" "}
+            <Link href="/electricidad/" className="text-accent underline">potencia eléctrica</Link> y la{" "}
+            <Link href="/climatizacion/" className="text-accent underline">climatización</Link>.
+          </p>
+        </div>
+      )}
       {doc && <PlanElevations doc={doc} />}
     </div>
   );

@@ -3,7 +3,7 @@ import { siteUrl } from "@/app/sitemap";
 import ElectricidadClient from "./ElectricidadClient";
 
 export const metadata: Metadata = {
-  title: "Calculadora de potencia eléctrica contratada | TusPlanos3D",
+  title: "Calculadora de potencia eléctrica contratada",
   description:
     "Calcula la potencia eléctrica contratada mínima para tu vivienda gratis: selecciona electrodomésticos, factor de coincidencia y margen de seguridad. Obtén el kW e ICP recomendados. Herramienta gratuita.",
   alternates: {

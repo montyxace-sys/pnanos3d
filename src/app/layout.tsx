@@ -23,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
       icon: "/icon.svg",
       apple: "/img/logo.svg",
     },
-    alternates: { canonical: SITE, languages: { "es-ES": SITE } },
+    alternates: { languages: { "es-ES": SITE } },
     openGraph: {
       title,
       description,
