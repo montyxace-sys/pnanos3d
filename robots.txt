@@ -1,5 +1,6 @@
 User-Agent: *
 Allow: /
+Disallow: /admin/
 Disallow: /login/
 Disallow: /account/
 Disallow: /sw.js
