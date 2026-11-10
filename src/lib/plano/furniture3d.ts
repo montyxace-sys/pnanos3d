@@ -1411,6 +1411,48 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
         box(w * 0.8, 0.02, 0.02, mat(0x65a30d, 0.95), 0, 0.42, -d / 3 + (d / 3) * (i + 0.5));
       }
       break;
+    case "columpio": {
+      // Swing set
+      const crossBar = 2;
+      const chainLen = 1.5;
+      const seatW = 0.4;
+      const seatD = 0.3;
+      const seatH = 0.1;
+      const chainTh = 0.02;
+      const darkMetal = mat(0x6b4a32, 0.8, 0.5);
+      const lightMetal = mat(0xc2c7cd, 0.32, 0.72);
+      // A-frame structure
+      box(0.15, 1.2, 0.15, darkMetal, -crossBar / 2, 0.6, 0);
+      box(0.15, 1.2, 0.15, darkMetal, crossBar / 2, 0.6, 0);
+      // Cross beam
+      box(crossBar, 0.08, 0.15, darkMetal, 0, 1.15, 0);
+      // Chains and seat
+      for (const sx of [-1, 1]) {
+        cyl(chainTh, chainTh, chainLen, darkMetal, sx * crossBar / 2, 0.5 - chainLen, 0);
+        box(seatW, seatH, seatD, lightMetal, 0, seatH / 2, 0);
+      }
+      break;
+    }
+    case "caseta-perro": {
+      // Dog house
+      const roofColor = new THREE.MeshStandardMaterial({ color: 0x2d5a27, roughness: 0.9, metalness: 0.1 });
+      const woodMat = new THREE.MeshStandardMaterial({ color: 0x6b4a32, roughness: 0.8, metalness: 0.3 });
+      const entranceMat = new THREE.MeshStandardMaterial({ color: 0x8d6e63, roughness: 0.9, metalness: 0.5 });
+      // House base
+      box(w, 0.4, d, woodMat, 0, 0.2, 0);
+      // Roof (two parts)
+      box(w + 0.2, 0.1, d + 0.2, roofColor, 0, 0.05, 0);
+      box(w * 0.8, 0.1, d * 0.6, roofColor, 0, 0.05, 0);
+      // Main body
+      box(w * 0.7, 0.3, d * 0.5, woodMat, 0, 0.15, 0);
+      // Entrance hole
+      cyl(0.15, 0.1, 0.15, entranceMat, 0, -0.15, d / 4 - 0.1);
+      // Textured detail: vertical boards
+      for (let i = -3; i <= 3; i++) {
+        box(0.08, 0.35, d * 0.4 - 0.05, woodMat, (w / 4) * i, 0.175, 0);
+      }
+      break;
+    }
     case "coche": {
       // Car body
       const carColor = new THREE.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
@@ -1483,6 +1525,106 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
       box(w + 0.1, 0.35, d - 0.4, trimColor, 0, 0.175, 0);
       // Roof
       box(w * 0.9, 0.1, d - 0.8, doorColor, 0, 0.05, 0);
+      break;
+    }
+    case "pozo-agua": {
+      // Water well
+      const wellColor = new THREE.MeshStandardMaterial({ color: 0x8b4513, roughness: 0.7, metalness: 0.3 });
+      const ropeColor = new THREE.MeshStandardMaterial({ color: 0x8b0000, roughness: 0.5, metalness: 0.1 });
+      // Well structure (square base)
+      box(w, 0.1, d, wellColor, 0, 0.05, 0);
+      // Well walls (vertical planks)
+      for (let i = -2; i <= 2; i++) {
+        box(0.1, 1.5, d - 0.2, wellColor, (w / 4) * i, 0.75, 0);
+      }
+      // Rope and bucket
+      cyl(0.02, 0.02, 1.2, ropeColor, 0, 0.6, 0);
+      // Bucket
+      box(0.1, 0.15, 0.1, wellColor, 0, 0.85, 0);
+      // Boards around well
+      for (let i = -3; i <= 3; i++) {
+        box(0.15, 0.1, d * 0.4 - 0.05, wellColor, (w / 4) * i, 0.05, 0);
+      }
+      break;
+    }
+    case "pajarera": {
+      // Bird cage/aviaries
+      const wireColor = new THREE.MeshStandardMaterial({ color: 0x9e9e9e, roughness: 0.6, metalness: 0.5 });
+      const woodMat = new THREE.MeshStandardMaterial({ color: 0x6b4a32, roughness: 0.8, metalness: 0.3 });
+      // Cage structure - horizontal wires
+      for (let i = -2; i <= 2; i++) {
+        cyl(0.02, 0.02, w + 0.5, wireColor, (w / 4) * i, 0.5, 0);
+        cyl(0.02, 0.02, d + 0.5, wireColor, 0, 0.5, (d / 4) * i);
+      }
+      // Vertical wires
+      for (let i = -2; i <= 2; i++) {
+        cyl(0.02, 0.02, h + 0.5, wireColor, 0, 0.5 + i * 0.3, 0);
+      }
+      // Base box
+      box(w, 0.1, d, woodMat, 0, 0.05, 0);
+      // Perches
+      for (const sx of [-1, 1]) {
+        cyl(0.05, 0.05, 0.3, woodMat, sx * w / 4, 0.15, 0);
+      }
+      break;
+    }
+    case "gallinero": {
+      // Chicken coop
+      const roofColor = new THREE.MeshStandardMaterial({ color: 0x2d5a27, roughness: 0.9, metalness: 0.1 });
+      const woodMat = new THREE.MeshStandardMaterial({ color: 0x6b4a32, roughness: 0.8, metalness: 0.3 });
+      const nestBoxColor = new THREE.MeshStandardMaterial({ color: 0x8b4513, roughness: 0.7, metalness: 0.3 });
+      // Main body
+      box(w, 0.6, d, woodMat, 0, 0.3, 0);
+      // Roof
+      box(w + 0.2, 0.1, d + 0.2, roofColor, 0, 0.05, 0);
+      box(w * 0.8, 0.1, d * 0.6, roofColor, 0, 0.05, 0);
+      // Nest boxes (3 on top)
+      for (let i = -1; i <= 1; i++) {
+        box(w * 0.2, 0.2, d * 0.3, nestBoxColor, (w / 2) * (i + 1) - w * 0.1, 0.5, d / 2 - 0.15);
+      }
+      // Door
+      cyl(0.1, 0.1, 0.15, woodMat, 0, 0.25, -d / 4 - 0.05);
+      // Ventilation holes
+      for (let i = -2; i <= 2; i++) {
+        cyl(0.03, 0.03, 0.2, woodMat, (w / 4) * i, 0.45, d / 2 - 0.1);
+      }
+      break;
+    }
+    case "tobogan": {
+      // Toboggan/water slide
+      const slideColor = new THREE.MeshStandardMaterial({ color: 0xffa500, roughness: 0.6, metalness: 0.1 });
+      const baseColor = new THREE.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
+      // Slide base structure
+      box(w * 0.8, 0.1, d * 0.5, baseColor, 0, 0.05, 0);
+      // Slide curve (approximated)
+      for (let i = 0; i < 5; i++) {
+        const segW = w * 0.16;
+        const segH = 0.1 * (i + 1);
+        box(segW, segH, d * 0.1, slideColor, -w / 4 + segW / 2, segH / 2, -d / 2 + 0.05);
+      }
+      // Ladder
+      for (let i = 0; i < 3; i++) {
+        cyl(0.05, 0.05, 0.5, baseColor, -w / 4 + 0.1, 0.25 + i * 0.2, -d / 2 + 0.1);
+      }
+      break;
+    }
+    case "depuradora piscina": {
+      // Pool filtration system
+      const pumpColor = new THREE.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
+      const motorColor = new THREE.MeshStandardMaterial({ color: 0x4a4a4a, roughness: 0.5, metalness: 0.3 });
+      // Main pump housing
+      box(w, 0.4, d, pumpColor, 0, 0.2, 0);
+      // Motor on top
+      box(w * 0.7, 0.2, d * 0.5, motorColor, 0, 0.1, 0);
+      // Pressure gauge
+      cyl(0.05, 0.05, 0.3, motorColor, -w / 4, 0.3, d / 4 - 0.1);
+      cyl(0.05, 0.05, 0.3, motorColor, w / 4 - 0.05, 0.3, d / 4 - 0.1);
+      // Pipes
+      cyl(0.08, 0.08, d * 0.6, pumpColor, 0, 0.3, 0);
+      // Pressure gauge faces
+      for (let i = -1; i <= 1; i++) {
+        box(0.05, 0.05, 0.05, motorColor, (w / 4) * i, 0.35, d / 2 - 0.05);
+      }
       break;
     }
     default:

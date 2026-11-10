@@ -187,9 +187,22 @@ export const CATALOG: CatalogGroup[] = [
       { key: "fancoil", label: "Fancoil", w: 70, h: 30, draw: () => (<><rect x={-35} y={-15} width={70} height={30} rx={4} /><path d="M-25 -8 H25 M-25 -4 H25 M-25 0 H25 M-25 4 H25" fill="none" /><circle cx={20} cy={0} r={4} fill="none" /></>) },
       { key: "coche", label: "Coche", w: 80, h: 30, draw: () => (<><rect x={-40} y={-15} width={80} height={30} rx={4} fill="#2d3436" stroke="#1c1f24" /><circle cx={-20} cy={0} r={8} fill="#1a1a1a" /><circle cx={20} cy={0} r={8} fill="#1a1a1a" /><path d="M-30 -5 H30 M-30 0 H30 M-30 5 H30" fill="none" /></>) },
       { key: "moto", label: "Motocicleta", w: 70, h: 35, draw: () => (<><rect x={-35} y={-17.5} width={70} height={35} rx={4} fill="#2d3436" stroke="#1c1f24" /><circle cx={-20} cy={0} r={6} fill="#1a1a1a" /><circle cx={20} cy={0} r={6} fill="#1a1a1a" /><path d="M-25 -8 H25 M-25 -4 H25 M-25 0 H25 M-25 4 H25" fill="none" /></>) },
-      { key: "bicicleta", label: "Bicicleta", w: 65, h: 40, draw: () => (<><rect x={-32.5} y={-20} width={65} height={40} rx={4} fill="#6b3a2a" stroke="#1c1f24" /><circle cx={-20} cy={0} r={8} fill="#1a1a1a" /><circle cx={20} cy={0} r={8} fill="#1a1a1a" /><path d="M-20 -10 H20 M-10 -5 H10" fill="none" /></>) ,
+      { key: "bicicleta", label: "Bicicleta", w: 65, h: 40, draw: () => (<><rect x={-32.5} y={-20} width={65} height={40} rx={4} fill="#6b3a2a" stroke="#1c1f24" /><circle cx={-20} cy={0} r={8} fill="#1a1a1a" /><circle cx={20} cy={0} r={8} fill="#1a1a1a" /><path d="M-20 -10 H20 M-10 -5 H10" fill="none" /></>) },
+      { key: "columpio", label: "Columpio", w: 100, h: 40, draw: () => (<><rect x={-50} y={-20} width={100} height={40} rx={4} fill="#8d6e63" stroke="#1c1f24" /><path d="M-40 -8 V8 M-20 -8 V8 M0 -8 V8 M20 -8 V8 M40 -8 V8" fill="none" /><rect x={-20} y={-12} width={40} height={12} rx={2} /><rect x={-20} y={-12} width={4} height={12} rx={2} /><path d="M-20 0 H20 M0 0 H20 M20 0 H20" stroke="#1c1f24" strokeWidth={2} /><path d="M-20 -15 H20 M0 -15 H20 M20 -15 H20" stroke="#1c1f24" strokeWidth={2} /></>) },
+      { key: "caseta-perro", label: "Caseta perro", w: 80, h: 50, draw: () => (<><rect x={-40} y={-25} width={80} height={30} rx={4} fill="#6b4a32" stroke="#1c1f24" /><rect x={-20} y={-5} width={40} height={10} rx={2} fill="#5d4037" /></>) },
     ],
   },
+  {
+    id: "suelo",
+    label: "Suelo",
+    items: [
+      { key: "madera", label: "Madera", w: 60, h: 30, draw: () => (<><rect x={-30} y={-15} width={60} height={30} rx={3} fill="#d2b48c" stroke="#1c1f24" />) },
+      { key: "loza", label: "Loza/Cerámica", w: 60, h: 30, draw: () => (<><rect x={-30} y={-15} width={60} height={30} rx={3} fill="#f0f0f0" stroke="#1c1f24" />) },
+      { key: "marmol", label: "Mármol", w: 60, h: 30, draw: () => (<><rect x={-30} y={-15} width={60} height={30} rx={3} fill="#e0e0e0" stroke="#1c1f24" />) },
+    ],
+  },
+  {
+    id: "fontaneria",
 
   {
     id: "iluminacion",
@@ -210,6 +223,8 @@ export const CATALOG: CatalogGroup[] = [
       { key: "grifo-lavabo", label: "Grifo lavabo", w: 16, h: 10, draw: () => (<><rect x={-8} y={-5} width={16} height={10} rx={2} fill="#faf9f7" stroke="#1c1f24" /><circle cx={0} cy={0} r={2.5} fill="#475569" /></>) },
       { key: "manguera-ducha", label: "Manguera ducha", w: 50, h: 8, draw: () => (<><rect x={-25} y={-4} width={50} height={8} rx={4} fill="#faf9f7" stroke="#1c1f24" /><path d="M-20 0 H20" fill="none" stroke="#6b675f" strokeWidth={1.5} /><circle cx={-23} cy={0} r={2} fill="#f6821f" /><circle cx={23} cy={0} r={2} fill="#f6821f" /></>) },
       { key: "manguera-lavabo", label: "Manguera lavabo", w: 35, h: 6, draw: () => (<><rect x={-17} y={-3} width={35} height={6} rx={3} fill="#faf9f7" stroke="#1c1f24" /><path d="M-14 0 H12" fill="none" stroke="#6b675f" strokeWidth={1.5} /></>) },
+      { key: "alicatado", label: "Alicatado Pared", w: 50, h: 30, draw: () => (<><rect x={-25} y={-15} width={50} height={30} rx={3} fill="#e0e0fa" stroke="#1c1f24" /><path d="M-20 -5 H20 M-15 -10 H15" stroke="#1c1f24" strokeWidth={1} fill="none" />) },
+      { key: "azulejo", label: "Azulejo Pared", w: 50, h: 30, draw: () => (<><rect x={-25} y={-15} width={50} height={30} rx={3} fill="#f0f8ff" stroke="#1c1f24" /><path d="M-20 -5 H20 M-15 -10 H15" stroke="#1c1f24" strokeWidth={1} fill="none" />) },
     ],
   },
   {
