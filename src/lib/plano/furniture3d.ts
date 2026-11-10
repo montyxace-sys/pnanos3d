@@ -473,6 +473,38 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
   };
 
+  const palm = () => {
+    const trunkH = Math.max(2, Math.min(w, d) * 1.5);
+    const canopyR = Math.max(0.5, Math.min(w, d) * 0.4);
+    const trunkMat = mat(0x8b5a2b, 0.8, 0.3);
+    const canopyMat = mat(0x2d5a27, 0.9, 0.1);
+    cyl(0.1, 0.2, trunkH, trunkMat, 0, trunkH / 2, 0, 12);
+    sphere(canopyR, canopyMat, 0, trunkH + canopyR * 0.5, 0, 18);
+    sphere(canopyR * 0.7, canopyMat, 0, trunkH + canopyR * 0.2, canopyR * 0.5, 12);
+    sphere(canopyR * 0.5, canopyMat, 0, trunkH + canopyR * 0.15, -canopyR * 0.2, 12);
+    sphere(canopyR * 0.7, canopyMat, 0, trunkH + canopyR * 0.2, canopyR * 0.5, -12);
+    sphere(canopyR * 0.5, canopyMat, 0, trunkH + canopyR * 0.15, -canopyR * 0.2, -12);
+  };
+
+  const flowerPlanter = () => {
+    const h = Math.max(0.36, Math.min(0.72, d * 0.7));
+    box(w, h, d, terracotta, 0, h / 2, 0);
+    box(w + 0.03, 0.05, d + 0.03, mat(0x8e5a3f, 0.9), 0, h - 0.01, 0);
+    box(w - 0.07, 0.03, d - 0.07, soil, 0, h + 0.02, 0);
+    const n = Math.max(2, Math.round(w / 0.38));
+    for (let i = 0; i < n; i++) {
+      const x = -w / 2 + (w / n) * (i + 0.5);
+      const rad = Math.min(0.24, (w / n) * 0.42);
+      // Roses: pink/red flowers
+      const roseColor = i % 2 === 0 ? mat(0xeb4d4b, 0.7, 0.2) : mat(0xf06292, 0.6, 0.2);
+      const rose = sphere(rad * 0.5, roseColor, x, h + rad * 0.8, 0, 8);
+      rose.scale.y = 0.9;
+      if (i % 3 === 1) {
+        sphere(rad * 0.38, mat(0xd8788a, 0.8), x + rad * 0.3, h + rad * 0.9, rad * 0.2, 8);
+      }
+    }
+  };
+
   const tree = () => {
     const canopyR = Math.max(0.55, Math.min(w, d) * 0.46);
     const trunkH = Math.max(1.5, canopyR * 2.1);
@@ -489,6 +521,233 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     sphere(canopyR * 0.68, foliage, -canopyR * 0.5, trunkH + canopyR * 0.34, -canopyR * 0.28, 16);
     sphere(canopyR * 0.6, foliageDark, -canopyR * 0.16, trunkH + canopyR * 0.92, 0.16, 16);
     sphere(canopyR * 0.55, foliage, canopyR * 0.2, trunkH + canopyR * 0.72, -canopyR * 0.48, 16);
+  }
+
+  const swing = () => {
+    const crossBar = 2;
+    const chainLen = 1.5;
+    const seatW = 0.4;
+    const seatD = 0.3;
+    const seatH = 0.1;
+    const chainTh = 0.02;
+    const darkMetal = mat(0x6b4a32, 0.8, 0.5);
+    const lightMetal = mat(0xc2c7cd, 0.32, 0.72);
+    // A-frame structure
+    box(0.15, 1.2, 0.15, darkMetal, -crossBar / 2, 0.6, 0);
+    box(0.15, 1.2, 0.15, darkMetal, crossBar / 2, 0.6, 0);
+    // Cross beam
+    box(crossBar, 0.08, 0.15, darkMetal, 0, 1.15, 0);
+    // Chains and seat
+    for (const sx of [-1, 1]) {
+      cyl(chainTh, chainTh, chainLen, darkMetal, sx * crossBar / 2, 0.5 - chainLen, 0);
+      box(seatW, seatH, seatD, lightMetal, 0, seatH / 2, 0);
+    }
+  };
+
+  const toys = () => {
+    const blockW = 0.2;
+    const blockD = 0.2;
+    const blockH = 0.15;
+    const ballR = 0.1;
+    const darkMetal = mat(0x6b4a32, 0.8, 0.5);
+    const plastic = mat(0x4facfe, 0.9, 0.2);
+    // Building blocks
+    for (const sx of [-1, 1]) {
+      for (const sz of [-1, 1]) {
+        box(blockW, blockH, blockD, plastic, sx * blockW / 2, blockH / 2, sz * blockD / 2);
+      }
+    }
+    // Balls
+    for (const sy of [-1, 1]) {
+      sphere(ballR, plastic, 0, sy * 0.3, 0, 12);
+    }
+  };
+
+  const house = () => {
+    const h = 0.8;
+    const w = 0.6;
+    const d = 0.5;
+    const darkWood = mat(0x6b4a32, 0.8, 0.3);
+    const roofMat = mat(0x2d5a27, 0.9, 0.1);
+    // House walls
+    box(w, h, d, darkWood, 0, h / 2, 0);
+    // Roof
+    box(w + 0.2, 0.1, d + 0.2, roofMat, 0, h + 0.05, 0);
+    // Door
+    box(0.05, 0.4, 0.1, mat(0x8d6e63, 0.9, 0.5), -w / 2 + 0.05, 0.2, 0);
+    // Window
+    box(0.04, 0.04, 0.02, mat(0x8fe9e9, 0.5, 0.3), w / 2 - 0.04, 0.2, 0);
+  };
+
+  const monster = () => {
+    const bodyH = 1.5;
+    const bodyW = 0.8;
+    const bodyD = 0.8;
+    const darkGreen = mat(0x2d5a27, 0.8, 0.3);
+    const lightGreen = mat(0x6b8e23, 0.4, 0.7);
+    const eyeWhite = mat(0xf8f9fa, 0.9, 0.2);
+    const eyeBlack = mat(0x1a1a1a, 0.9, 0.2);
+    const mouthBrown = mat(0x5d4037, 0.7, 0.4);
+    // Main body
+    box(bodyW, bodyH, bodyD, darkGreen, 0, bodyH / 2, 0);
+    // Stomach patch
+    box(bodyW * 0.6, bodyH * 0.3, bodyD * 0.4, lightGreen, 0, bodyH * 0.45, 0);
+    // Two arms
+    for (const sx of [-1, 1]) {
+      cyl(0.08, 0.08, bodyH * 0.4, darkGreen, sx * bodyW / 2 - 0.1, bodyH * 0.35, 0);
+      // Hand
+      box(0.15, 0.15, 0.15, lightGreen, sx * bodyW / 2 - 0.1, bodyH * 0.65, 0);
+    }
+    // Two legs
+    for (const sx of [-1, 1]) {
+      cyl(0.08, 0.08, bodyH * 0.45, darkGreen, sx * bodyW * 0.2, -bodyH / 2 + 0.05, 0);
+      // Feet
+      box(0.12, 0.12, 0.2, darkGreen, sx * bodyW * 0.2, -bodyH / 2 + 0.15, 0);
+    }
+    // Left eye socket
+    box(0.12, 0.18, 0.12, eyeWhite, -bodyW / 4, bodyH / 2 - 0.15, 0);
+    // Right eye socket
+    box(0.12, 0.18, 0.12, eyeWhite, bodyW / 4, bodyH / 2 - 0.15, 0);
+    // Left pupil
+    sphere(0.05, eyeBlack, 0, bodyH / 2 - 0.25, -bodyW / 4, 8);
+    // Right pupil
+    sphere(0.05, eyeBlack, 0, bodyH / 2 - 0.25, bodyW / 4, 8);
+    // Mouth (smile)
+    const mouthX = 0;
+    const mouthY = -bodyH / 3;
+    const mouthWd = bodyW * 0.4;
+    const mouthHt = 0.08;
+    box(mouthWd, mouthHt, bodyD * 0.2, mouthBrown, mouthX, mouthY, 0);
+    // Smile curve (approximated with small spheres)
+    for (let i = 0; i <= 4; i++) {
+      const angle = (i * Math.PI) / 4;
+      const sx = Math.cos(angle) * mouthWd / 3;
+      const sy = Math.sin(angle) * mouthWd / 3;
+      sphere(0.03, mouthBrown, 0, mouthY + 0.02, sx, 8);
+    }
+  };;
+
+  // Seasonal objects
+  const spring = () => {
+    const flowerR = 0.15;
+    const stemH = 0.8;
+    const petalColor = new THREE.MeshStandardMaterial({ color: 0xff6b6b, roughness: 0.7, metalness: 0.1 });
+    const centerColor = new THREE.MeshStandardMaterial({ color: 0xffd93d, roughness: 0.5, metalness: 0.2 });
+    const leafColor = new THREE.MeshStandardMaterial({ color: 0x2d5a27, roughness: 0.9, metalness: 0.3 });
+    for (let i = 0; i < 8; i++) {
+      const angle = (i * Math.PI * 2) / 8;
+      const petal = new THREE.Mesh(
+        new THREE.PlaneGeometry(flowerR * 0.8, flowerR * 0.5, 8, 4),
+        petalColor
+      );
+      petal.position.set(Math.cos(angle) * flowerR * 0.6, stemH * 0.7, Math.sin(angle) * flowerR * 0.6);
+      petal.rotation.z = angle + Math.PI / 2;
+      petal.scale.y = 0.5;
+      // Add to a group would be done in Plan3D.tsx, here we just create individual pieces
+    }
+    // Stem
+    cyl(0.04, 0.04, stemH, leafColor, 0, 0, 0);
+    // Center
+    sphere(flowerR * 0.4, centerColor, 0, 0, 0, 12);
+  };
+
+  const summer = () => {
+    const bucket = new THREE.Mesh(
+      new THREE.BoxGeometry(0.3, 0.2, 0.15),
+      new THREE.MeshStandardMaterial({ color: 0x7f8c42, roughness: 0.8, metalness: 0.1 })
+    );
+    bucket.position.set(0, 0.1, 0);
+    // Handle
+    cyl(0.03, 0.03, 0.5, new THREE.MeshStandardMaterial({ color: 0x8b6b45, roughness: 0.9, metalness: 0.2 }), 0, 0.15, 0);
+    // Sun flower element
+    const flower = new THREE.Mesh(
+      new THREE.SphereGeometry(0.1, 12, 12),
+      new THREE.MeshStandardMaterial({ color: 0xf5a623, roughness: 0.6, metalness: 0.3 })
+    );
+    flower.position.set(0, 0.3, 0);
+  };
+
+  const autumn = () => {
+    const leafColors = [0x8b5a2b, 0xcd853f, 0xe97451, 0x2c3e50];
+    for (let i = 0; i < 6; i++) {
+      const angle = (i * Math.PI * 2) / 6;
+      const leaf = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.2, 0.15, 8, 4),
+        new THREE.MeshStandardMaterial({ color: leafColors[i % leafColors.length], roughness: 0.9, metalness: 0.1 })
+      );
+      leaf.position.set(Math.cos(angle) * 0.4, 0.25, Math.sin(angle) * 0.4);
+      leaf.rotation.z = angle + Math.PI / 2;
+    }
+    // Pumpkin
+    const pumpkin = new THREE.Mesh(
+      new THREE.SphereGeometry(0.15, 12, 12),
+      new THREE.MeshStandardMaterial({ color: 0xeb4d4b, roughness: 0.7, metalness: 0.1 })
+    );
+    pumpkin.position.set(0, 0.12, 0);
+    // Stem
+    box(0.05, 0.1, 0.05, new THREE.MeshStandardMaterial({ color: 0x5d4037, roughness: 0.8, metalness: 0.2 }), 0, 0.2, 0);
+  };
+
+  const winter = () => {
+    // Snowman body
+    const snow1 = new THREE.Mesh(
+      new THREE.SphereGeometry(0.3, 12, 12),
+      new THREE.MeshStandardMaterial({ color: 0xf8f9fa, roughness: 0.9, metalness: 0.1 })
+    );
+    snow1.position.set(0, 0.75, 0);
+    const snow2 = new THREE.Mesh(
+      new THREE.SphereGeometry(0.4, 12, 12),
+      new THREE.MeshStandardMaterial({ color: 0xf8f9fa, roughness: 0.9, metalness: 0.1 })
+    );
+    snow2.position.set(0, 0.35, 0);
+    const snow3 = new THREE.Mesh(
+      new THREE.SphereGeometry(0.5, 12, 12),
+      new THREE.MeshStandardMaterial({ color: 0xf8f9fa, roughness: 0.9, metalness: 0.1 })
+    );
+    snow3.position.set(0, -0.05, 0);
+    // Carrot nose
+    const carrot = new THREE.Mesh(
+      new THREE.ConeGeometry(0.03, 0.15, 8, 4),
+      new THREE.MeshStandardMaterial({ color: 0xeb4d4b, roughness: 0.7, metalness: 0.2 })
+    );
+    carrot.position.set(0, 0.2, 0);
+    // Eyes
+    sphere(0.02, new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.2 }), 0, 0.15, -0.05, 8);
+    sphere(0.02, new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.2 }), 0, 0.15, 0.05, 8);
+    // Mouth (coal buttons)
+    for (let i = 0; i < 3; i++) {
+      sphere(0.015, new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.2 }), 0, 0.05 + i * 0.07, 0, 8);
+    }
+  };
+
+  const halloween = () => {
+    // Pumpkin
+    const pumpkin = new THREE.Mesh(
+      new THREE.SphereGeometry(0.2, 12, 12),
+      new THREE.MeshStandardMaterial({ color: 0xeb4d4b, roughness: 0.7, metalness: 0.1 })
+    );
+    pumpkin.position.set(0, 0.1, 0);
+    // Eyes
+    sphere(0.03, new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, metalness: 0.2 }), 0, 0.05, -0.05, 8);
+    sphere(0.03, new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, metalness: 0.2 }), 0, 0.05, 0.05, 8);
+    // Nose
+    box(0.03, 0.03, 0.03, new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.2 }), 0, 0.02, 0);
+    // Mouth (grimace)
+    for (let i = 0; i < 5; i++) {
+      const x = (i - 2) * 0.04;
+      sphere(0.015, new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.2 }), 0, -0.02 + i * 0.01, x, 8);
+    }
+    // Stem
+    box(0.02, 0.05, 0.02, new THREE.MeshStandardMaterial({ color: 0x5d4037, roughness: 0.8, metalness: 0.2 }), 0, 0.15, 0);
+    // Bat wings
+    for (const sx of [-1, 1]) {
+      const wing = new THREE.Mesh(
+        new THREE.BoxGeometry(0.15, 0.02, 0.1),
+        new THREE.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.9, metalness: 0.3 })
+      );
+      wing.position.set(sx * 0.2, 0.2, 0);
+      wing.rotation.z = sx * 0.3;
+    }
   };
 
   const hedge = () => {
@@ -881,6 +1140,22 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
         box(0.012, 0.21, d + 0.005, darkMetal, -w / 2 + (w / 5) * i, 2.22, 0);
       }
       break;
+    case "conducto-panel-vidrio":
+      // Conducto panel fibra vidrio tipo climaver 360
+      // Diferente apariencia: textura más ligera, color gris claro con patrón sutil
+      const fiberglassColor = 0xf3f4f6;
+      const fiberglassRoughness = 0.95;
+      const fiberglassMetalness = 0.15;
+      box(w, 0.25, d, new THREE.MeshStandardMaterial({ color: fiberglassColor, roughness: fiberglassRoughness, metalness: fiberglassMetalness }), 0, 2.22, 0);
+      // Patrón de paneles verticales simulados
+      for (let i = 1; i < 5; i++) {
+        box(0.02, 0.24, d + 0.005, new THREE.MeshStandardMaterial({ color: 0xdcddde, roughness: 0.98, metalness: 0.1 }), -w / 2 + (w / 5) * i, 2.22, 0);
+      }
+      // Remaches/fixaciones every 0.3m
+      for (let i = 0; i < 4; i++) {
+        cyl(0.01, 0.01, 0.22, new THREE.MeshStandardMaterial({ color: 0x9ca3af, roughness: 0.8, metalness: 0.3 }), -w / 2 + (w / 4) * i + (w / 8), 2.3, 0);
+      }
+      break;
     case "rejilla-salida":
       box(w, 0.02, d, white, 0, 2.47, 0);
       for (let i = 0; i < 7; i++) {
@@ -986,6 +1261,12 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     case "jardinera":
       planter();
       break;
+    case "maceta-flor":
+      flowerPlanter();
+      break;
+    case "palma":
+      palm();
+      break;
     case "arbol":
       tree();
       break;
@@ -1036,6 +1317,30 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
         box(w * (0.9 - i * 0.08), h, d / steps, mat(0xc77b3c, 0.9), 0, h / 2, -d / 2 + (d / steps) * (i + 0.5));
       }
       box(w * 0.3, 0.04, d, mat(0x92400e, 0.9), -w * 0.35, 0.02, 0);
+      break;
+    }
+    case "escalera-piscina-metal": {
+      const steps = 5;
+      for (const sx of [-1, 1]) {
+        box(0.05, 1.0, 0.05, steel, sx * (w / 2 - 0.04), 0.5, 0);
+      }
+      for (let i = 0; i < steps; i++) {
+        box(w * 0.85, 0.04, 0.18, steel, 0, 0.12 + i * 0.16, -d / 2 + (d / steps) * (i + 0.5));
+      }
+      box(w * 0.9, 0.05, 0.1, steelDark, 0, 1.02, 0);
+      break;
+    }
+    case "escalera-exterior": {
+      const steps = Math.max(4, Math.min(20, Math.round(d / 0.2)));
+      const total = Math.min(3.5, steps * 0.2);
+      for (let i = 0; i < steps; i++) {
+        const h = 0.15 + i * 0.1;
+        const dx = w * (0.1 - i * 0.01);
+        box(dx, h, d / steps - 0.02, mat(0xc2410c, 0.9), 0, h / 2, -d / 2 + (d / steps) * (i + 0.5));
+      }
+      for (const sx of [-1, 1]) {
+        cyl(0.1, 0.15, total + 0.1, mat(0x6b4a32, 0.8), sx * (w / 2 - 0.1), 0.05, -d / 2 + 0.1);
+      }
       break;
     }
     case "escalera-piscina-metal": {

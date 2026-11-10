@@ -25,6 +25,47 @@ function loadDoc(): PlanDoc {
   }
 }
 
+const TEMPLATES: Record<string, PlanDoc> = {
+  "casa-adosada": {
+    title: "Casa Adosada 3 Habitaciones",
+    rooms: [
+      { id: "1", name: "Sala", x: 0, y: 0, w: 800, h: 600, wallType: "tabique" },
+      { id: "2", name: "Cocina", x: 800, y: 0, w: 800, h: 600, wallType: "tabique" },
+      { id: "3", name: "Dormitorio 1", x: 1600, y: 0, w: 800, h: 600, wallType: "tabique" },
+    ],
+    pieces: [
+      { id: "p1", key: "cama150", x: 100, y: 100, w: 400, h: 200, rot: 0 },
+      { id: "p2", key: "mesita", x: 100, y: 500, w: 200, h: 100, rot: 0 },
+      { id: "p3", key: "sofa2", x: 500, y: 300, w: 200, h: 90, rot: 0 },
+      { id: "p4", key: "mesa-centro", x: 700, y: 350, w: 80, h: 80, rot: 0 },
+      { id: "p5", key: "ventana", x: 100, y: 100, w: 200, h: 100, rot: 0 },
+      { id: "p6", key: "puerta", x: 100, y: 300, w: 100, h: 200, rot: 0 },
+    ],
+  },
+  "chalet": {
+    title: "Chalet Unifamiliar con Jardín",
+    rooms: [
+      { id: "1", name: "Planta Principal", x: 0, y: 0, w: 1000, h: 800, wallType: "paredes" },
+    ],
+    pieces: [
+      { id: "p1", key: "palma", x: 200, y: 200, w: 50, h: 100, rot: 0 },
+      { id: "p2", key: "sillón", x: 100, y: 700, w: 150, h: 100, rot: 0 },
+      { id: "p3", key: "jacuzzi", x: 800, y: 600, w: 300, h: 100, rot: 0 },
+    ],
+  },
+  "piso-estudio": {
+    title: "Piso Estudio Moderno",
+    rooms: [
+      { id: "1", name: "Estudio", x: 0, y: 0, w: 600, h: 400, wallType: "tabique" },
+    ],
+    pieces: [
+      { id: "p1", key: "escritorio", x: 50, y: 50, w: 150, h: 80, rot: 0 },
+      { id: "p2", key: "sofa2", x: 50, y: 300, w: 200, h: 90, rot: 0 },
+      { id: "p3", key: "lampara-pie", x: 300, y: 300, w: 50, h: 200, rot: 0 },
+    ],
+  },
+};
+
 const wallHeight = 2.5;
 
 function wallTypeThick(t?: string): number {
@@ -51,6 +92,35 @@ export default function Plan3D() {
   const selection3DRef = useRef<HTMLDivElement>(null);
   const [layers, setLayers] = useState<{walls:boolean; roof:boolean; furniture:boolean; notes:boolean; dimensions:boolean; measure:boolean; floor:boolean}>({walls:true, roof:true, furniture:true, notes:true, dimensions:true, measure:true, floor:true });
   const layersStateRef = useRef(layers);
+  const [season, setSeason] = useState(6); // 0=Todo, 1=Primavera, 2=Verano, 3=Otoño, 4=Invierno, 5=Halloween, 6=Fecha actual
+
+  // Detectar estación automáticamente basado en la fecha actual
+  useEffect(() => {
+    const month = new Date().getMonth(); // 0=Enero, 11=Diciembre
+    let detectedSeason = 6; // Default: Fecha actual
+    
+    // Norte: Invierno ene-feb-mar, Primavera abr-may-jun, Verano jul-ago-set, Otoño oct-nov-dic
+    if (month >= 0 && month <= 2) detectedSeason = 4; // Invierno
+    else if (month >= 3 && month <= 5) detectedSeason = 1; // Primavera
+    else if (month >= 6 && month <= 8) detectedSeason = 2; // Verano
+    else if (month >= 9 && month <= 11) detectedSeason = 3; // Otoño
+    
+    // Special: Halloween is October 31st
+    if (month === 9 && new Date().getDate() >= 31) detectedSeason = 5; // Halloween
+    
+    setSeason(detectedSeason);
+  }, []);
+
+// Helper to get season name
+  const seasonNames: Record<number, string> = {
+    0: "Todo",
+    1: "Primavera",
+    2: "Verano", 
+    3: "Otoño",
+    4: "Invierno",
+    5: "Halloween",
+    6: "Fecha actual"
+  };
 
   const dimXRef = useRef<HTMLDivElement>(null);
   const dimZRef = useRef<HTMLDivElement>(null);
@@ -493,6 +563,42 @@ export default function Plan3D() {
               const soil = new THREE.Mesh(new THREE.CylinderGeometry(radius * 0.9, radius * 0.9, 0.04, 32), new THREE.MeshStandardMaterial({ color: 0x56633b, roughness: 1 }));
               soil.position.y = 0.25;
               g.add(soil);
+            } else if (p.key === "maceta-flor") {
+              const radius = Math.min(w, h) * 0.4;
+              const pot = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius * 0.82, 0.25, 32), new THREE.MeshStandardMaterial({ color: 0x92400e, roughness: 0.9 }));
+              pot.position.y = 0.125;
+              g.add(pot);
+              // Add flowers (roses/geraniums) - red/pink colors
+              const flowerColor = new THREE.MeshStandardMaterial({ color: 0xeb4d4b, roughness: 0.7, metalness: 0.2 });
+              for (let i = 0; i < 6; i++) {
+                const angle = (i * Math.PI * 2) / 6;
+                const flower = new THREE.Mesh(
+                  new THREE.SphereGeometry(radius * 0.3, 12, 12),
+                  flowerColor
+                );
+                flower.position.set(
+                  Math.cos(angle) * radius * 0.5,
+                  0.4,
+                  Math.sin(angle) * radius * 0.5
+                );
+                flower.scale.y = 0.8;
+                g.add(flower);
+              }
+              // Add green leaves
+              const leafColor = new THREE.MeshStandardMaterial({ color: 0x1e8449, roughness: 0.8, metalness: 0.1 });
+              for (let i = 0; i < 4; i++) {
+                const angle = (i * Math.PI * 2) / 4;
+                const leaf = new THREE.Mesh(
+                  new THREE.PlaneGeometry(radius * 0.4, radius * 0.2, 8, 4),
+                  leafColor
+                );
+                leaf.position.set(
+                  Math.cos(angle) * radius * 0.5,
+                  0.35,
+                  Math.sin(angle) * radius * 0.5);
+                leaf.rotation.z = angle + Math.PI / 2;
+                leaf.scale.y = 0.5;
+                g.add(leaf);
             } else if (p.key === "parasol") {
               const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.85, 8), new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.85 }));
               mast.position.y = 0.425;
@@ -500,6 +606,90 @@ export default function Plan3D() {
               const canopy = new THREE.Mesh(new THREE.ConeGeometry(Math.max(w, h) * 0.48, 0.04, 8), new THREE.MeshStandardMaterial({ color: 0xfbbf24, roughness: 0.65 }));
               canopy.position.y = 0.85;
               g.add(canopy);
+            } else if (p.key === "monstruo") {
+              const g = new THREE.Group();
+              const bodyH = 1.5;
+              const bodyW = 0.8;
+              const bodyD = 0.8;
+              const darkGreen = new THREE.MeshStandardMaterial({ color: 0x2d5a27, roughness: 0.8, metalness: 0.3 });
+              const lightGreen = new THREE.MeshStandardMaterial({ color: 0x6b8e23, roughness: 0.4, metalness: 0.7 });
+              const eyeWhite = new THREE.MeshStandardMaterial({ color: 0xf8f9fa, roughness: 0.9, metalness: 0.2 });
+              const eyeBlack = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.2 });
+              const mouthBrown = new THREE.MeshStandardMaterial({ color: 0x5d4037, roughness: 0.7, metalness: 0.4 });
+              // Main body
+              box(bodyW, bodyH, bodyD, darkGreen, 0, bodyH / 2, 0);
+              // Stomach patch
+              box(bodyW * 0.6, bodyH * 0.3, bodyD * 0.4, lightGreen, 0, bodyH * 0.45, 0);
+              // Two arms
+              for (const sx of [-1, 1]) {
+                cyl(0.08, 0.08, bodyH * 0.4, darkGreen, sx * bodyW / 2 - 0.1, bodyH * 0.35, 0);
+                box(0.15, 0.15, 0.15, lightGreen, sx * bodyW / 2 - 0.1, bodyH * 0.65, 0);
+              }
+              // Two legs
+              for (const sx of [-1, 1]) {
+                cyl(0.08, 0.08, bodyH * 0.45, darkGreen, sx * bodyW * 0.2, -bodyH / 2 + 0.05, 0);
+                box(0.12, 0.12, 0.2, darkGreen, sx * bodyW * 0.2, -bodyH / 2 + 0.15, 0);
+              }
+              // Left eye socket
+              box(0.12, 0.18, 0.12, eyeWhite, -bodyW / 4, bodyH / 2 - 0.15, 0);
+              // Right eye socket
+              box(0.12, 0.18, 0.12, eyeWhite, bodyW / 4, bodyH / 2 - 0.15, 0);
+              // Left pupil
+              sphere(0.05, eyeBlack, 0, bodyH / 2 - 0.25, -bodyW / 4, 8);
+              // Right pupil
+              sphere(0.05, eyeBlack, 0, bodyH / 2 - 0.25, bodyW / 4, 8);
+              // Mouth (smile)
+              const mouthX = 0;
+              const mouthY = -bodyH / 3;
+              const mouthWd = bodyW * 0.4;
+              const mouthHt = 0.08;
+              box(mouthWd, mouthHt, bodyD * 0.2, mouthBrown, mouthX, mouthY, 0);
+              // Smile curve (approximated with small spheres)
+              for (let i = 0; i <= 4; i++) {
+                const angle = (i * Math.PI) / 4;
+                const sx = Math.cos(angle) * mouthWd / 3;
+                const sy = Math.sin(angle) * mouthWd / 3;
+                sphere(0.03, mouthBrown, 0, mouthY + 0.02, sx, 8);
+              }
+              g.position.set(px, 0, pz);
+              g.rotation.y = angle;
+              model.add(g);
+              return;
+            } else if (p.key === "primavera") {
+              if (season === 0 || season === 1) spring();
+              else if (season === 6) spring(); // Mostrar si es "fecha actual" y es primavera
+              g.position.set(px, 0, pz);
+              g.rotation.y = angle;
+              model.add(g);
+              return;
+            } else if (p.key === "verano") {
+              if (season === 0 || season === 2) summer();
+              else if (season === 6) summer();
+              g.position.set(px, 0, pz);
+              g.rotation.y = angle;
+              model.add(g);
+              return;
+            } else if (p.key === "otoño") {
+              if (season === 0 || season === 3) autumn();
+              else if (season === 6) autumn();
+              g.position.set(px, 0, pz);
+              g.rotation.y = angle;
+              model.add(g);
+              return;
+            } else if (p.key === "invierno") {
+              if (season === 0 || season === 4) winter();
+              else if (season === 6) winter();
+              g.position.set(px, 0, pz);
+              g.rotation.y = angle;
+              model.add(g);
+              return;
+            } else if (p.key === "halloween") {
+              if (season === 0 || season === 5) halloween();
+              else if (season === 6) halloween();
+              g.position.set(px, 0, pz);
+              g.rotation.y = angle;
+              model.add(g);
+              return;
             } else if (p.key === "arbol") {
               const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.04, 0.45, 10), new THREE.MeshStandardMaterial({ color: 0x92400e, roughness: 0.9 }));
               trunk.position.y = 0.225;
@@ -745,6 +935,44 @@ controls.autoRotate = false;
 
       let raf = 0;
       const labelElements = roomLabelsRef.current;
+
+      // Función para exportar el plano actual como imagen PNG
+      function exportarPlano() {
+        if (!rendererRef.current || !mountRef.current) return;
+        
+        // Crear un renderer temporal para capturar la escena
+        const tempRenderer = new THREE.WebGLRenderer({ 
+          antialias: true, 
+          preserveDrawingBuffer: true 
+        });
+        tempRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        tempRenderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
+        tempRenderer.background = new THREE.Color(0xffffff);
+        tempRenderer.shadowMap.enabled = true;
+        tempRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        
+        // Copiar la escena actual
+        const scene = sceneRef.current;
+        const camera = cameraRef.current;
+        
+        // Renderizar la escena al buffer temporal
+        tempRenderer.render(scene, camera);
+        
+        // Convertir a data URL de imagen PNG
+        const imageData = tempRenderer.domElement.toDataURL('image/png');
+        
+        // Crear enlace de descarga
+        const link = document.createElement('a');
+        link.href = imageData.replace('image/png', 'image/octet-stream'); // Forzar descarga
+        link.download = `plano-tusplanos3d-${new Date().toISOString().split('T')[0]}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Limpiar renderer temporal
+        tempRenderer.dispose();
+      }
+
       const updateLabels = () => {
         labelElements.forEach((label, index) => {
           const room = doc.rooms[index];
@@ -849,6 +1077,24 @@ controls.autoRotate = false;
         >
           Cargar proyecto actual (2D)
         </button>
+        <button
+          onClick={() => setDoc(TEMPLATES["casa-adosada"])}
+          className="rounded border bg-green-100 px-3 py-1.5 text-xs font-medium text-green-900 hover:bg-green-200"
+        >
+          Casa Adosada
+        </button>
+        <button
+          onClick={() => setDoc(TEMPLATES["chalet"])}
+          className="rounded border bg-green-100 px-3 py-1.5 text-xs font-medium text-green-900 hover:bg-green-200"
+        >
+          Chalet
+        </button>
+        <button
+          onClick={() => setDoc(TEMPLATES["piso-estudio"])}
+          className="rounded border bg-green-100 px-3 py-1.5 text-xs font-medium text-green-900 hover:bg-green-200"
+        >
+          Piso Estudio
+        </button>
       </div>
       <div className="mb-4 flex flex-wrap gap-2">
         <button
@@ -939,6 +1185,12 @@ controls.autoRotate = false;
           className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
         >
           Día / Noche
+        </button>
+        <button
+          onClick={() => exportarPlano()}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Descargar Plano
         </button>
 
         <button
@@ -1094,6 +1346,25 @@ controls.autoRotate = false;
           className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
         >
           {autoRotateOn ? "Recorrido (on)" : "Recorrido automático"}
+        </button>
+        <button
+          onClick={() => {
+            setSeason((prev) => {
+              const next = (prev + 1) % 7; // Cycle through 0-6
+              return next;
+            });
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+        >
+          Estaciones: {seasonNames[season]}
+        </button>
+        <button
+          onClick={() => {
+            setSeason(6); // Reset to "Fecha actual"
+          }}
+          className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
+          title="Resetear a fecha actual">
+          Actualizar
         </button>
         <button
           onClick={() => {

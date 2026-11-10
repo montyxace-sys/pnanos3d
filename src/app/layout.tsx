@@ -10,9 +10,9 @@ import SiteFooter from "@/components/SiteFooter";
 const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://tusplanos3d.es").replace(/\/$/, "");
 
 export async function generateMetadata(): Promise<Metadata> {
-  const title = "TusPlanos3D - Generador de planos online gratuito y calculadoras";
+  const title = "TusPlanos3D - Creador de planos gratis en español";
   const description =
-    "La web principal en español para crear planos de vivienda gratis: dibuja muros, puertas, ventanas y mobiliario, calcula la potencia eléctrica contratada y la climatización (frigorías). Todo completamente gratis, sin registro ni instalación.";
+    "Diseña tu planta de casa, jardín o local comercial de forma gratuita en 2D y 3D. Visor interactivo, objetos parametrizados, exportación a PDF e imagen. Sin registro, sin instalación, completamente gratis. La referencia en España para crear planos online.";
   return {
     metadataBase: new URL(SITE),
     title: { default: title, template: "%s | TusPlanos3D" },
@@ -31,7 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "TusPlanos3D",
       type: "website",
       locale: "es_ES",
-      images: [{ url: "/img/og-image.svg", alt: "TusPlanos3D", width: 1200, height: 630 }],
+      images: [{ url: "/img/og-image.svg", alt: "TusPlanos3D - Creador de planos gratis", width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
@@ -79,11 +79,11 @@ const jsonLdOrganization = {
 const jsonLdApp = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  name: "TusPlanos3D – Generador de planos",
+  name: "TusPlanos3D – Generador de planos gratis",
   url: SITE,
   applicationCategory: "DesignApplication",
   operatingSystem: "Any",
-  browserRequirements: "Requires JavaScript",
+  browserRequirements: "Requiere JavaScript",
   inLanguage: "es",
   offers: {
     "@type": "Offer",
@@ -91,7 +91,7 @@ const jsonLdApp = {
     priceCurrency: "EUR",
   },
   description:
-    "Dibuja planos 2D de tu vivienda en el navegador: muros, puertas, ventanas, mobiliario. Calcula la potencia eléctrica contratada y la climatización (frigorías). Exporta a PDF, SVG o JSON. Todo completamente gratis, sin instalación ni registro.",
+    "Dibuja planos 2D de tu vivienda, jardín o local en el navegador de forma gratuita. Incluye muros, puertas, ventanas, mobiliario externo (palmas, columpios, casitas), calculadora de electricidad y climatización. Exporta a PDF, imagen o JSON. 100% gratis, sin instalación ni registro.",
 };
 
 const jsonLdFaq = {
