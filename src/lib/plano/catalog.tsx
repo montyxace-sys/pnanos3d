@@ -228,6 +228,16 @@ export const CATALOG: CatalogGroup[] = [
     ],
   },
   {
+    id: "urbanizacion",
+    label: "Urbanización",
+    items: [
+      { key: "caminos-madera", label: "Camino Madera", w: 100, h: 30, draw: () => (<><rect x={-50} y={-15} width={100} height={30} rx={3} fill="#6b4a32" stroke="#1c1f24" />) },
+      { key: "granito", label: "Piedra Granito", w: 100, h: 30, draw: () => (<><rect x={-50} y={-15} width={100} height={30} rx={3} fill="#2c3e50" stroke="#1c1f24" />) },
+      { key: "antenna-tv", label: "Antena TV", w: 60, h: 50, draw: () => (<><rect x={-30} y={-25} width={60} height={30} rx={3} fill="#8b7355" stroke="#1c1f24" /><path d="M-15 -8 V8 M15 -8 V8 M0 -8 V8" stroke="#1c1f24" strokeWidth={2} /><line x1="-10" y1="-12" x2="10" y2="-12" stroke="#1c1f24" strokeWidth={2} /><line x1="-10" y1="-18" x2="10" y2="-18" stroke="#1c1f24" strokeWidth={2} /></>) },
+      { key: "antenna-satelite", label: "Antena Satélite", w: 70, h: 55, draw: () => (<><circle cx={0} cy={0} r={30} fill="none" stroke="#3a3a3a" strokeWidth={2} /><line x1="0" y1="-35" x2="0" y2="-30" stroke="#8b7355" strokeWidth={2} /><line x1="-20" y1="-25" x2="20" y2="-25" stroke="#8b7355" strokeWidth={1} /></>) },
+    ],
+  },
+  {
     id: "anotaciones",
     label: "Anotaciones",
     items: [

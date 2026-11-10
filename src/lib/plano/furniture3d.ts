@@ -1627,6 +1627,233 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
       }
       break;
     }
+    case "pc": {
+      // Desktop computer
+      const caseColor = new THREE.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
+      const ventColor = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.3 });
+      const buttonColor = new THREE.MeshStandardMaterial({ color: 0xff0000, roughness: 0.5, metalness: 0.8 });
+      // Computer tower
+      box(w * 0.4, 0.4, d * 0.3, caseColor, 0, 0.2, 0);
+      // Ventilation grilles (top)
+      for (let i = -1; i <= 1; i++) {
+        box(0.05, 0.1, w * 0.2 - 0.1, ventColor, (w / 4) * i, 0.35, d / 4);
+      }
+      // Optical drive panel
+      box(w * 0.3, 0.05, d * 0.2, caseColor, 0, 0.02, -d / 4 + 0.05);
+      // Buttons
+      for (let i = 0; i < 4; i++) {
+        box(0.03, 0.03, 0.03, buttonColor, -w / 4 + (w / 6) * (i + 1), 0.25, d / 4 - 0.05);
+      }
+      // Monitor arm base
+      cyl(0.1, 0.1, 0.2, caseColor, 0, -0.3, 0);
+      break;
+    }
+    case "mesa-pc": {
+      // PC desk / gaming desk
+      const deskColor = new THREE.MeshStandardMaterial({ color: 0xf5f0e8, roughness: 0.8, metalness: 0.1 });
+      const metalFrame = new THREE.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.5, metalness: 0.7 });
+      // Desktop surface
+      box(w, 0.05, d, deskColor, 0, 0.025, 0);
+      // Metal frame legs
+      for (const sx of [-1, 1]) {
+        for (const sz of [-1, 1]) {
+          cyl(0.1, 0.1, 0.8, metalFrame, sx * w / 4, 0.4, sz * d / 4);
+          box(0.3, 0.1, 0.3, metalFrame, sx * w / 4 - 0.15, 0.52, sz * d / 4 - 0.15);
+        }
+      }
+      // Cable management hole
+      cyl(0.08, 0.08, 0.5, caseColor, 0, 0.05, -d / 4 + 0.05);
+      // Monitor stand
+      box(w * 0.3, 0.1, d * 0.2, deskColor, 0, 0.05, -d / 2 + 0.1);
+      break;
+    }
+    case "extractores": {
+      // Ventilation extractors
+      const extColor = new THREE.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
+      const bladeColor = new THREE.MeshStandardMaterial({ color: 0x4a4a4a, roughness: 0.5, metalness: 0.3 });
+      // Wall-mounted extractor
+      box(w, 0.2, d / 2 - 0.1, extColor, 0, 0.1, 0);
+      // Impeller blades (4 pieces)
+      for (let i = 0; i < 4; i++) {
+        const angle = (i * Math.PI) / 2;
+        const bladeW = w / 3;
+        const bladeH = h / 3;
+        box(bladeW, bladeH, d / 8 - 0.05, bladeColor, 
+          -w / 4 + bladeW / 2 * Math.cos(angle), 
+          0.1 / 2 + bladeH / 2 * Math.sin(angle), 
+          0);
+        // Rotate to follow circular pattern
+        // Note: full rotation would need matrix, simplified for now
+      }
+      // Motor housing
+      cyl(0.15, 0.15, 0.3, extColor, 0, 0.15, 0);
+      break;
+    }
+    case "tuberias-agua": {
+      // Water pipes
+      const pipeColor = new THREE.MeshStandardMaterial({ color: 0x6b5b3a, roughness: 0.6, metalness: 0.3 });
+      const insulationColor = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.8, metalness: 0.1 });
+      // Straight pipe segment
+      cyl(0.1, 0.1, d + 0.2, pipeColor, 0, 0.6 + d / 2, 0, 12);
+      // Insulation rings
+      for (let i = 0; i < 3; i++) {
+        cyl(0.12, 0.12, 0.15, insulationColor, 0, 0.7 + d / 2 + i * 0.2, 0);
+      }
+      // T-junction
+      cyl(0.1, 0.1, 0.3, pipeColor, 0, 0.5 + d / 2, 0);
+      cyl(0.1, 0.1, 0.3, pipeColor, 0, 0.5 + d / 2, d / 4, 8);
+      cyl(0.1, 0.1, 0.3, pipeColor, 0, 0.5 + d / 2, -d / 4, 8);
+      break;
+    }
+    case "tuberias-gas": {
+      // Gas pipes (yellow safety color)
+      const gasColor = new THREE.MeshStandardMaterial({ color: 0xffd500, roughness: 0.6, metalness: 0.3 });
+      const warningStripe = new THREE.MeshStandardMaterial({ color: 0xff0000, roughness: 0.9, metalness: 0.5 });
+      // Main pipe
+      cyl(0.08, 0.08, d + 0.3, gasColor, 0, 0.7 + d / 2, 0, 12);
+      // Warning stripes (every 0.5m)
+      for (let i = -2; i <= 2; i++) {
+        box(0.1, 0.02, d / 4 - 0.05, warningStripe, 0, 0.75 + d / 2 + i * 0.3, 0);
+      }
+      // T-junction
+      cyl(0.08, 0.08, 0.3, gasColor, 0, 0.5 + d / 2, 0);
+      // Valve symbol
+      for (let i = -1; i <= 1; i++) {
+        box(0.03, 0.1, 0.03, warningStripe, (w / 4) * i, 0.75 + d / 2, 0);
+      }
+      break;
+    }
+    case "paneles-solares-electricidad": {
+      // Solar panels for electricity
+      const panelColor = new THREE.MeshStandardMaterial({ color: 0x3a5a7c, roughness: 0.3, metalness: 0.2 });
+      const frameColor = new THREE.MeshStandardMaterial({ color: 0x8b6e3a, roughness: 0.5, metalness: 0.4 });
+      // Panel rows
+      for (let row = 0; row < 2; row++) {
+        for (let col = 0; col < 4; col++) {
+          // Panel
+          box(w / 8, 0.02, d / 6, panelColor, 
+            -w / 4 + (w / 8) * (col + 1) - (w / 32), 
+            0.01 + row * 0.03, 
+            -d / 12 * (row + 1) + d / 24);
+          // Frame
+          box(w / 8 + 0.02, 0.06, d / 6 + 0.02, frameColor, 
+            -w / 4 + (w / 8) * (col + 1) - (w / 32), 
+            0.03 + row * 0.03, 
+            -d / 12 * (row + 1) + d / 24 - 0.01);
+        }
+      }
+      // Inverter box
+      box(w * 0.4, 0.1, d * 0.2, frameColor, 0, 0.05, -d / 2 + 0.1);
+      break;
+    }
+    case "paneles-solares-acs": {
+      // Solar panels for ACS (domestic hot water) by thermosiphon
+      const panelColor = new THREE.MeshStandardMaterial({ color: 0x5a3a7c, roughness: 0.3, metalness: 0.2 });
+      const tubeColor = new THREE.MeshStandardMaterial({ color: 0xffa500, roughness: 0.7, metalness: 0.3 });
+      const frameColor = new THREE.MeshStandardMaterial({ color: 0x8b5a2b, roughness: 0.5, metalness: 0.4 });
+      // Panel array - tubes in portrait orientation
+      for (let row = 0; row < 3; row++) {
+        for (let col = 0; col < 3; col++) {
+          // Individual tube
+          cyl(Math.max(0.05, w / 18), 0.04, h / 6, tubeColor, 
+            -w / 4 + (w / 6) * (col + 1), 
+            0.02 + row * 0.15, 
+            -d / 6 * (row + 1) + d / 18);
+          // Glass envelope (larger cylinder)
+          cyl(Math.max(0.08, w / 15), 0.06, h / 6 + 0.02, panelColor, 
+            -w / 4 + (w / 6) * (col + 1), 
+            0.04 + row * 0.15, 
+            -d / 6 * (row + 1) + d / 18);
+        }
+      }
+      // Header pipes at top and bottom
+      cyl(0.05, 0.05, w + 0.3, tubeColor, 0, 0.2 + row * 0.15, -d / 4);
+      cyl(0.05, 0.05, w + 0.3, tubeColor, 0, 0.2 + row * 0.15, d / 4);
+      // Frame
+      box(w * 0.6, 0.15, d * 0.6, frameColor, 0, 0.075, 0);
+      break;
+    }
+    case "caminos-madera": {
+      // Wooden pathways/paths
+      const woodMat = new THREE.MeshStandardMaterial({ color: 0x6b4a32, roughness: 0.7, metalness: 0.3 });
+      const borderMat = new THREE.MeshStandardMaterial({ color: 0x8b5a2b, roughness: 0.8, metalness: 0.4 });
+      // Path planks (length w, width 0.15)
+      for (let i = 0; i < 3; i++) {
+        box(w * 0.3, 0.15, d / 6, woodMat, -w / 2 + (w / 6) * (i + 1), 0.075, -d / 2 + d / 12);
+      }
+      // Path cross-sections (perpendular)
+      for (let i = 0; i < 2; i++) {
+        box(w / 6, 0.15, d * 0.3, woodMat, -w / 4 + w / 12, 0.075, -d / 2 + (d / 6) * (i + 1));
+      }
+      // Border strips
+      box(w + 0.1, 0.2, d / 4 - 0.05, borderMat, 0, 0.1, 0);
+      box(w, 0.2, d / 4 - 0.05, borderMat, 0, 0.1, -d / 4);
+      break;
+    }
+    case "granito": {
+      // Granite paving stones
+      const graniteMat = new THREE.MeshStandardMaterial({ color: 0x2c3e50, roughness: 0.6, metalness: 0.2 });
+      const mortarMat = new THREE.MeshStandardMaterial({ color: 0x8b7355, roughness: 0.8, metalness: 0.3 });
+      // Paving stones (6x6 approx in relative units)
+      for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+          box(w / 4, 0.08, d / 4, graniteMat, -w / 4 + (w / 8) * (i + 1) - (w / 8), 0.04, -d / 4 + (d / 8) * (j + 1) + (d / 8));
+        }
+      }
+      // Mortar lines
+      for (let i = 0; i < 5; i++) {
+        box(w + 0.1, 0.1, d / 8 - 0.05, mortarMat, 0, 0.04, -d / 2 + (d / 8) * i);
+      }
+      for (let i = 0; i < 5; i++) {
+        box(w / 8 - 0.05, 0.1, d + 0.1, mortarMat, -w / 2 + (w / 8) * i, 0.04, 0);
+      }
+      break;
+    }
+    case "antenna-tv": {
+      // TV antenna (rabbit ears)
+      const poleColor = new THREE.MeshStandardMaterial({ color: 0x8b7355, roughness: 0.7, metalness: 0.3 });
+      const finColor = new THREE.MeshStandardMaterial({ color: 0xc1c1c1, roughness: 0.5, metalness: 0.7 });
+      // Main pole
+      cyl(0.05, 0.05, w + 0.5, poleColor, 0, (w + 0.5) / 2, 0);
+      // Horizontal crossbar
+      box(0.1, 0.1, w / 2 - 0.1, poleColor, 0, (w + 0.5) / 2 + 0.05, 0);
+      // Rabbit ear fins (2 per side)
+      for (const sx of [-1, 1]) {
+        for (const sz of [-1, 1]) {
+          box(0.05, 0.15, w / 4 - 0.1, finColor, sx * w / 4, (w + 0.5) / 2 + 0.15, sz * (w / 4 - 0.1));
+          box(0.05, 0.15, w / 4 - 0.1, finColor, sx * w / 4, (w + 0.5) / 2 + 0.35, sz * (w / 4 - 0.1));
+        }
+      }
+      // Antenna tip
+      sphere(0.05, finColor, 0, (w + 0.5) / 2 + 0.4, 0, 8);
+      break;
+    }
+    case "antenna-satelite": {
+      // Satellite dish
+      const dishColor = new THREE.MeshStandardMaterial({ color: 0x3a3a3a, roughness: 0.7, metalness: 0.8 });
+      const armColor = new THREE.MeshStandardMaterial({ color: 0x8b7355, roughness: 0.7, metalness: 0.4 });
+      const focusColor = new THREE.MeshStandardMaterial({ color: 0xffd700, roughness: 0.5, metalness: 1 });
+      // Dish surface (paraboloid approximated with sections)
+      const segments = 8;
+      for (let i = 0; i < segments; i++) {
+        const theta1 = (i * Math.PI) / segments;
+        const theta2 = ((i + 1) * Math.PI) / segments;
+        const z1 = -d / 2 + 0.1;
+        const z2 = -d / 2 + 0.3;
+        const r1 = d / 4;
+        const r2 = d / 4 * 0.8;
+        box(r2 - r1, 0.05, z2 - z1, dishColor, 0, 0.025, (z1 + z2) / 2);
+      }
+      // Dish rim
+      cyl(d / 4 + 0.05, d / 4 + 0.05, 0.05, dishColor, 0, 0.025, 0);
+      // Support arm
+      box(0.1, 0.3, 0.05, armColor, 0, 0.35, -d / 4);
+      // Pole
+      cyl(0.08, 0.08, w + 0.3, armColor, 0, (w + 0.3) / 2, 0);
+      // LNB focus
+      sphere(0.03, focusColor, 0, 0.35, -d / 4 + 0.05, 8);
+      break;
+    }
     default:
       return null;
   }
