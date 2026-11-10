@@ -1411,6 +1411,80 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
         box(w * 0.8, 0.02, 0.02, mat(0x65a30d, 0.95), 0, 0.42, -d / 3 + (d / 3) * (i + 0.5));
       }
       break;
+    case "coche": {
+      // Car body
+      const carColor = new THREE.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
+      const carTrim = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5, metalness: 0.8 });
+      // Main body
+      box(w, 0.3, d / 2 - 0.1, carColor, 0, 0.15, 0);
+      // Roof
+      box(w * 0.8, 0.2, d / 4, carColor, 0, 0.25, 0);
+      // Windows
+      box(w * 0.72, 0.08, d / 8, carTrim, -w * 0.12, 0.32, d / 8);
+      box(w * 0.72, 0.08, d / 8, carTrim, w * 0.12 - w * 0.72, 0.32, d / 8);
+      // Wheels
+      const wheelColor = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.7 });
+      for (const sx of [-1, 1]) {
+        for (const sz of [-1, 1]) {
+          cyl(0.15, 0.15, 0.3, wheelColor, sx * w / 2 + 0.15, 0.05, sz * d / 4 - 0.15, 16);
+          cyl(0.1, 0.1, 0.2, wheelColor, sx * w / 2 + 0.15, 0.25, sz * d / 4 - 0.15, 16);
+        }
+      }
+      // Headlights
+      box(0.05, 0.05, w / 2 - 0.1, carTrim, -w / 2 + 0.25, 0.32, 0);
+      box(0.05, 0.05, w / 2 - 0.1, carTrim, w / 2 - 0.3, 0.32, 0);
+      break;
+    }
+    case "moto": {
+      // Motorcycle
+      const motoColor = new THREE.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
+      const trimColor = new THREE.MeshStandardMaterial({ color: 0x9e9e9e, roughness: 0.5, metalness: 0.3 });
+      // Frame
+      cyl(0.08, 0.08, 0.4, motoColor, 0, 0.2, 0, 12);
+      // Wheels
+      const wheelColor = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.7 });
+      for (const sx of [-1, 1]) {
+        cyl(0.12, 0.12, 0.25, wheelColor, sx * w / 2 - 0.05, 0.125, 0, 16);
+        cyl(0.08, 0.08, 0.15, wheelColor, sx * w / 2 - 0.05, 0.325, 0, 16);
+      }
+      // Handlebars
+      box(0.15, 0.03, w / 2 - 0.1, trimColor, 0, 0.05, 0);
+      break;
+    }
+    case "bicicleta": {
+      // Bicycle
+      const bikeColor = new THREE.MeshStandardMaterial({ color: 0x6b3a2a, roughness: 0.7, metalness: 0.3 });
+      const tireColor = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.7 });
+      // Frame triangle
+      box(w * 0.4, 0.03, d * 0.3, bikeColor, 0, 0.05, 0);
+      // Wheels
+      for (const sx of [-1, 1]) {
+        cyl(0.15, 0.15, 0.3, tireColor, sx * w / 2 - 0.1, 0.05, 0, 16);
+        cyl(0.1, 0.1, 0.15, tireColor, sx * w / 2 - 0.1, 0.28, 0, 16);
+      }
+      // Seat
+      box(w * 0.1, 0.03, d * 0.1, bikeColor, 0, 0.02, -d / 4 + 0.05);
+      // Handlebars
+      cyl(0.05, 0.05, w / 2 - 0.1, bikeColor, 0, 0.05, 0, 8);
+      break;
+    }
+    case "garaje": {
+      // Garage door
+      const doorColor = new THREE.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
+      const trimColor = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5, metalness: 0.8 });
+      // Garage structure
+      box(w, 0.3, d - 0.5, doorColor, 0, 0.15, 0);
+      // Door panels
+      for (let i = 0; i < 4; i++) {
+        box(w * 0.2, 0.25, 0.05, doorColor, -(w / 2) + (w / 4) * (i + 1), 0.125, -d / 4);
+        box(w * 0.2, 0.25, 0.05, doorColor, (w / 2) - (w / 4) * (i + 1) - w * 0.2, 0.125, -d / 4);
+      }
+      // Door frame/trim
+      box(w + 0.1, 0.35, d - 0.4, trimColor, 0, 0.175, 0);
+      // Roof
+      box(w * 0.9, 0.1, d - 0.8, doorColor, 0, 0.05, 0);
+      break;
+    }
     default:
       return null;
   }

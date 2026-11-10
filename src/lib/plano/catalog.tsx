@@ -185,6 +185,9 @@ export const CATALOG: CatalogGroup[] = [
       { key: "split-ac", label: "Split interior", w: 80, h: 24, draw: () => (<><rect x={-40} y={-12} width={80} height={24} rx={4} /><path d="M-30 -5 H30 M-30 0 H30 M-30 5 H30" fill="none" /><path d="M-20 12 L-30 16 M-10 12 L-20 16 M0 12 L-10 16 M10 12 L0 16 M20 12 L10 16 M30 12 L20 16" fill="none" /></>) },
       { key: "compresor-ext", label: "Compresor", w: 50, h: 50, draw: () => (<><rect x={-25} y={-25} width={50} height={50} rx={6} fill={WALL} stroke={WALL} /><circle cx={0} cy={-2} r={18} fill="#e8e8e8" stroke="#1c1f24" strokeWidth={2} /><path d="M0 -12 V8 M-10 -2 H10" fill="none" stroke="#1c1f24" strokeWidth={2} /></>) },
       { key: "fancoil", label: "Fancoil", w: 70, h: 30, draw: () => (<><rect x={-35} y={-15} width={70} height={30} rx={4} /><path d="M-25 -8 H25 M-25 -4 H25 M-25 0 H25 M-25 4 H25" fill="none" /><circle cx={20} cy={0} r={4} fill="none" /></>) },
+      { key: "coche", label: "Coche", w: 80, h: 30, draw: () => (<><rect x={-40} y={-15} width={80} height={30} rx={4} fill="#2d3436" stroke="#1c1f24" /><circle cx={-20} cy={0} r={8} fill="#1a1a1a" /><circle cx={20} cy={0} r={8} fill="#1a1a1a" /><path d="M-30 -5 H30 M-30 0 H30 M-30 5 H30" fill="none" /></>) },
+      { key: "moto", label: "Motocicleta", w: 70, h: 35, draw: () => (<><rect x={-35} y={-17.5} width={70} height={35} rx={4} fill="#2d3436" stroke="#1c1f24" /><circle cx={-20} cy={0} r={6} fill="#1a1a1a" /><circle cx={20} cy={0} r={6} fill="#1a1a1a" /><path d="M-25 -8 H25 M-25 -4 H25 M-25 0 H25 M-25 4 H25" fill="none" /></>) },
+      { key: "bicicleta", label: "Bicicleta", w: 65, h: 40, draw: () => (<><rect x={-32.5} y={-20} width={65} height={40} rx={4} fill="#6b3a2a" stroke="#1c1f24" /><circle cx={-20} cy={0} r={8} fill="#1a1a1a" /><circle cx={20} cy={0} r={8} fill="#1a1a1a" /><path d="M-20 -10 H20 M-10 -5 H10" fill="none" /></>) ,
     ],
   },
 
