@@ -1854,8 +1854,118 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
       sphere(0.03, focusColor, 0, 0.35, -d / 4 + 0.05, 8);
       break;
     }
+    case "escalera-hormigon": {
+      // Concrete staircase
+      const concreteColor = new THREE.MeshStandardMaterial({ color: 0x8c8c8c, roughness: 0.7, metalness: 0.2 });
+      const stepMat = new THREE.MeshStandardMaterial({ color: 0x5a5a5a, roughness: 0.5, metalness: 0.1 });
+      const railingMat = new THREE.MeshStandardMaterial({ color: 0x8b7355, roughness: 0.7, metalness: 0.4 });
+      const newelMat = new THREE.MeshStandardMaterial({ color: 0x6b4a32, roughness: 0.8, metalness: 0.5 });
+      const steps = Math.max(3, Math.min(15, Math.round(d / 0.25)));
+      const totalHeight = steps * 0.18;
+      // Steps
+      for (let i = 0; i <= steps; i++) {
+        const h = i * 0.18;
+        box(w * 0.8, 0.15, 0.25, stepMat, 0, h - 0.075, -d / 2 + 0.125);
+      }
+      // Handrail
+      box(w * 0.8, 0.08, w / 2 - 0.1, railingMat, 0, totalHeight / 2 + 0.04, 0);
+      // Newel posts at ends
+      cyl(0.2, 0.2, totalHeight + 0.2, newelMat, 0, totalHeight / 2 + 0.1, -d / 4);
+      cyl(0.2, 0.2, totalHeight + 0.2, newelMat, 0, totalHeight / 2 + 0.1, d / 4);
+      // Balusters
+      for (let i = 1; i < steps; i++) {
+        const h = i * 0.18;
+        cyl(0.08, 0.08, 0.18, newelMat, 0, h, -d / 4);
+        cyl(0.08, 0.08, 0.18, newelMat, 0, h, d / 4);
+      }
+      break;
+    }
     default:
       return null;
+    }
+    case "pecera": {
+      // Fish tank/aquarium
+      const tankColor = new THREE.MeshStandardMaterial({ color: 0x1e3a5f, roughness: 0.5, metalness: 0.1 });
+      const waterColor = new THREE.MeshStandardMaterial({ color: 0x4682b4, roughness: 0.0, metalness: 0.0, transparent: true, opacity: 0.8 });
+      const gravelColor = new THREE.MeshStandardMaterial({ color: 0x8b7355, roughness: 0.8, metalness: 0.2 });
+      const plantColor = new THREE.MeshStandardMaterial({ color: 0x2e8b57, roughness: 0.9, metalness: 0.1 });
+      // Tank main body
+      box(w, 0.4, d, tankColor, 0, 0.2, 0);
+      // Water inside (smaller box with transparency)
+      box(w - 0.1, 0.3, d - 0.1, waterColor, 0.05, 0.15, 0.05);
+      // Gravel bottom
+      box(w - 0.2, 0.05, d - 0.2, gravelColor, 0, 0.025, -d / 2 + 0.1);
+      // Plants
+      for (let i = 0; i < 3; i++) {
+        box(0.05, 0.2, 0.05, plantColor, -w / 4 + (w / 3) * i, 0.35, -d / 2 + 0.1);
+      }
+      // Rim
+      box(w + 0.1, 0.05, d + 0.1, tankColor, 0, 0.025, 0);
+      break;
+    }
+    case "canasta": {
+      // Basket
+      const weaveColor = new THREE.MeshStandardMaterial({ color: 0x8b6e45, roughness: 0.7, metalness: 0.1 });
+      const trimColor = new THREE.MeshStandardMaterial({ color: 0x6b4a32, roughness: 0.5, metalness: 0.3 });
+      // Basket base
+      box(w, 0.1, d, weaveColor, 0, 0.05, 0);
+      // Basket walls (woven look with vertical strips)
+      for (let i = -2; i <= 2; i++) {
+        box(0.08, 0.3, d / 2 - 0.05, weaveColor, (w / 4) * i, 0.15, 0);
+      }
+      // Rim
+      box(w + 0.1, 0.05, d + 0.1, trimColor, 0, 0.025, 0);
+      // Handle
+      cyl(0.03, 0.03, 0.25, trimColor, -w / 4 + 0.1, 0.25, d / 4 - 0.05);
+      cyl(0.03, 0.03, 0.25, trimColor, w / 4 - 0.1, 0.25, -d / 4 + 0.05);
+      break;
+    }
+    case "tenis": {
+      // Tennis court (half court showing lines)
+      const courtColor = new THREE.MeshStandardMaterial({ color: 0x8b8b8b, roughness: 0.7, metalness: 0.1 });
+      const lineColor = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5, metalness: 0.2 });
+      // Court surface
+      box(w, 0.02, d, courtColor, 0, 0.01, 0);
+      // Service line (bottom)
+      box(w / 2, 0.01, d / 4 - 0.05, lineColor, 0, 0.005, -d / 4 + d / 8);
+      // Center line
+      cyl(0.01, 0.01, d / 2 - 0.1, lineColor, 0, 0.005, 0);
+      // Center service line (t)
+      box(w / 4, 0.01, d / 8 - 0.05, lineColor, 0, 0.005, -d / 4 + d / 16);
+      // Side lines (partial)
+      for (const sx of [-1, 1]) {
+        box(w / 20, 0.01, d / 2 - 0.1, lineColor, sx * w / 4, 0.005, 0);
+      }
+      break;
+    }
+    case "baloncesto": {
+      // Basketball court
+      const courtColor = new THREE.MeshStandardMaterial({ color: 0x212529, roughness: 0.7, metalness: 0.1 });
+      const lineColor = new THREE.MeshStandardMaterial({ color: 0xfff8f0, roughness: 0.5, metalness: 0.2 });
+      // Court surface (rectangular)
+      box(w, 0.05, d, courtColor, 0, 0.025, 0);
+      // Center circle
+      cyl(w / 4, 0.01, d / 4 - 0.05, lineColor, 0, 0.005, 0);
+      // Center circle outer
+      for (let i = 0; i < 8; i++) {
+        const angle = (i * Math.PI) / 4;
+        const x = (w / 4 + 0.02) * Math.cos(angle);
+        const z = (d / 4 + 0.02) * Math.sin(angle);
+        box(0.04, 0.01, 0.04, lineColor, x, 0.005, z);
+      }
+      // Free throw lines (two)
+      for (const sx of [-1, 1]) {
+        box(w / 6, 0.01, d / 8 - 0.05, lineColor, sx * w / 3, 0.005, -d / 4 + d / 16);
+      }
+      // Three point arc (approximated with boxes)
+      for (let i = 0; i < 4; i++) {
+        const angle = (i * Math.PI) / 2;
+        const x = (w / 3 + 0.02) * Math.cos(angle);
+        const z = (d / 3 + 0.02) * Math.sin(angle);
+        box(0.04, 0.01, 0.04, lineColor, x, 0.005, z);
+      }
+      break;
+    }
   }
 
   return g;
