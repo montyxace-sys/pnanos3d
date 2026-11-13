@@ -1,4 +1,4 @@
-import type * as THREE_NS from "three";
+﻿import type * as THREE_NS from "three";
 
 /**
  * Mobiliario 3D procedural del visor.
@@ -631,13 +631,13 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
   const spring = () => {
     const flowerR = 0.15;
     const stemH = 0.8;
-    const petalColor = new THREE.MeshStandardMaterial({ color: 0xff6b6b, roughness: 0.7, metalness: 0.1 });
-    const centerColor = new THREE.MeshStandardMaterial({ color: 0xffd93d, roughness: 0.5, metalness: 0.2 });
-    const leafColor = new THREE.MeshStandardMaterial({ color: 0x2d5a27, roughness: 0.9, metalness: 0.3 });
+    const petalColor = new T.MeshStandardMaterial({ color: 0xff6b6b, roughness: 0.7, metalness: 0.1 });
+    const centerColor = new T.MeshStandardMaterial({ color: 0xffd93d, roughness: 0.5, metalness: 0.2 });
+    const leafColor = new T.MeshStandardMaterial({ color: 0x2d5a27, roughness: 0.9, metalness: 0.3 });
     for (let i = 0; i < 8; i++) {
       const angle = (i * Math.PI * 2) / 8;
-      const petal = new THREE.Mesh(
-        new THREE.PlaneGeometry(flowerR * 0.8, flowerR * 0.5, 8, 4),
+      const petal = new T.Mesh(
+        new T.PlaneGeometry(flowerR * 0.8, flowerR * 0.5, 8, 4),
         petalColor
       );
       petal.position.set(Math.cos(angle) * flowerR * 0.6, stemH * 0.7, Math.sin(angle) * flowerR * 0.6);
@@ -652,17 +652,17 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
   };
 
   const summer = () => {
-    const bucket = new THREE.Mesh(
-      new THREE.BoxGeometry(0.3, 0.2, 0.15),
-      new THREE.MeshStandardMaterial({ color: 0x7f8c42, roughness: 0.8, metalness: 0.1 })
+    const bucket = new T.Mesh(
+      new T.BoxGeometry(0.3, 0.2, 0.15),
+      new T.MeshStandardMaterial({ color: 0x7f8c42, roughness: 0.8, metalness: 0.1 })
     );
     bucket.position.set(0, 0.1, 0);
     // Handle
-    cyl(0.03, 0.03, 0.5, new THREE.MeshStandardMaterial({ color: 0x8b6b45, roughness: 0.9, metalness: 0.2 }), 0, 0.15, 0);
+    cyl(0.03, 0.03, 0.5, new T.MeshStandardMaterial({ color: 0x8b6b45, roughness: 0.9, metalness: 0.2 }), 0, 0.15, 0);
     // Sun flower element
-    const flower = new THREE.Mesh(
-      new THREE.SphereGeometry(0.1, 12, 12),
-      new THREE.MeshStandardMaterial({ color: 0xf5a623, roughness: 0.6, metalness: 0.3 })
+    const flower = new T.Mesh(
+      new T.SphereGeometry(0.1, 12, 12),
+      new T.MeshStandardMaterial({ color: 0xf5a623, roughness: 0.6, metalness: 0.3 })
     );
     flower.position.set(0, 0.3, 0);
   };
@@ -671,79 +671,79 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     const leafColors = [0x8b5a2b, 0xcd853f, 0xe97451, 0x2c3e50];
     for (let i = 0; i < 6; i++) {
       const angle = (i * Math.PI * 2) / 6;
-      const leaf = new THREE.Mesh(
-        new THREE.PlaneGeometry(0.2, 0.15, 8, 4),
-        new THREE.MeshStandardMaterial({ color: leafColors[i % leafColors.length], roughness: 0.9, metalness: 0.1 })
+      const leaf = new T.Mesh(
+        new T.PlaneGeometry(0.2, 0.15, 8, 4),
+        new T.MeshStandardMaterial({ color: leafColors[i % leafColors.length], roughness: 0.9, metalness: 0.1 })
       );
       leaf.position.set(Math.cos(angle) * 0.4, 0.25, Math.sin(angle) * 0.4);
       leaf.rotation.z = angle + Math.PI / 2;
     }
     // Pumpkin
-    const pumpkin = new THREE.Mesh(
-      new THREE.SphereGeometry(0.15, 12, 12),
-      new THREE.MeshStandardMaterial({ color: 0xeb4d4b, roughness: 0.7, metalness: 0.1 })
+    const pumpkin = new T.Mesh(
+      new T.SphereGeometry(0.15, 12, 12),
+      new T.MeshStandardMaterial({ color: 0xeb4d4b, roughness: 0.7, metalness: 0.1 })
     );
     pumpkin.position.set(0, 0.12, 0);
     // Stem
-    box(0.05, 0.1, 0.05, new THREE.MeshStandardMaterial({ color: 0x5d4037, roughness: 0.8, metalness: 0.2 }), 0, 0.2, 0);
+    box(0.05, 0.1, 0.05, new T.MeshStandardMaterial({ color: 0x5d4037, roughness: 0.8, metalness: 0.2 }), 0, 0.2, 0);
   };
 
   const winter = () => {
     // Snowman body
-    const snow1 = new THREE.Mesh(
-      new THREE.SphereGeometry(0.3, 12, 12),
-      new THREE.MeshStandardMaterial({ color: 0xf8f9fa, roughness: 0.9, metalness: 0.1 })
+    const snow1 = new T.Mesh(
+      new T.SphereGeometry(0.3, 12, 12),
+      new T.MeshStandardMaterial({ color: 0xf8f9fa, roughness: 0.9, metalness: 0.1 })
     );
     snow1.position.set(0, 0.75, 0);
-    const snow2 = new THREE.Mesh(
-      new THREE.SphereGeometry(0.4, 12, 12),
-      new THREE.MeshStandardMaterial({ color: 0xf8f9fa, roughness: 0.9, metalness: 0.1 })
+    const snow2 = new T.Mesh(
+      new T.SphereGeometry(0.4, 12, 12),
+      new T.MeshStandardMaterial({ color: 0xf8f9fa, roughness: 0.9, metalness: 0.1 })
     );
     snow2.position.set(0, 0.35, 0);
-    const snow3 = new THREE.Mesh(
-      new THREE.SphereGeometry(0.5, 12, 12),
-      new THREE.MeshStandardMaterial({ color: 0xf8f9fa, roughness: 0.9, metalness: 0.1 })
+    const snow3 = new T.Mesh(
+      new T.SphereGeometry(0.5, 12, 12),
+      new T.MeshStandardMaterial({ color: 0xf8f9fa, roughness: 0.9, metalness: 0.1 })
     );
     snow3.position.set(0, -0.05, 0);
     // Carrot nose
-    const carrot = new THREE.Mesh(
-      new THREE.ConeGeometry(0.03, 0.15, 8, 4),
-      new THREE.MeshStandardMaterial({ color: 0xeb4d4b, roughness: 0.7, metalness: 0.2 })
+    const carrot = new T.Mesh(
+      new T.ConeGeometry(0.03, 0.15, 8, 4),
+      new T.MeshStandardMaterial({ color: 0xeb4d4b, roughness: 0.7, metalness: 0.2 })
     );
     carrot.position.set(0, 0.2, 0);
     // Eyes
-    sphere(0.02, new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.2 }), 0, 0.15, -0.05, 8);
-    sphere(0.02, new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.2 }), 0, 0.15, 0.05, 8);
+    sphere(0.02, new T.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.2 }), 0, 0.15, -0.05, 8);
+    sphere(0.02, new T.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.2 }), 0, 0.15, 0.05, 8);
     // Mouth (coal buttons)
     for (let i = 0; i < 3; i++) {
-      sphere(0.015, new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.2 }), 0, 0.05 + i * 0.07, 0, 8);
+      sphere(0.015, new T.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.2 }), 0, 0.05 + i * 0.07, 0, 8);
     }
   };
 
   const halloween = () => {
     // Pumpkin
-    const pumpkin = new THREE.Mesh(
-      new THREE.SphereGeometry(0.2, 12, 12),
-      new THREE.MeshStandardMaterial({ color: 0xeb4d4b, roughness: 0.7, metalness: 0.1 })
+    const pumpkin = new T.Mesh(
+      new T.SphereGeometry(0.2, 12, 12),
+      new T.MeshStandardMaterial({ color: 0xeb4d4b, roughness: 0.7, metalness: 0.1 })
     );
     pumpkin.position.set(0, 0.1, 0);
     // Eyes
-    sphere(0.03, new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, metalness: 0.2 }), 0, 0.05, -0.05, 8);
-    sphere(0.03, new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, metalness: 0.2 }), 0, 0.05, 0.05, 8);
+    sphere(0.03, new T.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, metalness: 0.2 }), 0, 0.05, -0.05, 8);
+    sphere(0.03, new T.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, metalness: 0.2 }), 0, 0.05, 0.05, 8);
     // Nose
-    box(0.03, 0.03, 0.03, new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.2 }), 0, 0.02, 0);
+    box(0.03, 0.03, 0.03, new T.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.2 }), 0, 0.02, 0);
     // Mouth (grimace)
     for (let i = 0; i < 5; i++) {
       const x = (i - 2) * 0.04;
-      sphere(0.015, new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.2 }), 0, -0.02 + i * 0.01, x, 8);
+      sphere(0.015, new T.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.2 }), 0, -0.02 + i * 0.01, x, 8);
     }
     // Stem
-    box(0.02, 0.05, 0.02, new THREE.MeshStandardMaterial({ color: 0x5d4037, roughness: 0.8, metalness: 0.2 }), 0, 0.15, 0);
+    box(0.02, 0.05, 0.02, new T.MeshStandardMaterial({ color: 0x5d4037, roughness: 0.8, metalness: 0.2 }), 0, 0.15, 0);
     // Bat wings
     for (const sx of [-1, 1]) {
-      const wing = new THREE.Mesh(
-        new THREE.BoxGeometry(0.15, 0.02, 0.1),
-        new THREE.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.9, metalness: 0.3 })
+      const wing = new T.Mesh(
+        new T.BoxGeometry(0.15, 0.02, 0.1),
+        new T.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.9, metalness: 0.3 })
       );
       wing.position.set(sx * 0.2, 0.2, 0);
       wing.rotation.z = sx * 0.3;
@@ -1146,14 +1146,14 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
       const fiberglassColor = 0xf3f4f6;
       const fiberglassRoughness = 0.95;
       const fiberglassMetalness = 0.15;
-      box(w, 0.25, d, new THREE.MeshStandardMaterial({ color: fiberglassColor, roughness: fiberglassRoughness, metalness: fiberglassMetalness }), 0, 2.22, 0);
+      box(w, 0.25, d, new T.MeshStandardMaterial({ color: fiberglassColor, roughness: fiberglassRoughness, metalness: fiberglassMetalness }), 0, 2.22, 0);
       // Patrón de paneles verticales simulados
       for (let i = 1; i < 5; i++) {
-        box(0.02, 0.24, d + 0.005, new THREE.MeshStandardMaterial({ color: 0xdcddde, roughness: 0.98, metalness: 0.1 }), -w / 2 + (w / 5) * i, 2.22, 0);
+        box(0.02, 0.24, d + 0.005, new T.MeshStandardMaterial({ color: 0xdcddde, roughness: 0.98, metalness: 0.1 }), -w / 2 + (w / 5) * i, 2.22, 0);
       }
       // Remaches/fixaciones every 0.3m
       for (let i = 0; i < 4; i++) {
-        cyl(0.01, 0.01, 0.22, new THREE.MeshStandardMaterial({ color: 0x9ca3af, roughness: 0.8, metalness: 0.3 }), -w / 2 + (w / 4) * i + (w / 8), 2.3, 0);
+        cyl(0.01, 0.01, 0.22, new T.MeshStandardMaterial({ color: 0x9ca3af, roughness: 0.8, metalness: 0.3 }), -w / 2 + (w / 4) * i + (w / 8), 2.3, 0);
       }
       break;
     case "rejilla-salida":
@@ -1435,9 +1435,9 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "caseta-perro": {
       // Dog house
-      const roofColor = new THREE.MeshStandardMaterial({ color: 0x2d5a27, roughness: 0.9, metalness: 0.1 });
-      const woodMat = new THREE.MeshStandardMaterial({ color: 0x6b4a32, roughness: 0.8, metalness: 0.3 });
-      const entranceMat = new THREE.MeshStandardMaterial({ color: 0x8d6e63, roughness: 0.9, metalness: 0.5 });
+      const roofColor = new T.MeshStandardMaterial({ color: 0x2d5a27, roughness: 0.9, metalness: 0.1 });
+      const woodMat = new T.MeshStandardMaterial({ color: 0x6b4a32, roughness: 0.8, metalness: 0.3 });
+      const entranceMat = new T.MeshStandardMaterial({ color: 0x8d6e63, roughness: 0.9, metalness: 0.5 });
       // House base
       box(w, 0.4, d, woodMat, 0, 0.2, 0);
       // Roof (two parts)
@@ -1455,8 +1455,8 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "coche": {
       // Car body
-      const carColor = new THREE.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
-      const carTrim = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5, metalness: 0.8 });
+      const carColor = new T.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
+      const carTrim = new T.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5, metalness: 0.8 });
       // Main body
       box(w, 0.3, d / 2 - 0.1, carColor, 0, 0.15, 0);
       // Roof
@@ -1465,7 +1465,7 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
       box(w * 0.72, 0.08, d / 8, carTrim, -w * 0.12, 0.32, d / 8);
       box(w * 0.72, 0.08, d / 8, carTrim, w * 0.12 - w * 0.72, 0.32, d / 8);
       // Wheels
-      const wheelColor = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.7 });
+      const wheelColor = new T.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.7 });
       for (const sx of [-1, 1]) {
         for (const sz of [-1, 1]) {
           cyl(0.15, 0.15, 0.3, wheelColor, sx * w / 2 + 0.15, 0.05, sz * d / 4 - 0.15, 16);
@@ -1479,12 +1479,12 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "moto": {
       // Motorcycle
-      const motoColor = new THREE.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
-      const trimColor = new THREE.MeshStandardMaterial({ color: 0x9e9e9e, roughness: 0.5, metalness: 0.3 });
+      const motoColor = new T.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
+      const trimColor = new T.MeshStandardMaterial({ color: 0x9e9e9e, roughness: 0.5, metalness: 0.3 });
       // Frame
       cyl(0.08, 0.08, 0.4, motoColor, 0, 0.2, 0, 12);
       // Wheels
-      const wheelColor = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.7 });
+      const wheelColor = new T.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.7 });
       for (const sx of [-1, 1]) {
         cyl(0.12, 0.12, 0.25, wheelColor, sx * w / 2 - 0.05, 0.125, 0, 16);
         cyl(0.08, 0.08, 0.15, wheelColor, sx * w / 2 - 0.05, 0.325, 0, 16);
@@ -1495,8 +1495,8 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "bicicleta": {
       // Bicycle
-      const bikeColor = new THREE.MeshStandardMaterial({ color: 0x6b3a2a, roughness: 0.7, metalness: 0.3 });
-      const tireColor = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.7 });
+      const bikeColor = new T.MeshStandardMaterial({ color: 0x6b3a2a, roughness: 0.7, metalness: 0.3 });
+      const tireColor = new T.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.7 });
       // Frame triangle
       box(w * 0.4, 0.03, d * 0.3, bikeColor, 0, 0.05, 0);
       // Wheels
@@ -1512,8 +1512,8 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "garaje": {
       // Garage door
-      const doorColor = new THREE.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
-      const trimColor = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5, metalness: 0.8 });
+      const doorColor = new T.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
+      const trimColor = new T.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5, metalness: 0.8 });
       // Garage structure
       box(w, 0.3, d - 0.5, doorColor, 0, 0.15, 0);
       // Door panels
@@ -1529,8 +1529,8 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "pozo-agua": {
       // Water well
-      const wellColor = new THREE.MeshStandardMaterial({ color: 0x8b4513, roughness: 0.7, metalness: 0.3 });
-      const ropeColor = new THREE.MeshStandardMaterial({ color: 0x8b0000, roughness: 0.5, metalness: 0.1 });
+      const wellColor = new T.MeshStandardMaterial({ color: 0x8b4513, roughness: 0.7, metalness: 0.3 });
+      const ropeColor = new T.MeshStandardMaterial({ color: 0x8b0000, roughness: 0.5, metalness: 0.1 });
       // Well structure (square base)
       box(w, 0.1, d, wellColor, 0, 0.05, 0);
       // Well walls (vertical planks)
@@ -1549,8 +1549,8 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "pajarera": {
       // Bird cage/aviaries
-      const wireColor = new THREE.MeshStandardMaterial({ color: 0x9e9e9e, roughness: 0.6, metalness: 0.5 });
-      const woodMat = new THREE.MeshStandardMaterial({ color: 0x6b4a32, roughness: 0.8, metalness: 0.3 });
+      const wireColor = new T.MeshStandardMaterial({ color: 0x9e9e9e, roughness: 0.6, metalness: 0.5 });
+      const woodMat = new T.MeshStandardMaterial({ color: 0x6b4a32, roughness: 0.8, metalness: 0.3 });
       // Cage structure - horizontal wires
       for (let i = -2; i <= 2; i++) {
         cyl(0.02, 0.02, w + 0.5, wireColor, (w / 4) * i, 0.5, 0);
@@ -1558,7 +1558,7 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
       }
       // Vertical wires
       for (let i = -2; i <= 2; i++) {
-        cyl(0.02, 0.02, h + 0.5, wireColor, 0, 0.5 + i * 0.3, 0);
+        cyl(0.02, 0.02, d + 0.5, wireColor, 0, 0.5 + i * 0.3, 0);
       }
       // Base box
       box(w, 0.1, d, woodMat, 0, 0.05, 0);
@@ -1570,9 +1570,9 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "gallinero": {
       // Chicken coop
-      const roofColor = new THREE.MeshStandardMaterial({ color: 0x2d5a27, roughness: 0.9, metalness: 0.1 });
-      const woodMat = new THREE.MeshStandardMaterial({ color: 0x6b4a32, roughness: 0.8, metalness: 0.3 });
-      const nestBoxColor = new THREE.MeshStandardMaterial({ color: 0x8b4513, roughness: 0.7, metalness: 0.3 });
+      const roofColor = new T.MeshStandardMaterial({ color: 0x2d5a27, roughness: 0.9, metalness: 0.1 });
+      const woodMat = new T.MeshStandardMaterial({ color: 0x6b4a32, roughness: 0.8, metalness: 0.3 });
+      const nestBoxColor = new T.MeshStandardMaterial({ color: 0x8b4513, roughness: 0.7, metalness: 0.3 });
       // Main body
       box(w, 0.6, d, woodMat, 0, 0.3, 0);
       // Roof
@@ -1592,8 +1592,8 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "tobogan": {
       // Toboggan/water slide
-      const slideColor = new THREE.MeshStandardMaterial({ color: 0xffa500, roughness: 0.6, metalness: 0.1 });
-      const baseColor = new THREE.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
+      const slideColor = new T.MeshStandardMaterial({ color: 0xffa500, roughness: 0.6, metalness: 0.1 });
+      const baseColor = new T.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
       // Slide base structure
       box(w * 0.8, 0.1, d * 0.5, baseColor, 0, 0.05, 0);
       // Slide curve (approximated)
@@ -1610,8 +1610,8 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "depuradora piscina": {
       // Pool filtration system
-      const pumpColor = new THREE.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
-      const motorColor = new THREE.MeshStandardMaterial({ color: 0x4a4a4a, roughness: 0.5, metalness: 0.3 });
+      const pumpColor = new T.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
+      const motorColor = new T.MeshStandardMaterial({ color: 0x4a4a4a, roughness: 0.5, metalness: 0.3 });
       // Main pump housing
       box(w, 0.4, d, pumpColor, 0, 0.2, 0);
       // Motor on top
@@ -1629,9 +1629,9 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "pc": {
       // Desktop computer
-      const caseColor = new THREE.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
-      const ventColor = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.3 });
-      const buttonColor = new THREE.MeshStandardMaterial({ color: 0xff0000, roughness: 0.5, metalness: 0.8 });
+      const caseColor = new T.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
+      const ventColor = new T.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.3 });
+      const buttonColor = new T.MeshStandardMaterial({ color: 0xff0000, roughness: 0.5, metalness: 0.8 });
       // Computer tower
       box(w * 0.4, 0.4, d * 0.3, caseColor, 0, 0.2, 0);
       // Ventilation grilles (top)
@@ -1650,8 +1650,8 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "mesa-pc": {
       // PC desk / gaming desk
-      const deskColor = new THREE.MeshStandardMaterial({ color: 0xf5f0e8, roughness: 0.8, metalness: 0.1 });
-      const metalFrame = new THREE.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.5, metalness: 0.7 });
+      const deskColor = new T.MeshStandardMaterial({ color: 0xf5f0e8, roughness: 0.8, metalness: 0.1 });
+      const metalFrame = new T.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.5, metalness: 0.7 });
       // Desktop surface
       box(w, 0.05, d, deskColor, 0, 0.025, 0);
       // Metal frame legs
@@ -1662,22 +1662,22 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
         }
       }
       // Cable management hole
-      cyl(0.08, 0.08, 0.5, caseColor, 0, 0.05, -d / 4 + 0.05);
+      cyl(0.08, 0.08, 0.5, metalFrame, 0, 0.05, -d / 4 + 0.05);
       // Monitor stand
       box(w * 0.3, 0.1, d * 0.2, deskColor, 0, 0.05, -d / 2 + 0.1);
       break;
     }
     case "extractores": {
       // Ventilation extractors
-      const extColor = new THREE.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
-      const bladeColor = new THREE.MeshStandardMaterial({ color: 0x4a4a4a, roughness: 0.5, metalness: 0.3 });
+      const extColor = new T.MeshStandardMaterial({ color: 0x2d3436, roughness: 0.7, metalness: 0.4 });
+      const bladeColor = new T.MeshStandardMaterial({ color: 0x4a4a4a, roughness: 0.5, metalness: 0.3 });
       // Wall-mounted extractor
       box(w, 0.2, d / 2 - 0.1, extColor, 0, 0.1, 0);
       // Impeller blades (4 pieces)
       for (let i = 0; i < 4; i++) {
         const angle = (i * Math.PI) / 2;
         const bladeW = w / 3;
-        const bladeH = h / 3;
+        const bladeH = d / 3;
         box(bladeW, bladeH, d / 8 - 0.05, bladeColor, 
           -w / 4 + bladeW / 2 * Math.cos(angle), 
           0.1 / 2 + bladeH / 2 * Math.sin(angle), 
@@ -1691,8 +1691,8 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "tuberias-agua": {
       // Water pipes
-      const pipeColor = new THREE.MeshStandardMaterial({ color: 0x6b5b3a, roughness: 0.6, metalness: 0.3 });
-      const insulationColor = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.8, metalness: 0.1 });
+      const pipeColor = new T.MeshStandardMaterial({ color: 0x6b5b3a, roughness: 0.6, metalness: 0.3 });
+      const insulationColor = new T.MeshStandardMaterial({ color: 0xffffff, roughness: 0.8, metalness: 0.1 });
       // Straight pipe segment
       cyl(0.1, 0.1, d + 0.2, pipeColor, 0, 0.6 + d / 2, 0, 12);
       // Insulation rings
@@ -1707,8 +1707,8 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "tuberias-gas": {
       // Gas pipes (yellow safety color)
-      const gasColor = new THREE.MeshStandardMaterial({ color: 0xffd500, roughness: 0.6, metalness: 0.3 });
-      const warningStripe = new THREE.MeshStandardMaterial({ color: 0xff0000, roughness: 0.9, metalness: 0.5 });
+      const gasColor = new T.MeshStandardMaterial({ color: 0xffd500, roughness: 0.6, metalness: 0.3 });
+      const warningStripe = new T.MeshStandardMaterial({ color: 0xff0000, roughness: 0.9, metalness: 0.5 });
       // Main pipe
       cyl(0.08, 0.08, d + 0.3, gasColor, 0, 0.7 + d / 2, 0, 12);
       // Warning stripes (every 0.5m)
@@ -1725,8 +1725,8 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "paneles-solares-electricidad": {
       // Solar panels for electricity
-      const panelColor = new THREE.MeshStandardMaterial({ color: 0x3a5a7c, roughness: 0.3, metalness: 0.2 });
-      const frameColor = new THREE.MeshStandardMaterial({ color: 0x8b6e3a, roughness: 0.5, metalness: 0.4 });
+      const panelColor = new T.MeshStandardMaterial({ color: 0x3a5a7c, roughness: 0.3, metalness: 0.2 });
+      const frameColor = new T.MeshStandardMaterial({ color: 0x8b6e3a, roughness: 0.5, metalness: 0.4 });
       // Panel rows
       for (let row = 0; row < 2; row++) {
         for (let col = 0; col < 4; col++) {
@@ -1748,35 +1748,35 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "paneles-solares-acs": {
       // Solar panels for ACS (domestic hot water) by thermosiphon
-      const panelColor = new THREE.MeshStandardMaterial({ color: 0x5a3a7c, roughness: 0.3, metalness: 0.2 });
-      const tubeColor = new THREE.MeshStandardMaterial({ color: 0xffa500, roughness: 0.7, metalness: 0.3 });
-      const frameColor = new THREE.MeshStandardMaterial({ color: 0x8b5a2b, roughness: 0.5, metalness: 0.4 });
+      const panelColor = new T.MeshStandardMaterial({ color: 0x5a3a7c, roughness: 0.3, metalness: 0.2 });
+      const tubeColor = new T.MeshStandardMaterial({ color: 0xffa500, roughness: 0.7, metalness: 0.3 });
+      const frameColor = new T.MeshStandardMaterial({ color: 0x8b5a2b, roughness: 0.5, metalness: 0.4 });
       // Panel array - tubes in portrait orientation
       for (let row = 0; row < 3; row++) {
         for (let col = 0; col < 3; col++) {
           // Individual tube
-          cyl(Math.max(0.05, w / 18), 0.04, h / 6, tubeColor, 
+          cyl(Math.max(0.05, w / 18), 0.04, d / 6, tubeColor, 
             -w / 4 + (w / 6) * (col + 1), 
             0.02 + row * 0.15, 
             -d / 6 * (row + 1) + d / 18);
           // Glass envelope (larger cylinder)
-          cyl(Math.max(0.08, w / 15), 0.06, h / 6 + 0.02, panelColor, 
+          cyl(Math.max(0.08, w / 15), 0.06, d / 6 + 0.02, panelColor, 
             -w / 4 + (w / 6) * (col + 1), 
             0.04 + row * 0.15, 
             -d / 6 * (row + 1) + d / 18);
         }
       }
       // Header pipes at top and bottom
-      cyl(0.05, 0.05, w + 0.3, tubeColor, 0, 0.2 + row * 0.15, -d / 4);
-      cyl(0.05, 0.05, w + 0.3, tubeColor, 0, 0.2 + row * 0.15, d / 4);
+      cyl(0.05, 0.05, w + 0.3, tubeColor, 0, 0.2 + 2 * 0.15, -d / 4);
+      cyl(0.05, 0.05, w + 0.3, tubeColor, 0, 0.2 + 2 * 0.15, d / 4);
       // Frame
       box(w * 0.6, 0.15, d * 0.6, frameColor, 0, 0.075, 0);
       break;
     }
     case "caminos-madera": {
       // Wooden pathways/paths
-      const woodMat = new THREE.MeshStandardMaterial({ color: 0x6b4a32, roughness: 0.7, metalness: 0.3 });
-      const borderMat = new THREE.MeshStandardMaterial({ color: 0x8b5a2b, roughness: 0.8, metalness: 0.4 });
+      const woodMat = new T.MeshStandardMaterial({ color: 0x6b4a32, roughness: 0.7, metalness: 0.3 });
+      const borderMat = new T.MeshStandardMaterial({ color: 0x8b5a2b, roughness: 0.8, metalness: 0.4 });
       // Path planks (length w, width 0.15)
       for (let i = 0; i < 3; i++) {
         box(w * 0.3, 0.15, d / 6, woodMat, -w / 2 + (w / 6) * (i + 1), 0.075, -d / 2 + d / 12);
@@ -1792,8 +1792,8 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "granito": {
       // Granite paving stones
-      const graniteMat = new THREE.MeshStandardMaterial({ color: 0x2c3e50, roughness: 0.6, metalness: 0.2 });
-      const mortarMat = new THREE.MeshStandardMaterial({ color: 0x8b7355, roughness: 0.8, metalness: 0.3 });
+      const graniteMat = new T.MeshStandardMaterial({ color: 0x2c3e50, roughness: 0.6, metalness: 0.2 });
+      const mortarMat = new T.MeshStandardMaterial({ color: 0x8b7355, roughness: 0.8, metalness: 0.3 });
       // Paving stones (6x6 approx in relative units)
       for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 4; j++) {
@@ -1811,8 +1811,8 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "antenna-tv": {
       // TV antenna (rabbit ears)
-      const poleColor = new THREE.MeshStandardMaterial({ color: 0x8b7355, roughness: 0.7, metalness: 0.3 });
-      const finColor = new THREE.MeshStandardMaterial({ color: 0xc1c1c1, roughness: 0.5, metalness: 0.7 });
+      const poleColor = new T.MeshStandardMaterial({ color: 0x8b7355, roughness: 0.7, metalness: 0.3 });
+      const finColor = new T.MeshStandardMaterial({ color: 0xc1c1c1, roughness: 0.5, metalness: 0.7 });
       // Main pole
       cyl(0.05, 0.05, w + 0.5, poleColor, 0, (w + 0.5) / 2, 0);
       // Horizontal crossbar
@@ -1830,9 +1830,9 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "antenna-satelite": {
       // Satellite dish
-      const dishColor = new THREE.MeshStandardMaterial({ color: 0x3a3a3a, roughness: 0.7, metalness: 0.8 });
-      const armColor = new THREE.MeshStandardMaterial({ color: 0x8b7355, roughness: 0.7, metalness: 0.4 });
-      const focusColor = new THREE.MeshStandardMaterial({ color: 0xffd700, roughness: 0.5, metalness: 1 });
+      const dishColor = new T.MeshStandardMaterial({ color: 0x3a3a3a, roughness: 0.7, metalness: 0.8 });
+      const armColor = new T.MeshStandardMaterial({ color: 0x8b7355, roughness: 0.7, metalness: 0.4 });
+      const focusColor = new T.MeshStandardMaterial({ color: 0xffd700, roughness: 0.5, metalness: 1 });
       // Dish surface (paraboloid approximated with sections)
       const segments = 8;
       for (let i = 0; i < segments; i++) {
@@ -1856,10 +1856,10 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "escalera-hormigon": {
       // Concrete staircase
-      const concreteColor = new THREE.MeshStandardMaterial({ color: 0x8c8c8c, roughness: 0.7, metalness: 0.2 });
-      const stepMat = new THREE.MeshStandardMaterial({ color: 0x5a5a5a, roughness: 0.5, metalness: 0.1 });
-      const railingMat = new THREE.MeshStandardMaterial({ color: 0x8b7355, roughness: 0.7, metalness: 0.4 });
-      const newelMat = new THREE.MeshStandardMaterial({ color: 0x6b4a32, roughness: 0.8, metalness: 0.5 });
+      const concreteColor = new T.MeshStandardMaterial({ color: 0x8c8c8c, roughness: 0.7, metalness: 0.2 });
+      const stepMat = new T.MeshStandardMaterial({ color: 0x5a5a5a, roughness: 0.5, metalness: 0.1 });
+      const railingMat = new T.MeshStandardMaterial({ color: 0x8b7355, roughness: 0.7, metalness: 0.4 });
+      const newelMat = new T.MeshStandardMaterial({ color: 0x6b4a32, roughness: 0.8, metalness: 0.5 });
       const steps = Math.max(3, Math.min(15, Math.round(d / 0.25)));
       const totalHeight = steps * 0.18;
       // Steps
@@ -1880,15 +1880,12 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
       }
       break;
     }
-    default:
-      return null;
-    }
     case "pecera": {
       // Fish tank/aquarium
-      const tankColor = new THREE.MeshStandardMaterial({ color: 0x1e3a5f, roughness: 0.5, metalness: 0.1 });
-      const waterColor = new THREE.MeshStandardMaterial({ color: 0x4682b4, roughness: 0.0, metalness: 0.0, transparent: true, opacity: 0.8 });
-      const gravelColor = new THREE.MeshStandardMaterial({ color: 0x8b7355, roughness: 0.8, metalness: 0.2 });
-      const plantColor = new THREE.MeshStandardMaterial({ color: 0x2e8b57, roughness: 0.9, metalness: 0.1 });
+      const tankColor = new T.MeshStandardMaterial({ color: 0x1e3a5f, roughness: 0.5, metalness: 0.1 });
+      const waterColor = new T.MeshStandardMaterial({ color: 0x4682b4, roughness: 0.0, metalness: 0.0, transparent: true, opacity: 0.8 });
+      const gravelColor = new T.MeshStandardMaterial({ color: 0x8b7355, roughness: 0.8, metalness: 0.2 });
+      const plantColor = new T.MeshStandardMaterial({ color: 0x2e8b57, roughness: 0.9, metalness: 0.1 });
       // Tank main body
       box(w, 0.4, d, tankColor, 0, 0.2, 0);
       // Water inside (smaller box with transparency)
@@ -1905,8 +1902,8 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "canasta": {
       // Basket
-      const weaveColor = new THREE.MeshStandardMaterial({ color: 0x8b6e45, roughness: 0.7, metalness: 0.1 });
-      const trimColor = new THREE.MeshStandardMaterial({ color: 0x6b4a32, roughness: 0.5, metalness: 0.3 });
+      const weaveColor = new T.MeshStandardMaterial({ color: 0x8b6e45, roughness: 0.7, metalness: 0.1 });
+      const trimColor = new T.MeshStandardMaterial({ color: 0x6b4a32, roughness: 0.5, metalness: 0.3 });
       // Basket base
       box(w, 0.1, d, weaveColor, 0, 0.05, 0);
       // Basket walls (woven look with vertical strips)
@@ -1922,8 +1919,8 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "tenis": {
       // Tennis court (half court showing lines)
-      const courtColor = new THREE.MeshStandardMaterial({ color: 0x8b8b8b, roughness: 0.7, metalness: 0.1 });
-      const lineColor = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5, metalness: 0.2 });
+      const courtColor = new T.MeshStandardMaterial({ color: 0x8b8b8b, roughness: 0.7, metalness: 0.1 });
+      const lineColor = new T.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5, metalness: 0.2 });
       // Court surface
       box(w, 0.02, d, courtColor, 0, 0.01, 0);
       // Service line (bottom)
@@ -1940,8 +1937,8 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
     }
     case "baloncesto": {
       // Basketball court
-      const courtColor = new THREE.MeshStandardMaterial({ color: 0x212529, roughness: 0.7, metalness: 0.1 });
-      const lineColor = new THREE.MeshStandardMaterial({ color: 0xfff8f0, roughness: 0.5, metalness: 0.2 });
+      const courtColor = new T.MeshStandardMaterial({ color: 0x212529, roughness: 0.7, metalness: 0.1 });
+      const lineColor = new T.MeshStandardMaterial({ color: 0xfff8f0, roughness: 0.5, metalness: 0.2 });
       // Court surface (rectangular)
       box(w, 0.05, d, courtColor, 0, 0.025, 0);
       // Center circle
@@ -1966,6 +1963,199 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
       }
       break;
     }
+    case "coche": {
+      const bodyMat = mat(0xd1d5db, 0.6, 0.2);
+      const glassMat = mat(0xbfdbfe, 0.1, 0.1);
+      const tireMat = mat(0x1f2937, 0.95, 0.0);
+      const lightMat = mat(0xfef9c3, 0.3, 0.1);
+      const tailMat = mat(0xfecaca, 0.3, 0.1);
+      // Main body
+      box(w, 0.3, d, bodyMat, 0, 0.15, 0);
+      // Roof (cabin)
+      box(w * 0.72, 0.28, d * 0.55, bodyMat, 0, 0.44, 0);
+      // Windshield front
+      box(w * 0.68, 0.22, 0.03, glassMat, 0, 0.44, d * 0.275 + 0.015);
+      // Rear window
+      box(w * 0.68, 0.22, 0.03, glassMat, 0, 0.44, -(d * 0.275 + 0.015));
+      // Wheels (4 corners)
+      for (const sx of [-1, 1]) {
+        for (const sz of [-1, 1]) {
+          cyl(0.07, 0.07, 0.08, tireMat, sx * (w * 0.5 + 0.04), 0.07, sz * d * 0.33, 16);
+        }
+      }
+      // Headlights
+      box(w * 0.18, 0.06, 0.03, lightMat, -w * 0.28, 0.2, d * 0.5 + 0.01);
+      box(w * 0.18, 0.06, 0.03, lightMat, w * 0.28, 0.2, d * 0.5 + 0.01);
+      // Taillights
+      box(w * 0.18, 0.06, 0.03, tailMat, -w * 0.28, 0.2, -(d * 0.5 + 0.01));
+      box(w * 0.18, 0.06, 0.03, tailMat, w * 0.28, 0.2, -(d * 0.5 + 0.01));
+      break;
+    }
+    case "moto": {
+      const frameMat = mat(0x374151, 0.7, 0.3);
+      const tireMat = mat(0x111827, 0.95, 0.0);
+      const tankMat = mat(0x6b7280, 0.5, 0.3);
+      const rimMat = mat(0x9ca3af, 0.3, 0.7);
+      // Wheels
+      cyl(d * 0.42, d * 0.42, 0.06, tireMat, 0, d * 0.42, d * 0.33, 24);
+      cyl(d * 0.42 - 0.03, d * 0.42 - 0.03, 0.04, rimMat, 0, d * 0.42, d * 0.33, 24);
+      cyl(d * 0.42, d * 0.42, 0.06, tireMat, 0, d * 0.42, -d * 0.33, 24);
+      cyl(d * 0.42 - 0.03, d * 0.42 - 0.03, 0.04, rimMat, 0, d * 0.42, -d * 0.33, 24);
+      // Frame
+      box(w * 0.22, 0.06, d * 0.5, frameMat, 0, d * 0.55, 0);
+      // Tank
+      box(w * 0.35, 0.18, d * 0.28, tankMat, 0, d * 0.72, d * 0.08);
+      // Seat
+      box(w * 0.28, 0.08, d * 0.22, mat(0x111827, 0.95), 0, d * 0.68, -d * 0.08);
+      // Handlebars
+      box(w * 0.9, 0.04, 0.04, frameMat, 0, d * 0.78, d * 0.3);
+      break;
+    }
+    case "bicicleta": {
+      const frameMat = mat(0x92400e, 0.7, 0.2);
+      const tireMat = mat(0x1f2937, 0.95, 0.0);
+      const rimMat = mat(0x9ca3af, 0.3, 0.7);
+      const r = Math.min(w, d) * 0.36;
+      // Wheels
+      cyl(r, r, 0.05, tireMat, 0, r, d * 0.33, 20);
+      cyl(r - 0.025, r - 0.025, 0.03, rimMat, 0, r, d * 0.33, 20);
+      cyl(r, r, 0.05, tireMat, 0, r, -d * 0.33, 20);
+      cyl(r - 0.025, r - 0.025, 0.03, rimMat, 0, r, -d * 0.33, 20);
+      // Frame bars
+      box(0.03, r * 1.4, 0.03, frameMat, 0, r * 0.5, 0);
+      box(0.03, 0.04, d * 0.5, frameMat, 0, r * 0.9, 0);
+      box(0.03, r, 0.03, frameMat, 0, r * 0.5, d * 0.15);
+      // Handlebars
+      box(w * 0.8, 0.03, 0.03, frameMat, 0, r * 1.5, d * 0.3);
+      // Seat
+      box(w * 0.3, 0.04, 0.04, frameMat, 0, r * 1.4, -d * 0.08);
+      break;
+    }
+    case "columpio": {
+      const woodMat = mat(0x92400e, 0.85, 0.1);
+      const ropeMat = mat(0x6b7280, 0.9, 0.1);
+      const seatMat = mat(0x451a03, 0.9, 0.1);
+      const crossBar = w;
+      const postH = d * 0.8;
+      // Two A-frame legs
+      for (const sx of [-1, 1]) {
+        cyl(0.05, 0.05, postH * 1.1, woodMat, sx * crossBar * 0.45, postH * 0.55, -d * 0.3);
+        cyl(0.05, 0.05, postH * 1.1, woodMat, sx * crossBar * 0.45, postH * 0.55, d * 0.3);
+      }
+      // Top horizontal bar
+      box(crossBar, 0.06, 0.06, woodMat, 0, postH, 0);
+      // Chains / ropes
+      cyl(0.02, 0.02, postH * 0.75, ropeMat, -crossBar * 0.18, postH * 0.62, 0, 6);
+      cyl(0.02, 0.02, postH * 0.75, ropeMat, crossBar * 0.18, postH * 0.62, 0, 6);
+      // Seat plank
+      box(crossBar * 0.4, 0.05, 0.22, seatMat, 0, postH * 0.25, 0);
+      break;
+    }
+    case "caseta-perro": {
+      const wallMat = mat(0xd2b48c, 0.85, 0.1);
+      const roofMat = mat(0x92400e, 0.75, 0.1);
+      const doorMat = mat(0x451a03, 0.9, 0.1);
+      const h2 = d * 0.65;
+      // Walls
+      box(w, h2, d, wallMat, 0, h2 / 2, 0);
+      // Triangular roof (approximated with a flat box + two slopes)
+      box(w + 0.1, 0.06, d * 0.5 + 0.05, roofMat, 0, h2 + 0.03, -d * 0.25);
+      box(w + 0.1, 0.06, d * 0.5 + 0.05, roofMat, 0, h2 + 0.03, d * 0.25);
+      box(w + 0.1, h2 * 0.4, 0.06, roofMat, 0, h2 + h2 * 0.2, 0);
+      // Door opening
+      cyl(w * 0.22, w * 0.22, 0.04, doorMat, 0, h2 * 0.42, d * 0.5 + 0.01, 20);
+      break;
+    }
+    case "garaje": {
+      const wallMat = mat(0xf3f4f6, 0.85, 0.05);
+      const doorMat = mat(0xe5e7eb, 0.75, 0.1);
+      const doorLineMat = mat(0x9ca3af, 0.8, 0.1);
+      const floorMat = mat(0xd1d5db, 0.9, 0.0);
+      const h2 = d * 0.75;
+      // Walls (3 sides + floor)
+      box(w, h2, 0.1, wallMat, 0, h2 / 2, -d / 2);        // back wall
+      box(0.1, h2, d, wallMat, -w / 2, h2 / 2, 0);         // left wall
+      box(0.1, h2, d, wallMat, w / 2, h2 / 2, 0);          // right wall
+      box(w, 0.08, d, floorMat, 0, 0.04, 0);               // floor
+      // Garage door (front opening, sectional door panels)
+      const doorH = h2 * 0.85;
+      const doorW = w * 0.82;
+      for (let i = 0; i < 4; i++) {
+        box(doorW, doorH / 4 - 0.02, 0.06, doorMat, 0, doorH / 8 + i * doorH / 4, d / 2 - 0.03);
+      }
+      // Panel lines
+      for (let i = 1; i < 4; i++) {
+        box(doorW, 0.03, 0.07, doorLineMat, 0, i * doorH / 4, d / 2 - 0.03);
+      }
+      // Car silhouette inside
+      const carMat = mat(0xd1d5db, 0.6, 0.1);
+      box(w * 0.72, 0.28, d * 0.55, carMat, 0, 0.14, 0);
+      box(w * 0.52, 0.22, d * 0.3, mat(0x9ca3af, 0.5, 0.1), 0, 0.42 + 0.11, 0);
+      break;
+    }
+    case "escalera-planta-baja":
+    case "escalera-construccion": {
+      const stepMat = mat(0xf1f5f9, 0.75, 0.1);
+      const railMat = mat(0x6b7280, 0.5, 0.5);
+      const steps = Math.max(4, Math.round(d / 0.28));
+      const stepH = 0.18;
+      const stepD = d / steps;
+      for (let i = 0; i < steps; i++) {
+        box(w * 0.85, stepH, stepD, stepMat, 0, (i + 0.5) * stepH, -d / 2 + (i + 0.5) * stepD);
+      }
+      const totalH = steps * stepH;
+      cyl(0.04, 0.04, totalH + 0.1, railMat, -w * 0.4, totalH / 2, 0, 8);
+      cyl(0.04, 0.04, totalH + 0.1, railMat, w * 0.4, totalH / 2, 0, 8);
+      box(w * 0.85, 0.04, d + 0.1, railMat, 0, totalH + 0.04, 0);
+      break;
+    }
+    case "escalera-planta-superior": {
+      const stepMat = mat(0xcbd5e1, 0.75, 0.1);
+      const railMat = mat(0x475569, 0.5, 0.5);
+      const markerMat = mat(0x1e40af, 0.5, 0.2);
+      const steps = Math.max(4, Math.round(d / 0.28));
+      const stepH = 0.18;
+      const stepD = d / steps;
+      // Steps get darker going up (arriving floor is top)
+      for (let i = 0; i < steps; i++) {
+        const shade = 0xf1f5f9 - i * 0x080808;
+        box(w * 0.85, stepH, stepD, mat(shade, 0.75, 0.05), 0, (i + 0.5) * stepH, -d / 2 + (i + 0.5) * stepD);
+      }
+      const totalH = steps * stepH;
+      // Solid landing plate at top
+      box(w * 0.85, stepH, stepD, mat(0x94a3b8, 0.8, 0.1), 0, totalH + stepH / 2, d / 2 - stepD / 2);
+      cyl(0.04, 0.04, totalH + 0.1, railMat, -w * 0.4, totalH / 2, 0, 8);
+      cyl(0.04, 0.04, totalH + 0.1, railMat, w * 0.4, totalH / 2, 0, 8);
+      box(w * 0.85, 0.04, d + 0.1, railMat, 0, totalH + 0.04, 0);
+      // Blue P.S. marker box
+      box(w * 0.4, 0.12, w * 0.25, markerMat, 0, totalH + 0.3, 0);
+      break;
+    }
+    case "escalera-caracol": {
+      const stepMat = mat(0xf1f5f9, 0.75, 0.1);
+      const poleMat = mat(0x6b7280, 0.4, 0.6);
+      const r = Math.min(w, d) * 0.46;
+      const steps = 10;
+      const totalH = 2.4;
+      // Central pole
+      cyl(0.06, 0.06, totalH, poleMat, 0, totalH / 2, 0, 12);
+      // Steps radiating outward
+      for (let i = 0; i < steps; i++) {
+        const angle = (i * Math.PI * 2) / steps;
+        const stepMesh = box(r * 0.8, 0.04, r * 0.3, stepMat,
+          Math.cos(angle) * r * 0.5,
+          (i / steps) * totalH + 0.02,
+          Math.sin(angle) * r * 0.5);
+        if (stepMesh) {
+          stepMesh.rotation.y = -angle;
+        }
+      }
+      // Handrail ring at top
+      cyl(r, r, 0.04, poleMat, 0, totalH, 0, 24);
+      break;
+    }
+    default:
+      return null;
   }
 
   return g;

@@ -91,7 +91,7 @@ export const CATALOG: CatalogGroup[] = [
       { key: "puerta-doble", label: "Puerta doble (2 hojas)", w: 160, h: 90, draw: () => (<><path d="M-80 -45 Q-20 -10 80 45" fill="none" strokeDasharray="10 8" strokeWidth={2} /><path d="M80 -45 Q20 -10 -80 45" fill="none" strokeDasharray="10 8" strokeWidth={2} /><rect x={-80} y={-45} width={8} height={90} fill={WALL} stroke={WALL} strokeWidth={1.5} /><rect x={72} y={-45} width={8} height={90} fill={WALL} stroke={WALL} strokeWidth={1.5} /><circle cx={-72} cy={45} r={5} fill={WALL} stroke="none" /><circle cx={72} cy={45} r={5} fill={WALL} stroke="none" /></>) },
       { key: "ventana", label: "Ventana", w: 120, h: 15, draw: () => (<><rect x={-60} y={-7} width={120} height={15} rx={2} fill="#faf9f7" stroke="#1c1f24" strokeWidth={1.8} /><rect x={-52} y={-5} width={104} height={10} rx={1} fill="#dcecf8" stroke="#4a5568" strokeWidth={1} /><path d="M0 -5 V5" fill="none" stroke="#4a5568" strokeWidth={1.4} /><path d="M-52 0 H52" fill="none" stroke="#4a5568" strokeWidth={1.4} /><rect x={-55} y={-6} width={7} height={2} rx={1} fill="#6b7280" /><rect x={48} y={-6} width={7} height={2} rx={1} fill="#6b7280" /></>) },
       { key: "columna", label: "Columna", w: 30, h: 30, draw: () => (<rect x={-15} y={-15} width={30} height={30} fill={WALL} stroke={WALL} />) },
-      { key: "escalera", label: "Escalera", w: 90, h: 240, draw: () => (<><rect x={-45} y={-120} width={90} height={240} fill="#ffffff" />{Array.from({ length: 7 }, (_, i) => (<path key={i} d={`M-45 ${-120 + (i + 1) * 30} H45`} fill="none" strokeWidth={2} />))}<path d="M0 105 V-95" fill="none" strokeWidth={2} /><path d="M-12 -75 L0 -100 L12 -75" fill="none" strokeWidth={2} /></>) },
+      { key: "escalera-construccion", label: "Escalera", w: 90, h: 240, draw: () => (<><rect x={-45} y={-120} width={90} height={240} fill="#ffffff" />{Array.from({ length: 7 }, (_, i) => (<path key={i} d={`M-45 ${-120 + (i + 1) * 30} H45`} fill="none" strokeWidth={2} />))}<path d="M0 105 V-95" fill="none" strokeWidth={2} /><path d="M-12 -75 L0 -100 L12 -75" fill="none" strokeWidth={2} /></>) },
       { key: "curva90", label: "Curva 90°", w: 150, h: 150, draw: () => (<><path d="M 0 -75 A 75 75 0 0 1 75 0" fill="none" stroke={WALL} strokeWidth={12} strokeLinecap="butt" /><circle cx={0} cy={-75} r={3} fill={WALL} /><circle cx={75} cy={0} r={3} fill={WALL} /></>) },
       { key: "curva180", label: "Curva 180°", w: 150, h: 75, draw: () => (<><path d="M -75 0 A 75 75 0 0 1 75 0" fill="none" stroke={WALL} strokeWidth={12} strokeLinecap="butt" /><circle cx={-75} cy={0} r={3} fill={WALL} /><circle cx={75} cy={0} r={3} fill={WALL} /></>) },
     ],
@@ -176,8 +176,7 @@ export const CATALOG: CatalogGroup[] = [
     ],
   },
   {
-    id: "anotaciones",
-
+    id: "climatizacion",
     label: "Climatización (A/A)",
     items: [
       { key: "conducto-recto", label: "Conducto", w: 100, h: 20, draw: () => (<><rect x={-50} y={-10} width={100} height={20} rx={2} /><path d="M-40 -10 V10 M-20 -10 V10 M0 -10 V10 M20 -10 V10 M40 -10 V10" fill="none" /><path d="M-45 0 H40 M 40 0 L 36 -3 M 40 0 L 36 3" fill="none" /></>) },
@@ -185,24 +184,252 @@ export const CATALOG: CatalogGroup[] = [
       { key: "split-ac", label: "Split interior", w: 80, h: 24, draw: () => (<><rect x={-40} y={-12} width={80} height={24} rx={4} /><path d="M-30 -5 H30 M-30 0 H30 M-30 5 H30" fill="none" /><path d="M-20 12 L-30 16 M-10 12 L-20 16 M0 12 L-10 16 M10 12 L0 16 M20 12 L10 16 M30 12 L20 16" fill="none" /></>) },
       { key: "compresor-ext", label: "Compresor", w: 50, h: 50, draw: () => (<><rect x={-25} y={-25} width={50} height={50} rx={6} fill={WALL} stroke={WALL} /><circle cx={0} cy={-2} r={18} fill="#e8e8e8" stroke="#1c1f24" strokeWidth={2} /><path d="M0 -12 V8 M-10 -2 H10" fill="none" stroke="#1c1f24" strokeWidth={2} /></>) },
       { key: "fancoil", label: "Fancoil", w: 70, h: 30, draw: () => (<><rect x={-35} y={-15} width={70} height={30} rx={4} /><path d="M-25 -8 H25 M-25 -4 H25 M-25 0 H25 M-25 4 H25" fill="none" /><circle cx={20} cy={0} r={4} fill="none" /></>) },
-      { key: "coche", label: "Coche", w: 80, h: 30, draw: () => (<><rect x={-40} y={-15} width={80} height={30} rx={4} fill="#2d3436" stroke="#1c1f24" /><circle cx={-20} cy={0} r={8} fill="#1a1a1a" /><circle cx={20} cy={0} r={8} fill="#1a1a1a" /><path d="M-30 -5 H30 M-30 0 H30 M-30 5 H30" fill="none" /></>) },
-      { key: "moto", label: "Motocicleta", w: 70, h: 35, draw: () => (<><rect x={-35} y={-17.5} width={70} height={35} rx={4} fill="#2d3436" stroke="#1c1f24" /><circle cx={-20} cy={0} r={6} fill="#1a1a1a" /><circle cx={20} cy={0} r={6} fill="#1a1a1a" /><path d="M-25 -8 H25 M-25 -4 H25 M-25 0 H25 M-25 4 H25" fill="none" /></>) },
-      { key: "bicicleta", label: "Bicicleta", w: 65, h: 40, draw: () => (<><rect x={-32.5} y={-20} width={65} height={40} rx={4} fill="#6b3a2a" stroke="#1c1f24" /><circle cx={-20} cy={0} r={8} fill="#1a1a1a" /><circle cx={20} cy={0} r={8} fill="#1a1a1a" /><path d="M-20 -10 H20 M-10 -5 H10" fill="none" /></>) },
-      { key: "columpio", label: "Columpio", w: 100, h: 40, draw: () => (<><rect x={-50} y={-20} width={100} height={40} rx={4} fill="#8d6e63" stroke="#1c1f24" /><path d="M-40 -8 V8 M-20 -8 V8 M0 -8 V8 M20 -8 V8 M40 -8 V8" fill="none" /><rect x={-20} y={-12} width={40} height={12} rx={2} /><rect x={-20} y={-12} width={4} height={12} rx={2} /><path d="M-20 0 H20 M0 0 H20 M20 0 H20" stroke="#1c1f24" strokeWidth={2} /><path d="M-20 -15 H20 M0 -15 H20 M20 -15 H20" stroke="#1c1f24" strokeWidth={2} /></>) },
-      { key: "caseta-perro", label: "Caseta perro", w: 80, h: 50, draw: () => (<><rect x={-40} y={-25} width={80} height={30} rx={4} fill="#6b4a32" stroke="#1c1f24" /><rect x={-20} y={-5} width={40} height={10} rx={2} fill="#5d4037" /></>) },
+    ],
+  },
+  {
+    id: "vehiculos",
+    label: "Vehículos y ocio",
+    items: [
+      {
+        key: "coche",
+        label: "Coche",
+        w: 200,
+        h: 450,
+        draw: () => (
+          <>
+            {/* Carrocería principal */}
+            <rect x={-100} y={-225} width={200} height={450} rx={30} fill="#d1d5db" stroke={WALL} strokeWidth={4} />
+            {/* Techo (zona central más oscura) */}
+            <rect x={-72} y={-130} width={144} height={180} rx={18} fill="#9ca3af" stroke={WALL} strokeWidth={2} />
+            {/* Parabrisas delantero */}
+            <rect x={-65} y={-125} width={130} height={55} rx={10} fill="#bfdbfe" stroke="#4a5568" strokeWidth={1.5} />
+            {/* Luneta trasera */}
+            <rect x={-65} y={45} width={130} height={55} rx={10} fill="#bfdbfe" stroke="#4a5568" strokeWidth={1.5} />
+            {/* Rueda delantera izquierda */}
+            <rect x={-110} y={-175} width={30} height={70} rx={8} fill="#1f2937" stroke={WALL} strokeWidth={2} />
+            {/* Rueda delantera derecha */}
+            <rect x={80} y={-175} width={30} height={70} rx={8} fill="#1f2937" stroke={WALL} strokeWidth={2} />
+            {/* Rueda trasera izquierda */}
+            <rect x={-110} y={105} width={30} height={70} rx={8} fill="#1f2937" stroke={WALL} strokeWidth={2} />
+            {/* Rueda trasera derecha */}
+            <rect x={80} y={105} width={30} height={70} rx={8} fill="#1f2937" stroke={WALL} strokeWidth={2} />
+            {/* Faros delanteros */}
+            <rect x={-88} y={-215} width={40} height={16} rx={4} fill="#fef9c3" stroke="#ca8a04" strokeWidth={1.5} />
+            <rect x={48} y={-215} width={40} height={16} rx={4} fill="#fef9c3" stroke="#ca8a04" strokeWidth={1.5} />
+            {/* Pilotos traseros */}
+            <rect x={-88} y={199} width={40} height={16} rx={4} fill="#fecaca" stroke="#dc2626" strokeWidth={1.5} />
+            <rect x={48} y={199} width={40} height={16} rx={4} fill="#fecaca" stroke="#dc2626" strokeWidth={1.5} />
+          </>
+        ),
+      },
+      {
+        key: "moto",
+        label: "Motocicleta",
+        w: 90,
+        h: 220,
+        draw: () => (
+          <>
+            {/* Rueda delantera */}
+            <ellipse cx={0} cy={-85} rx={28} ry={28} fill="none" stroke={WALL} strokeWidth={6} />
+            <ellipse cx={0} cy={-85} rx={12} ry={12} fill="#374151" stroke={WALL} strokeWidth={2} />
+            {/* Rueda trasera */}
+            <ellipse cx={0} cy={85} rx={28} ry={28} fill="none" stroke={WALL} strokeWidth={6} />
+            <ellipse cx={0} cy={85} rx={12} ry={12} fill="#374151" stroke={WALL} strokeWidth={2} />
+            {/* Chasis / cuerpo */}
+            <rect x={-14} y={-60} width={28} height={120} rx={8} fill="#374151" stroke={WALL} strokeWidth={3} />
+            {/* Depósito */}
+            <rect x={-18} y={-30} width={36} height={50} rx={10} fill="#6b7280" stroke={WALL} strokeWidth={2} />
+            {/* Manillar */}
+            <rect x={-30} y={-70} width={60} height={10} rx={4} fill="#1f2937" stroke={WALL} strokeWidth={2} />
+            {/* Asiento */}
+            <rect x={-14} y={12} width={28} height={28} rx={6} fill="#111827" stroke={WALL} strokeWidth={1.5} />
+          </>
+        ),
+      },
+      {
+        key: "bicicleta",
+        label: "Bicicleta",
+        w: 80,
+        h: 200,
+        draw: () => (
+          <>
+            {/* Rueda delantera */}
+            <circle cx={0} cy={-72} r={28} fill="none" stroke={WALL} strokeWidth={5} />
+            <circle cx={0} cy={-72} r={8} fill="#374151" />
+            {/* Rueda trasera */}
+            <circle cx={0} cy={72} r={28} fill="none" stroke={WALL} strokeWidth={5} />
+            <circle cx={0} cy={72} r={8} fill="#374151" />
+            {/* Cuadro */}
+            <line x1={0} y1={-72} x2={0} y2={72} stroke={WALL} strokeWidth={4} />
+            <line x1={0} y1={-72} x2={-16} y2={10} stroke={WALL} strokeWidth={4} />
+            <line x1={0} y1={72} x2={-16} y2={10} stroke={WALL} strokeWidth={4} />
+            <line x1={0} y1={-72} x2={16} y2={10} stroke={WALL} strokeWidth={3} />
+            {/* Manillar */}
+            <rect x={-22} y={-80} width={44} height={9} rx={4} fill={WALL} />
+            {/* Sillín */}
+            <rect x={-14} y={3} width={28} height={9} rx={4} fill={WALL} />
+            {/* Pedales */}
+            <circle cx={0} cy={10} r={6} fill="#6b7280" stroke={WALL} strokeWidth={2} />
+          </>
+        ),
+      },
+      {
+        key: "garaje",
+        label: "Garaje",
+        w: 400,
+        h: 550,
+        draw: () => (
+          <>
+            {/* Estructura garaje */}
+            <rect x={-200} y={-275} width={400} height={550} rx={8} fill="#f3f4f6" stroke={WALL} strokeWidth={5} />
+            {/* Puerta de garaje (seccional) */}
+            <rect x={-160} y={-275} width={320} height={180} rx={4} fill="#e5e7eb" stroke={WALL} strokeWidth={3} />
+            {/* Paneles de la puerta */}
+            <line x1={-160} y1={-230} x2={160} y2={-230} stroke="#9ca3af" strokeWidth={2} />
+            <line x1={-160} y1={-185} x2={160} y2={-185} stroke="#9ca3af" strokeWidth={2} />
+            <line x1={-160} y1={-140} x2={160} y2={-140} stroke="#9ca3af" strokeWidth={2} />
+            <line x1={0} y1={-275} x2={0} y2={-95} stroke="#9ca3af" strokeWidth={2} />
+            {/* Tirador central */}
+            <rect x={-14} y={-190} width={28} height={8} rx={4} fill="#6b7280" stroke={WALL} strokeWidth={1.5} />
+            {/* Interior del garaje */}
+            <rect x={-178} y={-85} width={356} height={350} rx={4} fill="#f9fafb" stroke="#d1d5db" strokeWidth={1.5} />
+            {/* Silueta del coche dentro */}
+            <rect x={-90} y={-60} width={180} height={310} rx={22} fill="#d1d5db" stroke="#9ca3af" strokeWidth={2.5} />
+            <rect x={-65} y={-45} width={130} height={120} rx={14} fill="#9ca3af" />
+            {/* Ruedas coche interior */}
+            <rect x={-100} y={-30} width={22} height={52} rx={6} fill="#374151" />
+            <rect x={78} y={-30} width={22} height={52} rx={6} fill="#374151" />
+            <rect x={-100} y={180} width={22} height={52} rx={6} fill="#374151" />
+            <rect x={78} y={180} width={22} height={52} rx={6} fill="#374151" />
+          </>
+        ),
+      },
+      {
+        key: "columpio",
+        label: "Columpio",
+        w: 220,
+        h: 220,
+        draw: () => (
+          <>
+            {/* Pórtico: postes laterales */}
+            <line x1={-100} y1={-100} x2={-80} y2={100} stroke={WALL} strokeWidth={8} strokeLinecap="round" />
+            <line x1={100} y1={-100} x2={80} y2={100} stroke={WALL} strokeWidth={8} strokeLinecap="round" />
+            {/* Travesaño superior */}
+            <rect x={-104} y={-108} width={208} height={16} rx={6} fill={WALL} />
+            {/* Cadenas */}
+            <line x1={-40} y1={-92} x2={-30} y2={30} stroke="#6b7280" strokeWidth={3} strokeDasharray="6 4" />
+            <line x1={40} y1={-92} x2={30} y2={30} stroke="#6b7280" strokeWidth={3} strokeDasharray="6 4" />
+            {/* Asiento */}
+            <rect x={-34} y={28} width={64} height={14} rx={5} fill="#92400e" stroke="#78350f" strokeWidth={2} />
+          </>
+        ),
+      },
+      {
+        key: "caseta-perro",
+        label: "Caseta perro",
+        w: 160,
+        h: 150,
+        draw: () => (
+          <>
+            {/* Cuerpo */}
+            <rect x={-80} y={-20} width={160} height={95} rx={6} fill="#d2b48c" stroke={WALL} strokeWidth={3} />
+            {/* Tejado (triángulo) */}
+            <polygon points="0,-75 -92,-20 92,-20" fill="#92400e" stroke={WALL} strokeWidth={3} />
+            {/* Entrada */}
+            <ellipse cx={0} cy={25} rx={30} ry={38} fill="#78350f" stroke={WALL} strokeWidth={2} />
+            <ellipse cx={0} cy={30} rx={22} ry={30} fill="#451a03" />
+          </>
+        ),
+      },
+    ],
+  },
+  {
+    id: "escaleras",
+    label: "Escaleras",
+    items: [
+      {
+        key: "escalera-planta-baja",
+        label: "Escalera planta baja",
+        w: 90,
+        h: 240,
+        draw: () => (
+          <>
+            <rect x={-45} y={-120} width={90} height={240} fill="#ffffff" stroke={WALL} strokeWidth={2} />
+            {Array.from({ length: 7 }, (_, i) => (
+              <path key={i} d={`M-45 ${-120 + (i + 1) * 30} H45`} fill="none" stroke={WALL} strokeWidth={2} />
+            ))}
+            {/* Flecha de subida */}
+            <path d="M0 105 V-95" fill="none" stroke={WALL} strokeWidth={2} />
+            <path d="M-12 -75 L0 -100 L12 -75" fill="none" stroke={WALL} strokeWidth={2} />
+          </>
+        ),
+      },
+      {
+        key: "escalera-planta-superior",
+        label: "Escalera planta superior",
+        w: 90,
+        h: 240,
+        draw: () => (
+          <>
+            {/* Fondo gris para indicar que es planta superior */}
+            <rect x={-45} y={-120} width={90} height={240} fill="#f1f5f9" stroke={WALL} strokeWidth={2} />
+            {/* Peldaños con degradado visual (más oscuros = más arriba) */}
+            {Array.from({ length: 7 }, (_, i) => (
+              <rect
+                key={i}
+                x={-45}
+                y={-120 + i * 30}
+                width={90}
+                height={30}
+                fill={`rgba(100,116,139,${0.08 + i * 0.06})`}
+                stroke={WALL}
+                strokeWidth={i === 6 ? 0 : 1.5}
+              />
+            ))}
+            {/* Línea de borde inferior (llegada) */}
+            <rect x={-45} y={90} width={90} height={30} rx={0} fill="#94a3b8" stroke={WALL} strokeWidth={2} />
+            {/* Flecha de bajada */}
+            <path d="M0 -105 V85" fill="none" stroke={WALL} strokeWidth={2} />
+            <path d="M-12 65 L0 90 L12 65" fill="none" stroke={WALL} strokeWidth={2} />
+            {/* Etiqueta P.S. */}
+            <rect x={-18} y={-14} width={36} height={18} rx={3} fill="#1e40af" />
+            <text x={0} y={-2} textAnchor="middle" fontSize={10} fontWeight="bold" fill="#ffffff">P.S.</text>
+          </>
+        ),
+      },
+      {
+        key: "escalera-caracol",
+        label: "Escalera caracol",
+        w: 120,
+        h: 120,
+        draw: () => (
+          <>
+            <circle cx={0} cy={0} r={58} fill="#f8fafc" stroke={WALL} strokeWidth={3} />
+            <circle cx={0} cy={0} r={16} fill="#e2e8f0" stroke={WALL} strokeWidth={2} />
+            {/* Peldaños radiales */}
+            {Array.from({ length: 8 }, (_, i) => {
+              const angle = (i * Math.PI * 2) / 8;
+              const x2 = Math.cos(angle) * 55;
+              const y2 = Math.sin(angle) * 55;
+              return <line key={i} x1={Math.cos(angle) * 16} y1={Math.sin(angle) * 16} x2={x2} y2={y2} stroke={WALL} strokeWidth={2} />;
+            })}
+            {/* Flecha espiral */}
+            <path d="M0 -40 A40 40 0 1 1 -28 28" fill="none" stroke="#f6821f" strokeWidth={2.5} />
+            <path d="M-28 28 L-38 18 M-28 28 L-18 18" fill="none" stroke="#f6821f" strokeWidth={2.5} />
+          </>
+        ),
+      },
     ],
   },
   {
     id: "suelo",
     label: "Suelo",
     items: [
-      { key: "madera", label: "Madera", w: 60, h: 30, draw: () => (<><rect x={-30} y={-15} width={60} height={30} rx={3} fill="#d2b48c" stroke="#1c1f24" />) },
-      { key: "loza", label: "Loza/Cerámica", w: 60, h: 30, draw: () => (<><rect x={-30} y={-15} width={60} height={30} rx={3} fill="#f0f0f0" stroke="#1c1f24" />) },
-      { key: "marmol", label: "Mármol", w: 60, h: 30, draw: () => (<><rect x={-30} y={-15} width={60} height={30} rx={3} fill="#e0e0e0" stroke="#1c1f24" />) },
+      { key: "madera", label: "Madera", w: 60, h: 30, draw: () => (<><rect x={-30} y={-15} width={60} height={30} rx={3} fill="#d2b48c" stroke="#1c1f24" /></>) },
+      { key: "loza", label: "Loza/Cerámica", w: 60, h: 30, draw: () => (<><rect x={-30} y={-15} width={60} height={30} rx={3} fill="#f0f0f0" stroke="#1c1f24" /></>) },
+      { key: "marmol", label: "Mármol", w: 60, h: 30, draw: () => (<><rect x={-30} y={-15} width={60} height={30} rx={3} fill="#e0e0e0" stroke="#1c1f24" /></>) },
     ],
   },
-  {
-    id: "fontaneria",
 
   {
     id: "iluminacion",
@@ -223,22 +450,22 @@ export const CATALOG: CatalogGroup[] = [
       { key: "grifo-lavabo", label: "Grifo lavabo", w: 16, h: 10, draw: () => (<><rect x={-8} y={-5} width={16} height={10} rx={2} fill="#faf9f7" stroke="#1c1f24" /><circle cx={0} cy={0} r={2.5} fill="#475569" /></>) },
       { key: "manguera-ducha", label: "Manguera ducha", w: 50, h: 8, draw: () => (<><rect x={-25} y={-4} width={50} height={8} rx={4} fill="#faf9f7" stroke="#1c1f24" /><path d="M-20 0 H20" fill="none" stroke="#6b675f" strokeWidth={1.5} /><circle cx={-23} cy={0} r={2} fill="#f6821f" /><circle cx={23} cy={0} r={2} fill="#f6821f" /></>) },
       { key: "manguera-lavabo", label: "Manguera lavabo", w: 35, h: 6, draw: () => (<><rect x={-17} y={-3} width={35} height={6} rx={3} fill="#faf9f7" stroke="#1c1f24" /><path d="M-14 0 H12" fill="none" stroke="#6b675f" strokeWidth={1.5} /></>) },
-      { key: "alicatado", label: "Alicatado Pared", w: 50, h: 30, draw: () => (<><rect x={-25} y={-15} width={50} height={30} rx={3} fill="#e0e0fa" stroke="#1c1f24" /><path d="M-20 -5 H20 M-15 -10 H15" stroke="#1c1f24" strokeWidth={1} fill="none" />) },
-      { key: "azulejo", label: "Azulejo Pared", w: 50, h: 30, draw: () => (<><rect x={-25} y={-15} width={50} height={30} rx={3} fill="#f0f8ff" stroke="#1c1f24" /><path d="M-20 -5 H20 M-15 -10 H15" stroke="#1c1f24" strokeWidth={1} fill="none" />) },
+      { key: "alicatado", label: "Alicatado Pared", w: 50, h: 30, draw: () => (<><rect x={-25} y={-15} width={50} height={30} rx={3} fill="#e0e0fa" stroke="#1c1f24" /><path d="M-20 -5 H20 M-15 -10 H15" stroke="#1c1f24" strokeWidth={1} fill="none" /></>) },
+      { key: "azulejo", label: "Azulejo Pared", w: 50, h: 30, draw: () => (<><rect x={-25} y={-15} width={50} height={30} rx={3} fill="#f0f8ff" stroke="#1c1f24" /><path d="M-20 -5 H20 M-15 -10 H15" stroke="#1c1f24" strokeWidth={1} fill="none" /></>) },
     ],
   },
   {
     id: "urbanizacion",
     label: "Urbanización",
     items: [
-      { key: "caminos-madera", label: "Camino Madera", w: 100, h: 30, draw: () => (<><rect x={-50} y={-15} width={100} height={30} rx={3} fill="#6b4a32" stroke="#1c1f24" />) },
-      { key: "granito", label: "Piedra Granito", w: 100, h: 30, draw: () => (<><rect x={-50} y={-15} width={100} height={30} rx={3} fill="#2c3e50" stroke="#1c1f24" />) },
+      { key: "caminos-madera", label: "Camino Madera", w: 100, h: 30, draw: () => (<><rect x={-50} y={-15} width={100} height={30} rx={3} fill="#6b4a32" stroke="#1c1f24" /></>) },
+      { key: "granito", label: "Piedra Granito", w: 100, h: 30, draw: () => (<><rect x={-50} y={-15} width={100} height={30} rx={3} fill="#2c3e50" stroke="#1c1f24" /></>) },
       { key: "antenna-tv", label: "Antena TV", w: 60, h: 50, draw: () => (<><rect x={-30} y={-25} width={60} height={30} rx={3} fill="#8b7355" stroke="#1c1f24" /><path d="M-15 -8 V8 M15 -8 V8 M0 -8 V8" stroke="#1c1f24" strokeWidth={2} /><line x1="-10" y1="-12" x2="10" y2="-12" stroke="#1c1f24" strokeWidth={2} /><line x1="-10" y1="-18" x2="10" y2="-18" stroke="#1c1f24" strokeWidth={2} /></>) },
       { key: "antenna-satelite", label: "Antena Satélite", w: 70, h: 55, draw: () => (<><circle cx={0} cy={0} r={30} fill="none" stroke="#3a3a3a" strokeWidth={2} /><line x1="0" y1="-35" x2="0" y2="-30" stroke="#8b7355" strokeWidth={2} /><line x1="-20" y1="-25" x2="20" y2="-25" stroke="#8b7355" strokeWidth={1} /></>) },
       { key: "pecera", label: "Pecera", w: 80, h: 50, draw: () => (<><rect x={-40} y={-25} width={80} height={30} rx={3} fill="#1e3a5f" stroke="#1c1f24" /><rect x={-10} y={-5} width={20} height={10} rx={2} fill="#4682b4" /></>) },
       { key: "canasta", label: "Canasta", w: 60, h: 40, draw: () => (<><rect x={-30} y={-20} width={60} height={20} rx={3} fill="#8b6e45" stroke="#1c1f24" /><path d="M-20 -5 H20 M0 -5 H0 M20 -5 H20" stroke="#1c1f24" strokeWidth={1} fill="none" /><path d="M-15 0 H15 M15 0 H15 M-15 0 H15" stroke="#1c1f24" strokeWidth={1} fill="none" /></>) },
       { key: "tenis", label: "Cancha Tenis", w: 110, h: 60, draw: () => (<><rect x={-55} y={-30} width={110} height={30} rx={2} fill="#8b8b8b" stroke="#1c1f24" /><path d="M-25 -3 V3 M0 -3 V3 M25 -3 V3 M50 -5 V5 M50 5 V-5" stroke="#1c1f24" strokeWidth={1} fill="none" /><line x1="-50" y1="-5" x2="50" y2="-5" stroke="#1c1f24" strokeWidth={1} /><line x1="-50" y1="5" x2="50" y2="5" stroke="#1c1f24" strokeWidth={1} /></>) },
-      { key: "baloncesto", label: "Cancha Baloncesto", w: 120, h: 65, draw: () => (<><rect x={-60} y={-32.5} width={120} height={32.5} rx={2} fill="#212529" stroke="#1c1f24" /><circle cx={0} cy={0} r={14} fill="none" stroke="#fff8f0" strokeWidth={2} /><path d="M0 14 L0 -14 M12 6 L12 -6 M-12 6 L-12 -6 M6 10 L6 -10 M-6 10 L-6 -10" stroke="#fff8f0" strokeWidth={2} /></>) ,
+      { key: "baloncesto", label: "Cancha Baloncesto", w: 120, h: 65, draw: () => (<><rect x={-60} y={-32.5} width={120} height={32.5} rx={2} fill="#212529" stroke="#1c1f24" /><circle cx={0} cy={0} r={14} fill="none" stroke="#fff8f0" strokeWidth={2} /><path d="M0 14 L0 -14 M12 6 L12 -6 M-12 6 L-12 -6 M6 10 L6 -10 M-6 10 L-6 -10" stroke="#fff8f0" strokeWidth={2} /></>) },
     ],
   },
   {

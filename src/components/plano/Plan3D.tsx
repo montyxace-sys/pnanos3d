@@ -134,6 +134,7 @@ export default function Plan3D() {
   const [measureOn, setMeasureOn] = useState<boolean>(false);
   const measurePointsRef = useRef<any[]>([]);
   const clearMeasureRef = useRef<() => void>(() => {});
+  const exportarPlanoRef = useRef<() => void>(() => {});
 
   useEffect(() => {
     setDoc(loadDoc());
@@ -528,7 +529,7 @@ export default function Plan3D() {
             }
             return;
           }
-          if (p.key === "piscina" || p.key === "fuente" || p.key === "maceta" || p.key === "maceta-grande" || p.key === "jardinera" || p.key === "parasol" || p.key === "arbol" || p.key === "arbusto" || p.key === "cesped") {
+          if (p.key === "piscina" || p.key === "fuente" || p.key === "maceta" || p.key === "maceta-grande" || p.key === "jardinera" || p.key === "maceta-flor" || p.key === "parasol" || p.key === "arbol" || p.key === "arbusto" || p.key === "cesped" || p.key === "monstruo" || p.key === "primavera" || p.key === "verano" || p.key === "otoño" || p.key === "invierno" || p.key === "halloween") {
             const g = new THREE.Group();
             if (p.key === "piscina") {
               const waterMat = new THREE.MeshStandardMaterial({ color: 0x5faadb, opacity: 0.85, transparent: true, roughness: 0.2 });
@@ -599,6 +600,7 @@ export default function Plan3D() {
                 leaf.rotation.z = angle + Math.PI / 2;
                 leaf.scale.y = 0.5;
                 g.add(leaf);
+              }
             } else if (p.key === "parasol") {
               const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.85, 8), new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.85 }));
               mast.position.y = 0.425;
@@ -606,89 +608,13 @@ export default function Plan3D() {
               const canopy = new THREE.Mesh(new THREE.ConeGeometry(Math.max(w, h) * 0.48, 0.04, 8), new THREE.MeshStandardMaterial({ color: 0xfbbf24, roughness: 0.65 }));
               canopy.position.y = 0.85;
               g.add(canopy);
-            } else if (p.key === "monstruo") {
-              const g = new THREE.Group();
-              const bodyH = 1.5;
-              const bodyW = 0.8;
-              const bodyD = 0.8;
-              const darkGreen = new THREE.MeshStandardMaterial({ color: 0x2d5a27, roughness: 0.8, metalness: 0.3 });
-              const lightGreen = new THREE.MeshStandardMaterial({ color: 0x6b8e23, roughness: 0.4, metalness: 0.7 });
-              const eyeWhite = new THREE.MeshStandardMaterial({ color: 0xf8f9fa, roughness: 0.9, metalness: 0.2 });
-              const eyeBlack = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.2 });
-              const mouthBrown = new THREE.MeshStandardMaterial({ color: 0x5d4037, roughness: 0.7, metalness: 0.4 });
-              // Main body
-              box(bodyW, bodyH, bodyD, darkGreen, 0, bodyH / 2, 0);
-              // Stomach patch
-              box(bodyW * 0.6, bodyH * 0.3, bodyD * 0.4, lightGreen, 0, bodyH * 0.45, 0);
-              // Two arms
-              for (const sx of [-1, 1]) {
-                cyl(0.08, 0.08, bodyH * 0.4, darkGreen, sx * bodyW / 2 - 0.1, bodyH * 0.35, 0);
-                box(0.15, 0.15, 0.15, lightGreen, sx * bodyW / 2 - 0.1, bodyH * 0.65, 0);
+            } else if (p.key === "monstruo" || p.key === "primavera" || p.key === "verano" || p.key === "otoño" || p.key === "invierno" || p.key === "halloween") {
+              const built = buildPiece(THREE, p.key, w, h);
+              if (built) {
+                built.position.set(px, 0, pz);
+                built.rotation.y = angle;
+                model.add(built);
               }
-              // Two legs
-              for (const sx of [-1, 1]) {
-                cyl(0.08, 0.08, bodyH * 0.45, darkGreen, sx * bodyW * 0.2, -bodyH / 2 + 0.05, 0);
-                box(0.12, 0.12, 0.2, darkGreen, sx * bodyW * 0.2, -bodyH / 2 + 0.15, 0);
-              }
-              // Left eye socket
-              box(0.12, 0.18, 0.12, eyeWhite, -bodyW / 4, bodyH / 2 - 0.15, 0);
-              // Right eye socket
-              box(0.12, 0.18, 0.12, eyeWhite, bodyW / 4, bodyH / 2 - 0.15, 0);
-              // Left pupil
-              sphere(0.05, eyeBlack, 0, bodyH / 2 - 0.25, -bodyW / 4, 8);
-              // Right pupil
-              sphere(0.05, eyeBlack, 0, bodyH / 2 - 0.25, bodyW / 4, 8);
-              // Mouth (smile)
-              const mouthX = 0;
-              const mouthY = -bodyH / 3;
-              const mouthWd = bodyW * 0.4;
-              const mouthHt = 0.08;
-              box(mouthWd, mouthHt, bodyD * 0.2, mouthBrown, mouthX, mouthY, 0);
-              // Smile curve (approximated with small spheres)
-              for (let i = 0; i <= 4; i++) {
-                const angle = (i * Math.PI) / 4;
-                const sx = Math.cos(angle) * mouthWd / 3;
-                const sy = Math.sin(angle) * mouthWd / 3;
-                sphere(0.03, mouthBrown, 0, mouthY + 0.02, sx, 8);
-              }
-              g.position.set(px, 0, pz);
-              g.rotation.y = angle;
-              model.add(g);
-              return;
-            } else if (p.key === "primavera") {
-              if (season === 0 || season === 1) spring();
-              else if (season === 6) spring(); // Mostrar si es "fecha actual" y es primavera
-              g.position.set(px, 0, pz);
-              g.rotation.y = angle;
-              model.add(g);
-              return;
-            } else if (p.key === "verano") {
-              if (season === 0 || season === 2) summer();
-              else if (season === 6) summer();
-              g.position.set(px, 0, pz);
-              g.rotation.y = angle;
-              model.add(g);
-              return;
-            } else if (p.key === "otoño") {
-              if (season === 0 || season === 3) autumn();
-              else if (season === 6) autumn();
-              g.position.set(px, 0, pz);
-              g.rotation.y = angle;
-              model.add(g);
-              return;
-            } else if (p.key === "invierno") {
-              if (season === 0 || season === 4) winter();
-              else if (season === 6) winter();
-              g.position.set(px, 0, pz);
-              g.rotation.y = angle;
-              model.add(g);
-              return;
-            } else if (p.key === "halloween") {
-              if (season === 0 || season === 5) halloween();
-              else if (season === 6) halloween();
-              g.position.set(px, 0, pz);
-              g.rotation.y = angle;
-              model.add(g);
               return;
             } else if (p.key === "arbol") {
               const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.04, 0.45, 10), new THREE.MeshStandardMaterial({ color: 0x92400e, roughness: 0.9 }));
@@ -947,7 +873,7 @@ controls.autoRotate = false;
         });
         tempRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
         tempRenderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
-        tempRenderer.background = new THREE.Color(0xffffff);
+        tempRenderer.setClearColor(0xffffff, 1);
         tempRenderer.shadowMap.enabled = true;
         tempRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
         
@@ -972,6 +898,9 @@ controls.autoRotate = false;
         // Limpiar renderer temporal
         tempRenderer.dispose();
       }
+
+      // Store the function in a ref so JSX can call it
+      exportarPlanoRef.current = exportarPlano;
 
       const updateLabels = () => {
         labelElements.forEach((label, index) => {
@@ -1187,7 +1116,7 @@ controls.autoRotate = false;
           Día / Noche
         </button>
         <button
-          onClick={() => exportarPlano()}
+          onClick={() => exportarPlanoRef.current()}
           className="rounded border border-line bg-paper px-3 py-1.5 text-xs font-semibold uppercase text-ink hover:bg-paper-2"
         >
           Descargar Plano
