@@ -422,6 +422,186 @@ export const CATALOG: CatalogGroup[] = [
     ],
   },
   {
+    id: "estaciones",
+    label: "Estaciones / Festivos",
+    items: [
+      {
+        key: "primavera",
+        label: "Árbol primavera",
+        w: 120, h: 120,
+        draw: () => (
+          <>
+            <rect x={-6} y={-60} width={12} height={80} rx={4} fill="#92400e" />
+            <circle cx={0} cy={-55} r={45} fill="#4ade80" stroke="#16a34a" strokeWidth={2} />
+            {/* Flores rosas */}
+            {[[-28,-70],[10,-85],[35,-55],[20,-35],[-30,-40]].map(([cx,cy],i) => (
+              <circle key={i} cx={cx} cy={cy} r={8} fill="#f9a8d4" stroke="#ec4899" strokeWidth={1.5} />
+            ))}
+          </>
+        ),
+      },
+      {
+        key: "verano",
+        label: "Árbol verano",
+        w: 120, h: 120,
+        draw: () => (
+          <>
+            <rect x={-6} y={-60} width={12} height={80} rx={4} fill="#92400e" />
+            <circle cx={0} cy={-55} r={48} fill="#16a34a" stroke="#166534" strokeWidth={2} />
+            <circle cx={-18} cy={-70} r={22} fill="#22c55e" />
+            <circle cx={20} cy={-68} r={20} fill="#22c55e" />
+            {/* Sol de verano */}
+            <circle cx={35} cy={-80} r={12} fill="#fbbf24" />
+            <path d="M35 -95 V-100 M35 -60 V-65 M20 -80 H15 M50 -80 H55 M25 -90 L22 -94 M45 -70 L48 -67 M45 -90 L48 -94 M25 -70 L22 -67" fill="none" stroke="#fbbf24" strokeWidth={2} />
+          </>
+        ),
+      },
+      {
+        key: "otoño",
+        label: "Árbol otoño",
+        w: 120, h: 120,
+        draw: () => (
+          <>
+            <rect x={-6} y={-60} width={12} height={80} rx={4} fill="#78350f" />
+            {/* Ramas */}
+            <path d="M0 -40 L-30 -70 M0 -50 L25 -72 M0 -55 L-15 -85 M0 -45 L10 -75" fill="none" stroke="#78350f" strokeWidth={5} />
+            {/* Hojas naranjas */}
+            {[[-32,-72],[26,-74],[-16,-87],[10,-77],[-8,-65],[18,-58]].map(([cx,cy],i) => (
+              <ellipse key={i} cx={cx} cy={cy} rx={12} ry={9} fill={["#f97316","#fb923c","#f59e0b","#ef4444","#ea580c","#dc2626"][i]} />
+            ))}
+            {/* Hojas caídas */}
+            {[[-40,15],[10,25],[-20,30],[30,10]].map(([cx,cy],i) => (
+              <ellipse key={i} cx={cx} cy={cy} rx={8} ry={6} fill={["#f97316","#f59e0b","#ea580c","#fb923c"][i]} opacity={0.7} />
+            ))}
+          </>
+        ),
+      },
+      {
+        key: "invierno",
+        label: "Muñeco de nieve",
+        w: 100, h: 160,
+        draw: () => (
+          <>
+            {/* Cuerpo grande */}
+            <circle cx={0} cy={35} r={40} fill="#f1f5f9" stroke="#94a3b8" strokeWidth={2} />
+            {/* Cabeza */}
+            <circle cx={0} cy={-45} r={28} fill="#f1f5f9" stroke="#94a3b8" strokeWidth={2} />
+            {/* Ojos */}
+            <circle cx={-10} cy={-52} r={4} fill="#1e293b" />
+            <circle cx={10} cy={-52} r={4} fill="#1e293b" />
+            {/* Nariz zanahoria */}
+            <polygon points="0,-47 8,-44 0,-41" fill="#f97316" />
+            {/* Boca */}
+            <path d="M-10 -38 Q0 -32 10 -38" fill="none" stroke="#1e293b" strokeWidth={2} />
+            {/* Sombrero */}
+            <rect x={-18} y={-82} width={36} height={6} rx={3} fill="#1e293b" />
+            <rect x={-12} y={-110} width={24} height={28} rx={3} fill="#1e293b" />
+            {/* Bufanda */}
+            <rect x={-26} y={-62} width={52} height={10} rx={4} fill="#ef4444" />
+            {/* Botones */}
+            <circle cx={0} cy={15} r={4} fill="#475569" />
+            <circle cx={0} cy={35} r={4} fill="#475569" />
+            <circle cx={0} cy={55} r={4} fill="#475569" />
+            {/* Brazos */}
+            <line x1={-40} y1={25} x2={-65} y2={5} stroke="#92400e" strokeWidth={5} strokeLinecap="round" />
+            <line x1={40} y1={25} x2={65} y2={5} stroke="#92400e" strokeWidth={5} strokeLinecap="round" />
+            {/* Nieve en el suelo */}
+            {[-50,-30,-10,10,30,50].map((x,i) => (
+              <circle key={i} cx={x} cy={75} r={5} fill="#e2e8f0" />
+            ))}
+          </>
+        ),
+      },
+      {
+        key: "arbol-navidad",
+        label: "Árbol Navidad",
+        w: 130, h: 200,
+        draw: () => (
+          <>
+            {/* Tronco */}
+            <rect x={-10} y={70} width={20} height={30} rx={3} fill="#78350f" />
+            {/* Tres capas del árbol */}
+            <polygon points="0,-100 -55,-10 55,-10" fill="#15803d" stroke="#166534" strokeWidth={2} />
+            <polygon points="0,-50 -65,30 65,30" fill="#16a34a" stroke="#166534" strokeWidth={2} />
+            <polygon points="0,0 -70,70 70,70" fill="#22c55e" stroke="#166534" strokeWidth={2} />
+            {/* Bolas de colores */}
+            {[[-35,-2],[30,5],[-20,30],[45,28],[-50,52],[15,55],[35,55],[-25,52]].map(([cx,cy],i) => (
+              <circle key={i} cx={cx} cy={cy} r={7} fill={["#ef4444","#fbbf24","#3b82f6","#f97316","#ec4899","#ef4444","#fbbf24","#3b82f6"][i]} />
+            ))}
+            {/* Estrella */}
+            <polygon points="0,-115 5,-102 18,-102 8,-94 12,-81 0,-89 -12,-81 -8,-94 -18,-102 -5,-102" fill="#fbbf24" stroke="#f59e0b" strokeWidth={1} />
+          </>
+        ),
+      },
+      {
+        key: "halloween",
+        label: "Halloween 🎃",
+        w: 100, h: 120,
+        draw: () => (
+          <>
+            {/* Calabaza */}
+            <ellipse cx={0} cy={20} rx={42} ry={36} fill="#f97316" stroke="#c2410c" strokeWidth={2} />
+            <ellipse cx={-20} cy={22} rx={14} ry={30} fill="#ea580c" />
+            <ellipse cx={20} cy={22} rx={14} ry={30} fill="#ea580c" />
+            {/* Tallo */}
+            <rect x={-5} y={-20} width={10} height={18} rx={4} fill="#15803d" />
+            <path d="M5 -15 Q20 -25 18 -35" fill="none" stroke="#15803d" strokeWidth={3} />
+            {/* Cara */}
+            <polygon points="-22,0 -14,-12 -6,0" fill="#1c1f24" />
+            <polygon points="22,0 14,-12 6,0" fill="#1c1f24" />
+            <path d="M-20 20 Q-10 30 0 22 Q10 30 20 20" fill="#1c1f24" />
+            {/* Murciélagos */}
+            <path d="M-50,-50 Q-40,-60 -30,-50 Q-25,-58 -20,-50" fill="#1c1f24" />
+            <path d="M50,-50 Q40,-60 30,-50 Q25,-58 20,-50" fill="#1c1f24" />
+          </>
+        ),
+      },
+      {
+        key: "arbol-navidad-nieve",
+        label: "Árbol Navidad nieve",
+        w: 130, h: 200,
+        draw: () => (
+          <>
+            <rect x={-10} y={70} width={20} height={30} rx={3} fill="#78350f" />
+            <polygon points="0,-100 -55,-10 55,-10" fill="#166534" />
+            <polygon points="0,-100 -20,-10 20,-10" fill="#f1f5f9" opacity={0.7} />
+            <polygon points="0,-50 -65,30 65,30" fill="#15803d" />
+            <polygon points="0,-50 -25,30 25,30" fill="#f1f5f9" opacity={0.7} />
+            <polygon points="0,0 -70,70 70,70" fill="#16a34a" />
+            <polygon points="0,0 -30,70 30,70" fill="#f1f5f9" opacity={0.7} />
+            <polygon points="0,-115 5,-102 18,-102 8,-94 12,-81 0,-89 -12,-81 -8,-94 -18,-102 -5,-102" fill="#fbbf24" />
+          </>
+        ),
+      },
+      {
+        key: "monstruo",
+        label: "Monstruo 👾",
+        w: 100, h: 180,
+        draw: () => (
+          <>
+            {/* Cuerpo */}
+            <rect x={-40} y={-50} width={80} height={110} rx={12} fill="#2d5a27" stroke="#166534" strokeWidth={2} />
+            {/* Barriga */}
+            <ellipse cx={0} cy={15} rx={28} ry={36} fill="#6b8e23" />
+            {/* Ojos */}
+            <circle cx={-18} cy={-28} r={14} fill="#f8f9fa" stroke="#1c1f24" strokeWidth={2} />
+            <circle cx={18} cy={-28} r={14} fill="#f8f9fa" stroke="#1c1f24" strokeWidth={2} />
+            <circle cx={-18} cy={-28} r={7} fill="#1a1a1a" />
+            <circle cx={18} cy={-28} r={7} fill="#1a1a1a" />
+            {/* Boca */}
+            <path d="M-20 10 Q0 25 20 10" fill="none" stroke="#1c1f24" strokeWidth={3} />
+            {/* Brazos */}
+            <rect x={-60} y={-20} width={22} height={50} rx={8} fill="#2d5a27" stroke="#166534" strokeWidth={2} />
+            <rect x={38} y={-20} width={22} height={50} rx={8} fill="#2d5a27" stroke="#166534" strokeWidth={2} />
+            {/* Patas */}
+            <rect x={-30} y={58} width={22} height={32} rx={6} fill="#2d5a27" stroke="#166534" strokeWidth={2} />
+            <rect x={8} y={58} width={22} height={32} rx={6} fill="#2d5a27" stroke="#166534" strokeWidth={2} />
+          </>
+        ),
+      },
+    ],
+  },
+  {
     id: "suelo",
     label: "Suelo",
     items: [
