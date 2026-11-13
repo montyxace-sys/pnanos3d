@@ -29,7 +29,11 @@ export const CATALOG: CatalogGroup[] = [
       { key: "sofa3", label: "Sofá 3 pl.", w: 210, h: 90, draw: () => (<><rect x={-105} y={-45} width={210} height={90} rx={10} /><rect x={-87} y={-30} width={174} height={62} rx={6} fill="none" /><path d="M-29 -30 V32 M29 -30 V32" fill="none" /></>) },
       { key: "sofa2", label: "Sofá 2 pl.", w: 160, h: 90, draw: () => (<><rect x={-80} y={-45} width={160} height={90} rx={10} /><rect x={-63} y={-30} width={126} height={62} rx={6} fill="none" /><path d="M0 -30 V32" fill="none" /></>) },
       { key: "butaca", label: "Butaca", w: 90, h: 85, draw: () => (<><rect x={-45} y={-42} width={90} height={85} rx={10} /><rect x={-30} y={-26} width={60} height={54} rx={6} fill="none" /></>) },
+      { key: "sofa-cama", label: "Sofá cama", w: 200, h: 90, draw: () => (<><rect x={-100} y={-45} width={200} height={90} rx={10} /><rect x={-85} y={-30} width={170} height={62} rx={6} fill="none" /><path d="M-20 -30 V32 M20 -30 V32" fill="none" /><path d="M-100 0 H100" fill="none" strokeDasharray="6 4" /></>) },
       { key: "mesa-aux", label: "Mesa aux.", w: 60, h: 45, draw: () => (<><rect x={-30} y={-22} width={60} height={45} rx={6} /><circle cx={0} cy={0} r={9} fill="none" /></>) },
+      { key: "chimenea", label: "Chimenea", w: 100, h: 60, draw: () => (<><rect x={-50} y={-30} width={100} height={60} rx={4} fill="#6b7280" stroke={WALL} strokeWidth={2} /><rect x={-30} y={-20} width={60} height={40} rx={2} fill="#1c1f24" /><circle cx={0} cy={-5} r={12} fill="#f97316" opacity={0.9} /><path d="M-8 -15 Q0 -25 8 -15 Q4 -10 0 -5 Q-4 -10 -8 -15" fill="#fbbf24" /></>) },
+      { key: "piano", label: "Piano", w: 150, h: 90, draw: () => (<><rect x={-75} y={-45} width={150} height={90} rx={6} fill="#1c1f24" stroke={WALL} /><rect x={-62} y={-32} width={124} height={30} rx={2} fill="#faf9f7" /><path d="M-50 -32 V-2 M-35 -32 V-2 M-20 -32 V-2 M-5 -32 V-2 M10 -32 V-2 M25 -32 V-2 M40 -32 V-2" fill="none" stroke="#94a3b8" strokeWidth={1} /><rect x={-56} y={-32} width={8} height={19} rx={1} fill="#1c1f24" /><rect x={-41} y={-32} width={8} height={19} rx={1} fill="#1c1f24" /><rect x={-11} y={-32} width={8} height={19} rx={1} fill="#1c1f24" /><rect x={4} y={-32} width={8} height={19} rx={1} fill="#1c1f24" /><rect x={19} y={-32} width={8} height={19} rx={1} fill="#1c1f24" /></>) },
+      { key: "barra-americana", label: "Barra americana", w: 200, h: 50, draw: () => (<><rect x={-100} y={-25} width={200} height={50} rx={8} fill="#78350f" stroke={WALL} strokeWidth={2} /><rect x={-90} y={-18} width={180} height={8} rx={4} fill="#92400e" /><path d="M-80 -25 V25 M-55 -25 V25 M-30 -25 V25 M-5 -25 V25 M20 -25 V25 M45 -25 V25 M70 -25 V25" fill="none" stroke="#6b4a32" strokeWidth={2} /></>) },
       { key: "tv", label: "TV / barra", w: 140, h: 25, draw: () => (<><rect x={-70} y={-12} width={140} height={25} rx={3} /><path d="M-58 0 H58" fill="none" /></>) },
       { key: "estanteria", label: "Estantería", w: 80, h: 30, draw: () => (<><rect x={-40} y={-15} width={80} height={30} rx={3} /><path d="M-14 -15 V15 M14 -15 V15" fill="none" /></>) },
     ],
@@ -50,6 +54,7 @@ export const CATALOG: CatalogGroup[] = [
     items: [
       { key: "cama150", label: "Cama 150", w: 150, h: 200, draw: () => (<><rect x={-75} y={-100} width={150} height={200} rx={8} /><rect x={-75} y={-100} width={150} height={22} fill="none" /><rect x={-64} y={-70} width={58} height={30} rx={6} /><rect x={6} y={-70} width={58} height={30} rx={6} /><path d="M-75 -28 H75" fill="none" /></>) },
       { key: "cama90", label: "Cama 90", w: 90, h: 200, draw: () => (<><rect x={-45} y={-100} width={90} height={200} rx={8} /><rect x={-45} y={-100} width={90} height={22} fill="none" /><rect x={-34} y={-70} width={68} height={30} rx={6} /><path d="M-45 -28 H45" fill="none" /></>) },
+      { key: "litera", label: "Litera", w: 95, h: 200, draw: () => (<><rect x={-47} y={-100} width={95} height={200} rx={6} fill="#faf9f7" stroke={WALL} strokeWidth={2} /><rect x={-47} y={-100} width={95} height={22} fill="none" stroke={WALL} strokeWidth={2} /><rect x={-36} y={-70} width={72} height={28} rx={5} /><path d="M-47 -28 H47" fill="none" stroke={WALL} strokeWidth={2} /><rect x={-47} y={-28} width={95} height={22} fill="none" stroke={WALL} strokeWidth={2} /><rect x={-36} y={20} width={72} height={28} rx={5} /><path d="M-47 60 H47" fill="none" stroke={WALL} strokeWidth={2} /><path d="M-47 -100 V100 M47 -100 V100" fill="none" stroke="#94a3b8" strokeWidth={2} strokeDasharray="6 4" /></>) },
       { key: "mesita", label: "Mesita", w: 45, h: 40, draw: () => (<><rect x={-22} y={-20} width={45} height={40} rx={4} /><circle cx={0} cy={0} r={8} fill="none" /></>) },
       { key: "armario", label: "Armario", w: 180, h: 60, draw: () => (<><rect x={-90} y={-30} width={180} height={60} rx={3} /><path d="M0 -30 V30" fill="none" /><path d="M-8 -5 V5 M8 -5 V5" fill="none" /></>) },
       { key: "comoda", label: "Cómoda", w: 120, h: 50, draw: () => (<><rect x={-60} y={-25} width={120} height={50} rx={3} /><path d="M-60 0 H60" fill="none" /><path d="M-14 -12 V-4 M14 -12 V-4 M-14 4 V12 M14 4 V12" fill="none" /></>) },
@@ -64,6 +69,8 @@ export const CATALOG: CatalogGroup[] = [
       { key: "campana", label: "Campana extractora", w: 60, h: 45, draw: () => (<><rect x={-30} y={-22} width={60} height={15} rx={4} /><rect x={-24} y={-7} width={48} height={29} rx={4} fill="none" /><path d="M-18 -22 V-30 M0 -22 V-30 M18 -22 V-30" fill="none" /></>) },
       { key: "placa", label: "Placa", w: 60, h: 60, draw: () => (<><rect x={-30} y={-30} width={60} height={60} rx={4} /><circle cx={-15} cy={-15} r={9} fill="none" /><circle cx={15} cy={-15} r={9} fill="none" /><circle cx={-15} cy={15} r={9} fill="none" /><circle cx={15} cy={15} r={9} fill="none" /></>) },
       { key: "frigorifico", label: "Frigorífico", w: 60, h: 65, draw: () => (<><rect x={-30} y={-32} width={60} height={65} rx={4} /><path d="M-30 -12 H30" fill="none" /><path d="M20 -28 V-16 M20 -8 V4" fill="none" /></>) },
+      { key: "lavavajillas", label: "Lavavajillas", w: 60, h: 60, draw: () => (<><rect x={-30} y={-30} width={60} height={60} rx={4} fill="#faf9f7" stroke={WALL} strokeWidth={2} /><rect x={-22} y={-22} width={44} height={34} rx={3} fill="none" stroke="#6b7280" strokeWidth={1.5} /><path d="M-18 -10 H18 M-18 -2 H18 M-18 6 H18" fill="none" stroke="#94a3b8" strokeWidth={1.5} /><rect x={-20} y={18} width={40} height={8} rx={3} fill="#e5e7eb" stroke="#9ca3af" strokeWidth={1} /><circle cx={16} cy={22} r={3} fill="#f6821f" /></>) },
+      { key: "mesa-desayuno", label: "Mesa desayuno", w: 80, h: 60, draw: () => (<><rect x={-40} y={-30} width={80} height={60} rx={6} fill="#faf9f7" stroke={WALL} strokeWidth={2} /><rect x={-32} y={-22} width={64} height={44} rx={4} fill="none" stroke="#6b7280" /><circle cx={-15} cy={0} r={8} fill="none" stroke="#94a3b8" strokeWidth={1.5} /><circle cx={15} cy={0} r={8} fill="none" stroke="#94a3b8" strokeWidth={1.5} /></>) },
       { key: "isla", label: "Isla", w: 120, h: 80, draw: () => (<><rect x={-60} y={-40} width={120} height={80} rx={4} /><rect x={-48} y={-29} width={96} height={58} rx={3} fill="none" /></>) },
     ],
   },
@@ -76,6 +83,78 @@ export const CATALOG: CatalogGroup[] = [
       { key: "lavabo", label: "Lavabo", w: 55, h: 45, draw: () => (<><rect x={-27} y={-22} width={55} height={45} rx={8} /><ellipse cx={0} cy={3} rx={17} ry={12} fill="none" /><circle cx={0} cy={-14} r={4} fill="none" /></>) },
       { key: "ducha", label: "Ducha", w: 90, h: 90, draw: () => (<><rect x={-45} y={-45} width={90} height={90} rx={5} /><path d="M-45 -45 L45 45" fill="none" /><circle cx={0} cy={0} r={6} fill="none" /></>) },
       { key: "banera", label: "Bañera", w: 170, h: 75, draw: () => (<><rect x={-85} y={-37} width={170} height={75} rx={16} /><rect x={-74} y={-27} width={148} height={55} rx={12} fill="none" /><circle cx={62} cy={0} r={5} fill="none" /></>) },
+      {
+        key: "jacuzzi",
+        label: "Jacuzzi",
+        w: 180, h: 180,
+        draw: () => (
+          <>
+            <rect x={-90} y={-90} width={180} height={180} rx={20} fill="#dceef8" stroke={WALL} strokeWidth={4} />
+            <rect x={-76} y={-76} width={152} height={152} rx={16} fill="#bfdbfe" stroke="#93c5fd" strokeWidth={2} />
+            {/* Chorros de agua */}
+            {[[-55,-55],[55,-55],[-55,55],[55,55],[0,-68],[0,68],[-68,0],[68,0]].map(([cx,cy],i) => (
+              <circle key={i} cx={cx} cy={cy} r={6} fill="#60a5fa" opacity={0.8} />
+            ))}
+            {/* Asientos */}
+            <rect x={-80} y={-80} width={30} height={16} rx={4} fill="#93c5fd" stroke="#3b82f6" strokeWidth={1.5} />
+            <rect x={50} y={-80} width={30} height={16} rx={4} fill="#93c5fd" stroke="#3b82f6" strokeWidth={1.5} />
+            <rect x={-80} y={64} width={30} height={16} rx={4} fill="#93c5fd" stroke="#3b82f6" strokeWidth={1.5} />
+            <rect x={50} y={64} width={30} height={16} rx={4} fill="#93c5fd" stroke="#3b82f6" strokeWidth={1.5} />
+            {/* Control panel */}
+            <rect x={-18} y={-82} width={36} height={12} rx={4} fill="#1e40af" />
+            <circle cx={-8} cy={-76} r={3} fill="#f6821f" />
+            <circle cx={0} cy={-76} r={3} fill="#22c55e" />
+            <circle cx={8} cy={-76} r={3} fill="#ef4444" />
+          </>
+        ),
+      },
+      {
+        key: "sauna",
+        label: "Sauna",
+        w: 200, h: 180,
+        draw: () => (
+          <>
+            <rect x={-100} y={-90} width={200} height={180} rx={6} fill="#d2b48c" stroke={WALL} strokeWidth={4} />
+            {/* Bancos */}
+            <rect x={-88} y={-78} width={176} height={35} rx={4} fill="#92400e" stroke="#78350f" strokeWidth={2} />
+            <rect x={-88} y={-35} width={176} height={35} rx={4} fill="#a16207" stroke="#78350f" strokeWidth={2} />
+            {/* Fogón / piedras */}
+            <rect x={-30} y={30} width={60} height={48} rx={6} fill="#374151" stroke="#1f2937" strokeWidth={2} />
+            {[-15,-5,5,15,-10,10,-20,20].map((x,i) => (
+              <ellipse key={i} cx={x} cy={40 + (i%3)*8} rx={6} ry={4} fill="#6b7280" />
+            ))}
+            {/* Vapor */}
+            <path d="M-10 28 Q-5 18 0 28 Q5 18 10 28" fill="none" stroke="#94a3b8" strokeWidth={2} opacity={0.6} />
+            {/* Puerta */}
+            <rect x={-100} y={-10} width={5} height={50} rx={2} fill="#6b4a32" />
+            <rect x={-95} y={-10} width={2} height={50} fill="#92400e" />
+          </>
+        ),
+      },
+      {
+        key: "hidromasaje",
+        label: "Ducha hidromasaje",
+        w: 110, h: 110,
+        draw: () => (
+          <>
+            <rect x={-55} y={-55} width={110} height={110} rx={8} fill="#f8fafc" stroke={WALL} strokeWidth={3} />
+            {/* Panel de control */}
+            <rect x={-50} y={-50} width={22} height={35} rx={4} fill="#1e40af" />
+            <circle cx={-39} cy={-42} r={4} fill="#f6821f" />
+            <rect x={-46} y={-34} width={14} height={3} rx={1} fill="#60a5fa" />
+            <rect x={-46} y={-28} width={10} height={3} rx={1} fill="#93c5fd" />
+            {/* Lluvia efecto */}
+            {[[-20,-30],[-8,-35],[4,-28],[16,-33],[-14,-20],[0,-18],[12,-22]].map(([x,y],i) => (
+              <line key={i} x1={x} y1={y} x2={x-2} y2={y+10} stroke="#93c5fd" strokeWidth={2} strokeLinecap="round" />
+            ))}
+            {/* Cabezal */}
+            <rect x={-24} y={-42} width={48} height={8} rx={4} fill="#6b7280" />
+            {/* Suelo con desagüe */}
+            <circle cx={10} cy={30} r={8} fill="none" stroke="#94a3b8" strokeWidth={2} />
+            <path d="M6 30 H14 M10 26 V34" stroke="#94a3b8" strokeWidth={1.5} />
+          </>
+        ),
+      },
       { key: "espejo", label: "Espejo", w: 80, h: 12, draw: () => (<><rect x={-40} y={-10} width={80} height={20} rx={4} fill="#faf9f7" stroke="#1c1f24" /><rect x={-34} y={-6} width={68} height={12} fill="#dce6f1" stroke="#4a5568" /><path d="M-18 -6 H18" fill="none" stroke="#94a3b8" strokeWidth={1.5} /></>) },
       { key: "toallero", label: "Toallero", w: 60, h: 8, draw: () => (<><rect x={-30} y={-4} width={60} height={8} rx={4} fill="#faf9f7" stroke="#1c1f24" /><path d="M-24 -2 h48" fill="none" stroke="#94a3b8" strokeWidth={1.5} /></>) },
       { key: "calefactor", label: "Calefactor", w: 50, h: 20, draw: () => (<><rect x={-25} y={-10} width={50} height={20} rx={4} fill="#faf9f7" stroke="#1c1f24" /><path d="M-18 -6 H18 M-18 0 H18 M-18 6 H18" fill="none" stroke="#f6821f" strokeWidth={2} /></>) },
@@ -91,6 +170,53 @@ export const CATALOG: CatalogGroup[] = [
       { key: "puerta-doble", label: "Puerta doble (2 hojas)", w: 160, h: 90, draw: () => (<><path d="M-80 -45 Q-20 -10 80 45" fill="none" strokeDasharray="10 8" strokeWidth={2} /><path d="M80 -45 Q20 -10 -80 45" fill="none" strokeDasharray="10 8" strokeWidth={2} /><rect x={-80} y={-45} width={8} height={90} fill={WALL} stroke={WALL} strokeWidth={1.5} /><rect x={72} y={-45} width={8} height={90} fill={WALL} stroke={WALL} strokeWidth={1.5} /><circle cx={-72} cy={45} r={5} fill={WALL} stroke="none" /><circle cx={72} cy={45} r={5} fill={WALL} stroke="none" /></>) },
       { key: "ventana", label: "Ventana", w: 120, h: 15, draw: () => (<><rect x={-60} y={-7} width={120} height={15} rx={2} fill="#faf9f7" stroke="#1c1f24" strokeWidth={1.8} /><rect x={-52} y={-5} width={104} height={10} rx={1} fill="#dcecf8" stroke="#4a5568" strokeWidth={1} /><path d="M0 -5 V5" fill="none" stroke="#4a5568" strokeWidth={1.4} /><path d="M-52 0 H52" fill="none" stroke="#4a5568" strokeWidth={1.4} /><rect x={-55} y={-6} width={7} height={2} rx={1} fill="#6b7280" /><rect x={48} y={-6} width={7} height={2} rx={1} fill="#6b7280" /></>) },
       { key: "columna", label: "Columna", w: 30, h: 30, draw: () => (<rect x={-15} y={-15} width={30} height={30} fill={WALL} stroke={WALL} />) },
+      {
+        key: "ascensor",
+        label: "Ascensor",
+        w: 120, h: 120,
+        draw: () => (
+          <>
+            <rect x={-60} y={-60} width={120} height={120} rx={4} fill="#f1f5f9" stroke={WALL} strokeWidth={4} />
+            <rect x={-50} y={-50} width={100} height={100} rx={3} fill="#e2e8f0" stroke="#94a3b8" strokeWidth={2} />
+            {/* Puertas */}
+            <rect x={-50} y={-50} width={48} height={100} rx={2} fill="#cbd5e1" stroke="#94a3b8" strokeWidth={1.5} />
+            <rect x={2} y={-50} width={48} height={100} rx={2} fill="#cbd5e1" stroke="#94a3b8" strokeWidth={1.5} />
+            {/* Tirador */}
+            <rect x={-6} y={-8} width={12} height={5} rx={2} fill="#6b7280" />
+            {/* Panel botones */}
+            <rect x={55} y={-30} width={15} height={60} rx={3} fill="#374151" />
+            {[-20,-8,4,16,28].map((y,i) => (
+              <circle key={i} cx={62} cy={y} r={4} fill={i===2?"#22c55e":"#6b7280"} />
+            ))}
+            {/* Flecha arriba/abajo */}
+            <path d="M62 -38 L58 -44 L66 -44 Z" fill="#fbbf24" />
+            <path d="M62 36 L58 42 L66 42 Z" fill="#fbbf24" transform="rotate(180 62 39)" />
+          </>
+        ),
+      },
+      {
+        key: "rampa",
+        label: "Rampa acceso",
+        w: 120, h: 200,
+        draw: () => (
+          <>
+            <rect x={-60} y={-100} width={120} height={200} rx={4} fill="#f8fafc" stroke={WALL} strokeWidth={3} />
+            {/* Superficie inclinada (efecto con líneas) */}
+            {[-80,-55,-30,-5,20,45,70].map((y,i) => (
+              <line key={i} x1={-55} y1={y} x2={55} y2={y} stroke="#cbd5e1" strokeWidth={2} />
+            ))}
+            {/* Barandillas */}
+            <line x1={-52} y1={-95} x2={-52} y2={95} stroke="#6b7280" strokeWidth={4} strokeLinecap="round" />
+            <line x1={52} y1={-95} x2={52} y2={95} stroke="#6b7280" strokeWidth={4} strokeLinecap="round" />
+            {/* Flecha dirección */}
+            <path d="M0 50 V-70" fill="none" stroke="#f6821f" strokeWidth={3} />
+            <path d="M-12 -50 L0 -75 L12 -50" fill="none" stroke="#f6821f" strokeWidth={3} />
+            {/* Pendiente % */}
+            <rect x={-18} y={-12} width={36} height={18} rx={3} fill="#1e40af" />
+            <text x={0} y={2} textAnchor="middle" fontSize={10} fontWeight="bold" fill="#ffffff">8%</text>
+          </>
+        ),
+      },
       { key: "escalera-construccion", label: "Escalera", w: 90, h: 240, draw: () => (<><rect x={-45} y={-120} width={90} height={240} fill="#ffffff" />{Array.from({ length: 7 }, (_, i) => (<path key={i} d={`M-45 ${-120 + (i + 1) * 30} H45`} fill="none" strokeWidth={2} />))}<path d="M0 105 V-95" fill="none" strokeWidth={2} /><path d="M-12 -75 L0 -100 L12 -75" fill="none" strokeWidth={2} /></>) },
       { key: "curva90", label: "Curva 90°", w: 150, h: 150, draw: () => (<><path d="M 0 -75 A 75 75 0 0 1 75 0" fill="none" stroke={WALL} strokeWidth={12} strokeLinecap="butt" /><circle cx={0} cy={-75} r={3} fill={WALL} /><circle cx={75} cy={0} r={3} fill={WALL} /></>) },
       { key: "curva180", label: "Curva 180°", w: 150, h: 75, draw: () => (<><path d="M -75 0 A 75 75 0 0 1 75 0" fill="none" stroke={WALL} strokeWidth={12} strokeLinecap="butt" /><circle cx={-75} cy={0} r={3} fill={WALL} /><circle cx={75} cy={0} r={3} fill={WALL} /></>) },
@@ -327,10 +453,8 @@ export const CATALOG: CatalogGroup[] = [
       {
         key: "caseta-perro",
         label: "Caseta perro",
-        w: 160,
-        h: 150,
-        draw: () => (
-          <>
+        w: 160, h: 150,
+        draw: () => (          <>
             {/* Cuerpo */}
             <rect x={-80} y={-20} width={160} height={95} rx={6} fill="#d2b48c" stroke={WALL} strokeWidth={3} />
             {/* Tejado (triángulo) */}
@@ -338,6 +462,86 @@ export const CATALOG: CatalogGroup[] = [
             {/* Entrada */}
             <ellipse cx={0} cy={25} rx={30} ry={38} fill="#78350f" stroke={WALL} strokeWidth={2} />
             <ellipse cx={0} cy={30} rx={22} ry={30} fill="#451a03" />
+          </>
+        ),
+      },
+      {
+        key: "furgoneta",
+        label: "Furgoneta",
+        w: 220, h: 520,
+        draw: () => (
+          <>
+            <rect x={-110} y={-260} width={220} height={520} rx={28} fill="#e5e7eb" stroke={WALL} strokeWidth={4} />
+            {/* Cabina */}
+            <rect x={-90} y={-110} width={180} height={130} rx={12} fill="#9ca3af" stroke={WALL} strokeWidth={2} />
+            <rect x={-72} y={-100} width={144} height={60} rx={8} fill="#bfdbfe" stroke="#4a5568" strokeWidth={1.5} />
+            {/* Ruedas */}
+            {[[-1,-1],[1,-1],[-1,1],[1,1]].map(([sx,sz],i) => (
+              <rect key={i} x={sx*(110+2)-sx*24} y={sz*180-36} width={28} height={72} rx={8} fill="#1f2937" stroke={WALL} strokeWidth={2} />
+            ))}
+            {/* Puerta trasera */}
+            <rect x={-80} y={40} width={160} height={180} rx={4} fill="#d1d5db" stroke="#9ca3af" strokeWidth={2} />
+            <line x1={0} y1={40} x2={0} y2={220} stroke="#9ca3af" strokeWidth={2} />
+            <rect x={-10} y={125} width={20} height={8} rx={4} fill="#6b7280" />
+          </>
+        ),
+      },
+      {
+        key: "quad",
+        label: "Quad",
+        w: 160, h: 240,
+        draw: () => (
+          <>
+            <rect x={-80} y={-120} width={160} height={240} rx={22} fill="#374151" stroke={WALL} strokeWidth={4} />
+            {/* Carrocería */}
+            <rect x={-60} y={-80} width={120} height={160} rx={14} fill="#f97316" stroke={WALL} strokeWidth={3} />
+            {/* Ruedas grandes */}
+            <rect x={-90} y={-100} width={36} height={68} rx={12} fill="#1f2937" stroke={WALL} strokeWidth={3} />
+            <rect x={54} y={-100} width={36} height={68} rx={12} fill="#1f2937" stroke={WALL} strokeWidth={3} />
+            <rect x={-90} y={32} width={36} height={68} rx={12} fill="#1f2937" stroke={WALL} strokeWidth={3} />
+            <rect x={54} y={32} width={36} height={68} rx={12} fill="#1f2937" stroke={WALL} strokeWidth={3} />
+            {/* Manillar */}
+            <rect x={-55} y={-100} width={110} height={12} rx={5} fill="#6b7280" stroke={WALL} strokeWidth={2} />
+            {/* Asiento */}
+            <rect x={-30} y={-30} width={60} height={40} rx={8} fill="#1c1f24" stroke={WALL} strokeWidth={2} />
+          </>
+        ),
+      },
+      {
+        key: "barco",
+        label: "Barco/Velero",
+        w: 180, h: 500,
+        draw: () => (
+          <>
+            {/* Casco */}
+            <ellipse cx={0} cy={80} rx={88} ry={170} fill="#1e40af" stroke={WALL} strokeWidth={4} />
+            <ellipse cx={0} cy={80} rx={72} ry={152} fill="#2563eb" />
+            {/* Cubierta */}
+            <ellipse cx={0} cy={-50} rx={80} ry={80} fill="#dbeafe" stroke="#93c5fd" strokeWidth={2} />
+            {/* Mástil */}
+            <line x1={0} y1={-50} x2={0} y2={-240} stroke="#78350f" strokeWidth={6} strokeLinecap="round" />
+            {/* Vela */}
+            <path d="M0 -230 L80 -60 L0 -60 Z" fill="#faf9f7" stroke="#94a3b8" strokeWidth={2} opacity={0.9} />
+            <path d="M0 -230 L-70 -80 L0 -80 Z" fill="#bfdbfe" stroke="#93c5fd" strokeWidth={2} opacity={0.8} />
+            {/* Cabina */}
+            <rect x={-30} y={-70} width={60} height={40} rx={6} fill="#1e3a5f" stroke={WALL} strokeWidth={2} />
+          </>
+        ),
+      },
+      {
+        key: "kayak",
+        label: "Kayak / Canoa",
+        w: 80, h: 400,
+        draw: () => (
+          <>
+            <ellipse cx={0} cy={0} rx={38} ry={198} fill="#f97316" stroke={WALL} strokeWidth={4} />
+            <ellipse cx={0} cy={0} rx={28} ry={180} fill="#fb923c" />
+            {/* Cockpit */}
+            <ellipse cx={0} cy={20} rx={22} ry={35} fill="#1c1f24" stroke="#374151" strokeWidth={2} />
+            {/* Remo */}
+            <line x1={-80} y1={-30} x2={80} y2={30} stroke="#92400e" strokeWidth={5} strokeLinecap="round" />
+            <ellipse cx={-82} cy={-32} rx={18} ry={8} fill="#78350f" />
+            <ellipse cx={82} cy={32} rx={18} ry={8} fill="#78350f" />
           </>
         ),
       },
@@ -416,6 +620,262 @@ export const CATALOG: CatalogGroup[] = [
             {/* Flecha espiral */}
             <path d="M0 -40 A40 40 0 1 1 -28 28" fill="none" stroke="#f6821f" strokeWidth={2.5} />
             <path d="M-28 28 L-38 18 M-28 28 L-18 18" fill="none" stroke="#f6821f" strokeWidth={2.5} />
+          </>
+        ),
+      },
+    ],
+  },
+  {
+    id: "ocio-premium",
+    label: "Ocio Premium",
+    items: [
+      {
+        key: "billar",
+        label: "Mesa billar",
+        w: 250, h: 140,
+        draw: () => (
+          <>
+            <rect x={-125} y={-70} width={250} height={140} rx={8} fill="#166534" stroke={WALL} strokeWidth={5} />
+            <rect x={-110} y={-55} width={220} height={110} rx={4} fill="#15803d" stroke="#14532d" strokeWidth={2} />
+            {/* Troneras */}
+            {[[-110,-55],[0,-55],[110,-55],[-110,55],[0,55],[110,55]].map(([cx,cy],i) => (
+              <circle key={i} cx={cx} cy={cy} r={9} fill="#1c1f24" />
+            ))}
+            {/* Bola blanca */}
+            <circle cx={-40} cy={0} r={8} fill="#faf9f7" stroke="#94a3b8" strokeWidth={1.5} />
+            {/* Triángulo de bolas */}
+            {[[40,0],[52,-10],[52,10],[64,-20],[64,0],[64,20]].map(([cx,cy],i) => (
+              <circle key={i} cx={cx} cy={cy} r={7} fill={["#ef4444","#fbbf24","#3b82f6","#22c55e","#8b5cf6","#f97316"][i]} />
+            ))}
+          </>
+        ),
+      },
+      {
+        key: "ping-pong",
+        label: "Mesa ping pong",
+        w: 274, h: 152,
+        draw: () => (
+          <>
+            <rect x={-137} y={-76} width={274} height={152} rx={4} fill="#1d4ed8" stroke={WALL} strokeWidth={4} />
+            <rect x={-128} y={-68} width={256} height={136} rx={3} fill="#2563eb" stroke="#1e40af" strokeWidth={1.5} />
+            {/* Línea central */}
+            <line x1={0} y1={-68} x2={0} y2={68} stroke="#faf9f7" strokeWidth={3} />
+            {/* Red */}
+            <rect x={-6} y={-76} width={12} height={152} rx={2} fill="#94a3b8" />
+            {/* Líneas laterales */}
+            <rect x={-128} y={-68} width={256} height={6} rx={1} fill="#faf9f7" opacity={0.4} />
+            <rect x={-128} y={62} width={256} height={6} rx={1} fill="#faf9f7" opacity={0.4} />
+            {/* Pelotas */}
+            <circle cx={-60} cy={25} r={8} fill="#fbbf24" stroke="#f59e0b" strokeWidth={1.5} />
+            <circle cx={70} cy={-20} r={8} fill="#fbbf24" stroke="#f59e0b" strokeWidth={1.5} />
+          </>
+        ),
+      },
+      {
+        key: "cine-casa",
+        label: "Cine en casa",
+        w: 350, h: 220,
+        draw: () => (
+          <>
+            {/* Fondo sala oscura */}
+            <rect x={-175} y={-110} width={350} height={220} rx={8} fill="#111827" stroke={WALL} strokeWidth={4} />
+            {/* Pantalla */}
+            <rect x={-150} y={-95} width={300} height={80} rx={4} fill="#f8fafc" stroke="#94a3b8" strokeWidth={2} />
+            <rect x={-144} y={-90} width={288} height={70} rx={2} fill="#dbeafe" />
+            {/* Sofás en U */}
+            <rect x={-165} y={-5} width={330} height={50} rx={8} fill="#374151" stroke="#6b7280" strokeWidth={2} />
+            <rect x={-165} y={-5} width={50} height={105} rx={8} fill="#374151" stroke="#6b7280" strokeWidth={2} />
+            <rect x={115} y={-5} width={50} height={105} rx={8} fill="#374151" stroke="#6b7280" strokeWidth={2} />
+            {/* Proyector */}
+            <rect x={-18} y={-105} width={36} height={14} rx={4} fill="#6b7280" />
+            <path d="M-8 -91 L-20 -75 M8 -91 L20 -75" fill="none" stroke="#fbbf24" strokeWidth={1.5} opacity={0.6} />
+          </>
+        ),
+      },
+      {
+        key: "spa-exterior",
+        label: "Spa exterior",
+        w: 300, h: 300,
+        draw: () => (
+          <>
+            {/* Plataforma de madera */}
+            <rect x={-150} y={-150} width={300} height={300} rx={12} fill="#92400e" stroke="#78350f" strokeWidth={4} />
+            {/* Tarima */}
+            {[-120,-80,-40,0,40,80,120].map((y,i) => (
+              <rect key={i} x={-140} y={y-5} width={280} height={10} rx={2} fill="#a16207" />
+            ))}
+            {/* Jacuzzi central */}
+            <circle cx={0} cy={0} r={90} fill="#dbeafe" stroke="#3b82f6" strokeWidth={4} />
+            <circle cx={0} cy={0} r={78} fill="#bfdbfe" stroke="#93c5fd" strokeWidth={2} />
+            {/* Chorros */}
+            {Array.from({length:8},(_,i)=>{const a=(i*Math.PI*2)/8;return <circle key={i} cx={Math.cos(a)*65} cy={Math.sin(a)*65} r={7} fill="#60a5fa" opacity={0.8} />})}
+            {/* Vapor */}
+            <path d="M-20 -30 Q-10 -50 0 -30 Q10 -50 20 -30" fill="none" stroke="#e2e8f0" strokeWidth={3} opacity={0.5} />
+            {/* Escalones entrada */}
+            <rect x={80} y={-14} width={70} height={28} rx={4} fill="#b45309" stroke="#92400e" strokeWidth={2} />
+            <rect x={90} y={-10} width={50} height={20} rx={3} fill="#d97706" />
+          </>
+        ),
+      },
+      {
+        key: "pista-padel",
+        label: "Pista pádel",
+        w: 1000, h: 500,
+        draw: () => (
+          <>
+            <rect x={-500} y={-250} width={1000} height={500} rx={6} fill="#22c55e" stroke={WALL} strokeWidth={6} />
+            {/* Suelo */}
+            <rect x={-490} y={-240} width={980} height={480} rx={4} fill="#16a34a" />
+            {/* Líneas de campo */}
+            <rect x={-490} y={-240} width={980} height={480} rx={4} fill="none" stroke="#faf9f7" strokeWidth={3} />
+            <line x1={0} y1={-240} x2={0} y2={240} stroke="#faf9f7" strokeWidth={3} />
+            <line x1={-490} y1={0} x2={490} y2={0} stroke="#faf9f7" strokeWidth={3} />
+            <line x1={-350} y1={-240} x2={-350} y2={240} stroke="#faf9f7" strokeWidth={2} />
+            <line x1={350} y1={-240} x2={350} y2={240} stroke="#faf9f7" strokeWidth={2} />
+            {/* Red */}
+            <rect x={-10} y={-240} width={20} height={480} rx={4} fill="#94a3b8" />
+            {/* Cristales laterales */}
+            <rect x={-500} y={-250} width={10} height={500} rx={2} fill="#bfdbfe" opacity={0.6} />
+            <rect x={490} y={-250} width={10} height={500} rx={2} fill="#bfdbfe" opacity={0.6} />
+          </>
+        ),
+      },
+      {
+        key: "campo-futbol",
+        label: "Campo fútbol",
+        w: 1050, h: 680,
+        draw: () => (
+          <>
+            <rect x={-525} y={-340} width={1050} height={680} rx={8} fill="#166534" stroke={WALL} strokeWidth={6} />
+            <rect x={-500} y={-315} width={1000} height={630} rx={4} fill="#15803d" />
+            {/* Líneas */}
+            <rect x={-500} y={-315} width={1000} height={630} fill="none" stroke="#faf9f7" strokeWidth={3} />
+            <line x1={0} y1={-315} x2={0} y2={315} stroke="#faf9f7" strokeWidth={3} />
+            <circle cx={0} cy={0} r={91} fill="none" stroke="#faf9f7" strokeWidth={3} />
+            <circle cx={0} cy={0} r={6} fill="#faf9f7" />
+            {/* Áreas */}
+            <rect x={-500} y={-110} width={165} height={220} rx={2} fill="none" stroke="#faf9f7" strokeWidth={3} />
+            <rect x={335} y={-110} width={165} height={220} rx={2} fill="none" stroke="#faf9f7" strokeWidth={3} />
+            {/* Porterías */}
+            <rect x={-520} y={-37} width={20} height={74} rx={2} fill="#faf9f7" />
+            <rect x={500} y={-37} width={20} height={74} rx={2} fill="#faf9f7" />
+          </>
+        ),
+      },
+      {
+        key: "tobogan",
+        label: "Tobogán",
+        w: 160, h: 300,
+        draw: () => (
+          <>
+            {/* Plataforma arriba */}
+            <rect x={-50} y={-150} width={100} height={40} rx={6} fill="#6b7280" stroke={WALL} strokeWidth={3} />
+            {/* Rampa */}
+            <path d="M-30 -110 Q-20 0 50 140" fill="none" stroke="#f97316" strokeWidth={18} strokeLinecap="round" />
+            <path d="M30 -110 Q40 0 110 140" fill="none" stroke="#f97316" strokeWidth={18} strokeLinecap="round" />
+            {/* Barandillas plataforma */}
+            <line x1={-50} y1={-150} x2={-50} y2={-110} stroke={WALL} strokeWidth={5} strokeLinecap="round" />
+            <line x1={50} y1={-150} x2={50} y2={-110} stroke={WALL} strokeWidth={5} strokeLinecap="round" />
+            {/* Escalera acceso */}
+            <rect x={-50} y={-150} width={12} height={130} rx={3} fill="#374151" />
+            {[-130,-110,-90,-70,-50,-30].map((y,i) => (
+              <rect key={i} x={-50} y={y} width={28} height={8} rx={2} fill="#6b7280" />
+            ))}
+          </>
+        ),
+      },
+      {
+        key: "arenero",
+        label: "Arenero",
+        w: 180, h: 180,
+        draw: () => (
+          <>
+            <rect x={-90} y={-90} width={180} height={180} rx={12} fill="#92400e" stroke="#78350f" strokeWidth={4} />
+            <rect x={-80} y={-80} width={160} height={160} rx={10} fill="#fbbf24" />
+            {/* Textura arena */}
+            {[[-40,-40],[20,-50],[-20,10],[40,30],[-50,40],[10,-15],[-10,45],[50,-20]].map(([cx,cy],i) => (
+              <circle key={i} cx={cx} cy={cy} r={4} fill="#f59e0b" opacity={0.6} />
+            ))}
+            {/* Juguetes */}
+            <rect x={-30} y={20} width={25} height={18} rx={3} fill="#ef4444" />
+            <path d="M-30 20 L-17 8 L-5 20" fill="#dc2626" />
+          </>
+        ),
+      },
+      {
+        key: "trampolin",
+        label: "Trampolín",
+        w: 300, h: 300,
+        draw: () => (
+          <>
+            {/* Marco exterior */}
+            <circle cx={0} cy={0} r={148} fill="none" stroke="#374151" strokeWidth={8} />
+            {/* Superficie de salto */}
+            <circle cx={0} cy={0} r={130} fill="#1e40af" stroke="#1d4ed8" strokeWidth={3} />
+            {/* Red/malla */}
+            {Array.from({length:8},(_,i)=>{const a=(i*Math.PI*2)/8;return <line key={i} x1={0} y1={0} x2={Math.cos(a)*128} y2={Math.sin(a)*128} stroke="#3b82f6" strokeWidth={1.5} opacity={0.6} />})}
+            <circle cx={0} cy={0} r={65} fill="none" stroke="#60a5fa" strokeWidth={1.5} opacity={0.5} />
+            {/* Patas (8) */}
+            {Array.from({length:8},(_,i)=>{const a=(i*Math.PI*2)/8;return <circle key={i} cx={Math.cos(a)*148} cy={Math.sin(a)*148} r={8} fill="#6b7280" stroke={WALL} strokeWidth={2} />})}
+            {/* Red seguridad */}
+            <circle cx={0} cy={0} r={148} fill="none" stroke="#22c55e" strokeWidth={3} strokeDasharray="10 6" opacity={0.7} />
+          </>
+        ),
+      },
+      {
+        key: "futbolin",
+        label: "Futbolín",
+        w: 130, h: 240,
+        draw: () => (
+          <>
+            <rect x={-65} y={-120} width={130} height={240} rx={6} fill="#92400e" stroke={WALL} strokeWidth={4} />
+            <rect x={-55} y={-108} width={110} height={216} rx={4} fill="#166534" />
+            {/* Barras y jugadores */}
+            {[-80,-50,-20,10,40,70].map((y,i) => (
+              <g key={i}>
+                <line x1={-65} y1={y} x2={65} y2={y} stroke="#374151" strokeWidth={5} />
+                {[-30,0,30].map((x,j) => (
+                  <rect key={j} x={x-6} y={y-10} width={12} height={20} rx={3}
+                    fill={i%2===0?"#ef4444":"#3b82f6"} stroke={WALL} strokeWidth={1} />
+                ))}
+              </g>
+            ))}
+            {/* Pelota */}
+            <circle cx={0} cy={-5} r={7} fill="#faf9f7" stroke="#94a3b8" strokeWidth={1.5} />
+          </>
+        ),
+      },
+      {
+        key: "dardos",
+        label: "Diana dardos",
+        w: 60, h: 60,
+        draw: () => (
+          <>
+            <circle cx={0} cy={0} r={28} fill="#1c1f24" stroke={WALL} strokeWidth={2} />
+            <circle cx={0} cy={0} r={22} fill="#ef4444" />
+            <circle cx={0} cy={0} r={16} fill="#1c1f24" />
+            <circle cx={0} cy={0} r={10} fill="#22c55e" />
+            <circle cx={0} cy={0} r={4} fill="#ef4444" />
+            {/* Dardos */}
+            <line x1={5} y1={-8} x2={18} y2={-22} stroke="#94a3b8" strokeWidth={2} strokeLinecap="round" />
+            <line x1={-6} y1={3} x2={-19} y2={16} stroke="#94a3b8" strokeWidth={2} strokeLinecap="round" />
+          </>
+        ),
+      },
+      {
+        key: "barra-bar",
+        label: "Barra bar",
+        w: 300, h: 60,
+        draw: () => (
+          <>
+            <rect x={-150} y={-30} width={300} height={60} rx={8} fill="#78350f" stroke={WALL} strokeWidth={3} />
+            <rect x={-140} y={-22} width={280} height={10} rx={4} fill="#92400e" />
+            {/* Taburetes */}
+            {[-100,-50,0,50,100].map((x,i) => (
+              <circle key={i} cx={x} cy={40} r={14} fill="#6b4a32" stroke={WALL} strokeWidth={2} />
+            ))}
+            {/* Grifo cerveza */}
+            <rect x={-6} y={-30} width={12} height={22} rx={3} fill="#fbbf24" stroke="#f59e0b" strokeWidth={1.5} />
           </>
         ),
       },
@@ -596,6 +1056,66 @@ export const CATALOG: CatalogGroup[] = [
             {/* Patas */}
             <rect x={-30} y={58} width={22} height={32} rx={6} fill="#2d5a27" stroke="#166534" strokeWidth={2} />
             <rect x={8} y={58} width={22} height={32} rx={6} fill="#2d5a27" stroke="#166534" strokeWidth={2} />
+          </>
+        ),
+      },
+      {
+        key: "reyes-magos",
+        label: "Estrella Reyes",
+        w: 120, h: 120,
+        draw: () => (
+          <>
+            {/* Estrella de 6 puntas */}
+            <polygon points="0,-58 14,-20 54,-20 22,4 34,42 0,18 -34,42 -22,4 -54,-20 -14,-20" fill="#fbbf24" stroke="#f59e0b" strokeWidth={2} />
+            {/* Regalos */}
+            <rect x={-50} y={30} width={30} height={28} rx={4} fill="#ef4444" stroke="#dc2626" strokeWidth={2} />
+            <path d="M-35 30 V58 M-50 44 H-20" fill="none" stroke="#fbbf24" strokeWidth={2.5} />
+            <rect x={20} y={35} width={28} height={22} rx={4} fill="#3b82f6" stroke="#2563eb" strokeWidth={2} />
+            <path d="M34 35 V57 M20 46 H48" fill="none" stroke="#fbbf24" strokeWidth={2} />
+            <rect x={-10} y={40} width={22} height={18} rx={3} fill="#22c55e" stroke="#16a34a" strokeWidth={2} />
+          </>
+        ),
+      },
+      {
+        key: "san-valentin",
+        label: "San Valentín ❤️",
+        w: 110, h: 100,
+        draw: () => (
+          <>
+            {/* Corazón grande */}
+            <path d="M0,30 C0,30 -55,-10 -55,-40 C-55,-65 -28,-75 0,-50 C28,-75 55,-65 55,-40 C55,-10 0,30 0,30 Z" fill="#ef4444" stroke="#dc2626" strokeWidth={2} />
+            {/* Corazones pequeños */}
+            <path d="M-35,55 C-35,55 -52,42 -52,34 C-52,27 -43,24 -35,34 C-27,24 -18,27 -18,34 C-18,42 -35,55 -35,55 Z" fill="#f9a8d4" />
+            <path d="M35,55 C35,55 18,42 18,34 C18,27 27,24 35,34 C43,24 52,27 52,34 C52,42 35,55 35,55 Z" fill="#f9a8d4" />
+            {/* Flecha de Cupido */}
+            <line x1={-55} y1={-55} x2={55} y2={30} stroke="#f97316" strokeWidth={3} strokeLinecap="round" />
+            <polygon points="55,30 42,22 50,38" fill="#f97316" />
+            <polygon points="-55,-55 -44,-42 -60,-44" fill="#f97316" />
+          </>
+        ),
+      },
+      {
+        key: "pascua",
+        label: "Pascua 🐣",
+        w: 120, h: 130,
+        draw: () => (
+          <>
+            {/* Hierba */}
+            <ellipse cx={0} cy={55} rx={58} ry={15} fill="#22c55e" opacity={0.5} />
+            {/* Huevos */}
+            <ellipse cx={-32} cy={30} rx={18} ry={24} fill="#f97316" stroke="#ea580c" strokeWidth={2} />
+            <path d="M-45,22 Q-32,16 -19,22" fill="none" stroke="#fbbf24" strokeWidth={2.5} />
+            <ellipse cx={32} cy={28} rx={18} ry={24} fill="#8b5cf6" stroke="#7c3aed" strokeWidth={2} />
+            <path d="M20,20 Q32,14 44,20 M20,32 Q32,26 44,32" fill="none" stroke="#faf9f7" strokeWidth={2} />
+            {/* Conejito */}
+            <ellipse cx={0} cy={-10} rx={22} ry={30} fill="#faf9f7" stroke="#94a3b8" strokeWidth={2} />
+            <ellipse cx={-10} cy={-50} rx={8} ry={20} fill="#faf9f7" stroke="#94a3b8" strokeWidth={2} />
+            <ellipse cx={10} cy={-50} rx={8} ry={20} fill="#faf9f7" stroke="#94a3b8" strokeWidth={2} />
+            <ellipse cx={-10} cy={-50} rx={4} ry={14} fill="#f9a8d4" />
+            <ellipse cx={10} cy={-50} rx={4} ry={14} fill="#f9a8d4" />
+            <circle cx={-6} cy={-15} r={3} fill="#1c1f24" />
+            <circle cx={6} cy={-15} r={3} fill="#1c1f24" />
+            <circle cx={0} cy={-8} r={4} fill="#f9a8d4" />
           </>
         ),
       },
