@@ -2154,6 +2154,168 @@ export function buildPiece(T: ThreeNS, key: string, w: number, d: number): THREE
       cyl(r, r, 0.04, poleMat, 0, totalH, 0, 24);
       break;
     }
+    case "microondas": {
+      const h = 0.3;
+      const body = mat(0xf5f3ef, 0.45, 0.05);
+      box(w, h, d, body, 0, h / 2, 0);
+      // ventana
+      box(w * 0.55, h * 0.6, 0.015, blackGlass, -w * 0.12, h * 0.5, d / 2 + 0.01);
+      // panel
+      box(w * 0.18, h * 0.6, 0.01, mat(0xe5e7eb, 0.6), w * 0.32, h * 0.5, d / 2 + 0.01);
+      cyl(0.02, 0.02, 0.012, mat(0xf6821f, 0.4), w * 0.32, h * 0.58, d / 2 + 0.02);
+      cyl(0.018, 0.018, 0.012, darkMetal, w * 0.32, h * 0.42, d / 2 + 0.02);
+      break;
+    }
+    case "horno": {
+      const h = 0.6;
+      const body = mat(0x3a3f46, 0.5, 0.2);
+      box(w, h, d, body, 0, h / 2, 0);
+      // puerta/ventana
+      box(w * 0.78, h * 0.55, 0.02, blackGlass, 0, h * 0.58, d / 2 + 0.01);
+      // marco inferior
+      box(w * 0.78, h * 0.12, 0.015, steelDark, 0, h * 0.18, d / 2 + 0.015);
+      cyl(0.022, 0.022, 0.012, mat(0xf6821f, 0.4), -w * 0.18, h * 0.18, d / 2 + 0.025);
+      cyl(0.02, 0.02, 0.012, darkMetal, 0, h * 0.18, d / 2 + 0.025);
+      cyl(0.02, 0.02, 0.012, darkMetal, w * 0.18, h * 0.18, d / 2 + 0.025);
+      // tirador
+      box(w * 0.5, 0.02, 0.03, chrome, 0, h * 0.9, d / 2 + 0.03);
+      break;
+    }
+    case "mampara": {
+      // Mampara/biombo de ducha: panel de vidrio con perfiles
+      const h = 1.9;
+      const glassPanel = new T.MeshStandardMaterial({ color: 0xdceef8, roughness: 0.05, metalness: 0.05, transparent: true, opacity: 0.35 });
+      box(w, h, d, glassPanel, 0, h / 2, 0);
+      // perfiles superior e inferior
+      box(w, 0.04, d + 0.02, chrome, 0, h, 0);
+      box(w, 0.04, d + 0.02, chrome, 0, 0.02, 0);
+      // montantes laterales
+      box(0.04, h, d + 0.02, chrome, -w / 2, h / 2, 0);
+      box(0.04, h, d + 0.02, chrome, w / 2, h / 2, 0);
+      break;
+    }
+    case "aparador": {
+      const h = 0.85;
+      box(w, h - 0.05, d, wood, 0, 0.05 + (h - 0.05) / 2, 0);
+      box(w + 0.02, 0.04, d + 0.02, woodDark, 0, h, 0);
+      // puertas
+      for (const sx of [-1, 1]) {
+        box(w * 0.44, h - 0.16, 0.02, woodDark, sx * w * 0.24, h * 0.45, d / 2 + 0.01);
+        cyl(0.015, 0.015, 0.03, chrome, sx * 0.05, h * 0.45, d / 2 + 0.03);
+      }
+      // patas
+      for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
+        box(0.04, 0.08, 0.04, darkMetal, sx * (w / 2 - 0.06), 0.04, sz * (d / 2 - 0.05));
+      }
+      break;
+    }
+    case "rinconera": {
+      // Pieza rinconera / mueble en esquina
+      const h = 0.45;
+      const seatH = 0.42;
+      const thick = Math.min(w, d) * 0.5;
+      // dos alas en L
+      box(w, seatH, thick, fabric, 0, seatH / 2, (d - thick) / 2);
+      box(thick, seatH, d, fabric, -(w - thick) / 2, seatH / 2, 0);
+      // respaldo en L
+      box(w, h, 0.12, fabric, 0, seatH + h / 2, d / 2 - 0.06);
+      box(0.12, h, d, fabric, -w / 2 + 0.06, seatH + h / 2, 0);
+      // cojines
+      box(w * 0.45, 0.12, thick * 0.7, pillow, w * 0.18, seatH + 0.06, (d - thick) / 2);
+      box(thick * 0.7, 0.12, d * 0.45, pillow, -(w - thick) / 2, seatH + 0.06, -d * 0.18);
+      break;
+    }
+    case "pozo-agua": {
+      const r = Math.min(w, d) * 0.42;
+      const wallH = 0.75;
+      // brocal de piedra
+      cyl(r, r * 1.05, wallH, mat(0x9aa3ad, 0.95), 0, wallH / 2, 0, 24);
+      cyl(r * 0.82, r * 0.82, wallH - 0.05, mat(0x1e4fa8, 0.2, 0.05), 0, wallH / 2 - 0.02, 0, 24);
+      // postes y travesaño
+      box(0.08, 1.1, 0.08, woodDark, -r * 0.6, wallH + 0.55, 0);
+      box(0.08, 1.1, 0.08, woodDark, r * 0.6, wallH + 0.55, 0);
+      box(r * 1.5, 0.1, 0.12, wood, 0, wallH + 1.1, 0);
+      // tejadillo
+      const roofMat = mat(0x7a4a2e, 0.9);
+      box(r * 1.7, 0.05, r * 1.3, roofMat, 0, wallH + 1.2, 0);
+      // cuerda y cubo
+      cyl(0.015, 0.015, 0.5, mat(0x8b7355, 0.9), 0, wallH + 0.6, 0);
+      cyl(0.08, 0.06, 0.12, mat(0x5b6772, 0.6, 0.3), 0, wallH + 0.32, 0);
+      break;
+    }
+    case "pergola-bioclimatica": {
+      const postH = 2.3;
+      const beamH = 0.12;
+      // postes
+      for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
+        box(0.12, postH, 0.12, mat(0x4b5563, 0.6, 0.2), sx * (w / 2 - 0.08), postH / 2, sz * (d / 2 - 0.08));
+      }
+      // marco superior
+      box(w, beamH, 0.12, mat(0x374151, 0.55, 0.2), 0, postH, -d / 2 + 0.06);
+      box(w, beamH, 0.12, mat(0x374151, 0.55, 0.2), 0, postH, d / 2 - 0.06);
+      box(0.12, beamH, d, mat(0x374151, 0.55, 0.2), -w / 2 + 0.06, postH, 0);
+      box(0.12, beamH, d, mat(0x374151, 0.55, 0.2), w / 2 - 0.06, postH, 0);
+      // lamas bioclimáticas
+      const slats = Math.max(5, Math.floor(w / 0.28));
+      for (let i = 0; i < slats; i++) {
+        const x = -w / 2 + 0.14 + (i * (w - 0.28)) / Math.max(slats - 1, 1);
+        box(0.16, 0.03, d - 0.2, mat(0x6b7280, 0.5, 0.15), x, postH + beamH / 2 + 0.02, 0);
+      }
+      break;
+    }
+    case "pickup": {
+      const body = mat(0x2f6ea6, 0.45, 0.25);
+      const cabinH = 0.55;
+      // caja trasera
+      box(w, 0.4, d, body, 0, 0.35, 0);
+      box(w, 0.18, d * 0.02, body, 0, 0.64, -d / 2 + 0.01);
+      box(w, 0.18, d * 0.02, body, 0, 0.64, d / 2 - 0.01);
+      // cabina
+      box(w * 0.55, cabinH, d * 0.9, body, -w * 0.18, 0.55 + cabinH / 2, 0);
+      // parabrisas
+      const glassM = new T.MeshStandardMaterial({ color: 0xbfe3ee, roughness: 0.08, metalness: 0.1, transparent: true, opacity: 0.5 });
+      box(w * 0.02, cabinH * 0.5, d * 0.75, glassM, w * 0.1, 0.55 + cabinH * 0.65, 0);
+      // ruedas
+      const wheel = mat(0x1b1f24, 0.9);
+      for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
+        const wh = cyl(0.16, 0.16, 0.12, wheel, sx * w * 0.32, 0.16, sz * d * 0.38, 14);
+        wh.rotation.z = Math.PI / 2;
+      }
+      // faros
+      box(0.04, 0.06, 0.12, mat(0xfff6cc, 0.2), w / 2 - 0.01, 0.55, -d * 0.2);
+      box(0.04, 0.06, 0.12, mat(0xfff6cc, 0.2), w / 2 - 0.01, 0.55, d * 0.2);
+      break;
+    }
+    case "patinete": {
+      const deck = mat(0x4b5563, 0.6, 0.2);
+      const deckH = 0.1;
+      box(w * 0.9, 0.04, d * 0.4, deck, 0, deckH, 0);
+      // mástil
+      cyl(0.02, 0.02, 0.85, chrome, w * 0.25, deckH + 0.42, 0);
+      box(0.35, 0.03, 0.04, mat(0x1f2937, 0.7), w * 0.25, deckH + 0.85, 0);
+      // ruedas
+      const wheel = mat(0x1b1f24, 0.9);
+      for (const sx of [-1, 1]) {
+        const wh = cyl(0.08, 0.08, 0.04, wheel, sx * w * 0.35, 0.08, 0, 14);
+        wh.rotation.z = Math.PI / 2;
+      }
+      break;
+    }
+    case "moto-agua": {
+      const hull = mat(0xef4444, 0.35, 0.15);
+      const h = 0.45;
+      // casco
+      box(w * 0.95, h * 0.45, d * 0.7, hull, 0, h * 0.22, 0);
+      // morro inclinado
+      const nose = box(w * 0.35, h * 0.25, d * 0.55, hull, w * 0.3, h * 0.35, 0);
+      nose.rotation.z = -0.35;
+      // asiento
+      box(w * 0.35, 0.12, d * 0.5, mat(0x1f2937, 0.8), -w * 0.05, h * 0.5, 0);
+      // manillar
+      cyl(0.02, 0.02, 0.35, chrome, w * 0.15, h * 0.7, 0);
+      box(0.04, 0.04, d * 0.5, chrome, w * 0.15, h * 0.88, 0);
+      break;
+    }
     default:
       return null;
   }
