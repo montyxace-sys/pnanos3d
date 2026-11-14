@@ -6,11 +6,11 @@ const nextConfig: NextConfig = {
   output: "export",
   basePath,
   assetPrefix: basePath === "" ? undefined : basePath,
-  trailingSlash: true,
+  reactStrictMode: true,
   images: { unoptimized: true },
+  trailingSlash: true,
   productionBrowserSourceMaps: false,
   poweredByHeader: false,
-  turbopack: { root: __dirname },
 };
 
 export default nextConfig;

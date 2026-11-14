@@ -45,7 +45,7 @@ const TEMPLATES: Record<string, PlanDoc> = {
   "chalet": {
     title: "Chalet Unifamiliar con Jardín",
     rooms: [
-      { id: "1", name: "Planta Principal", x: 0, y: 0, w: 1000, h: 800, wallType: "paredes" },
+      { id: "1", name: "Planta Principal", x: 0, y: 0, w: 1000, h: 800, wallType: "carga" },
     ],
     pieces: [
       { id: "p1", key: "palma", x: 200, y: 200, w: 50, h: 100, rot: 0 },
@@ -76,11 +76,16 @@ function wallTypeThick(t?: string): number {
 
 export default function Plan3D() {
   const mountRef = useRef<HTMLDivElement>(null);
-  const [doc, setDoc] = useState<PlanDoc>(loadDoc);
+  // Importante: el estado inicial debe ser determinista en servidor y cliente.
+  // Si leemos localStorage aquí, el HTML del servidor no coincide con el del
+  // cliente y React lanza el error de hidratación #418. Cargamos después.
+  const [doc, setDoc] = useState<PlanDoc>({ title: "Vivienda", rooms: [], pieces: [] });
   const [ready, setReady] = useState(false);
+  const [initError, setInitError] = useState<string | null>(null);
   const cameraRef = useRef<any>(null);
   const controlsRef = useRef<any>(null);
   const centerRef = useRef<[number, number, number]>([0, 0.5, 0]);
+  const viewDistRef = useRef<number>(12);
   const rendererRef = useRef<any>(null);
   const modelRef = useRef<any>(null);
   const doorHingesRef = useRef<any[]>([]);
@@ -90,7 +95,7 @@ export default function Plan3D() {
   const compassRef = useRef<HTMLDivElement>(null);
   const selected3DRef = useRef<any>(null);
   const selection3DRef = useRef<HTMLDivElement>(null);
-  const [layers, setLayers] = useState<{walls:boolean; roof:boolean; furniture:boolean; notes:boolean; dimensions:boolean; measure:boolean; floor:boolean}>({walls:true, roof:true, furniture:true, notes:true, dimensions:true, measure:true, floor:true });
+  const [layers, setLayers] = useState<{walls:boolean; roof:boolean; furniture:boolean; notes:boolean; dimensions:boolean; measure:boolean; floor:boolean}>({walls:true, roof:false, furniture:true, notes:true, dimensions:true, measure:true, floor:true });
   const layersStateRef = useRef(layers);
   const [season, setSeason] = useState(6); // 0=Todo, 1=Primavera, 2=Verano, 3=Otoño, 4=Invierno, 5=Halloween, 6=Fecha actual
 
@@ -147,11 +152,16 @@ export default function Plan3D() {
     if (!mountRef.current) return;
     const container = mountRef.current;
     let cleanup: (() => void) | null = null;
+    let cancelled = false;
+    setInitError(null);
 
     (async () => {
+      try {
       const THREE = await import("three");
       const OrbitModule = await import("three/examples/jsm/controls/OrbitControls.js");
       const OrbitControls = OrbitModule.OrbitControls;
+      // Si React desmontó (StrictMode) mientras cargábamos, abortamos.
+      if (cancelled) return;
 
       const scene = new THREE.Scene();
       scene.background = new THREE.Color(0xeeeadf);
@@ -175,7 +185,7 @@ export default function Plan3D() {
       container.appendChild(renderer.domElement);
       rendererRef.current = renderer;
       renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.shadowMap.type = THREE.PCFShadowMap;
 
       const { RoomEnvironment } = await import("three/examples/jsm/environments/RoomEnvironment.js");
       const pmrem = new THREE.PMREMGenerator(renderer);
@@ -195,17 +205,20 @@ export default function Plan3D() {
         const canvas = document.createElement("canvas"); canvas.width = 256; canvas.height = 256;
         const ctx = canvas.getContext("2d")!;
         const palette: any = { carga: "#7a7366", tabique: "#b0a694", pladur: "#f3f0ea", aluminio: "#9ca3af" };
-        ctx.fillStyle = palette[kind ?? "carga"]; ctx.fillRect(0, 0, 256, 256);
-        if (kind === "carga" || !kind) {
+        // Si el tipo de muro no es uno de los conocidos usamos "carga".
+        // (Un tipo desconocido dejaba fillStyle = undefined → muros NEGROS.)
+        const wallKind = palette[kind ?? ""] ? (kind as string) : "carga";
+        ctx.fillStyle = palette[wallKind]; ctx.fillRect(0, 0, 256, 256);
+        if (wallKind === "carga") {
           ctx.strokeStyle = "#5c5448"; ctx.lineWidth = 2;
           for (let y = 0; y < 256; y += 24) for (let x = 0; x < 256; x += 36) {
             ctx.strokeRect(x + (Math.floor(y / 24) % 2 ? 18 : 0) - 1, y - 1, 34, 22);
             if (Math.random() > 0.8) ctx.fillStyle = "rgba(0,0,0,0.04)", ctx.fillRect(x + (Math.floor(y / 24) % 2 ? 18 : 0), y, 34, 22);
           }
-        } else if (kind === "tabique" || kind === "pladur") {
+        } else if (wallKind === "tabique" || wallKind === "pladur") {
           ctx.fillStyle = "rgba(255,255,255,0.12)";
           for (let x = 0; x < 256; x += 18) ctx.fillRect(x, 0, 2, 256);
-        } else if (kind === "aluminio") {
+        } else if (wallKind === "aluminio") {
           ctx.strokeStyle = "rgba(148,163,184,.8)"; ctx.lineWidth = 1;
           for (let y = 0; y < 256; y += 12) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(256, y); ctx.stroke(); }
         }
@@ -262,7 +275,7 @@ export default function Plan3D() {
       scene.add(dir.target);
       scene.add(new THREE.HemisphereLight(0xffffff, 0xc7bda9, 0.45));
 
-      const groundSize = span * 10;
+      const groundSize = Math.max(span * 20, 60);
       const grassTexture = makeGrassTexture(THREE);
       grassTexture.repeat.set(groundSize / GRASS_TILE_METERS, groundSize / GRASS_TILE_METERS);
       const ground = new THREE.Mesh(
@@ -275,13 +288,15 @@ export default function Plan3D() {
       ground.userData = { type: "floor" };
       model.add(ground);
 
-      const slab = new THREE.Mesh(
-        new THREE.BoxGeometry(house.maxx - house.minx + 0.4, 0.12, house.maxz - house.minz + 0.4),
-        new THREE.MeshStandardMaterial({ color: 0xcfc8ba, roughness: 1 }),
-      );
-      slab.position.set((house.minx + house.maxx) / 2, -0.06, (house.minz + house.maxz) / 2);
-      slab.receiveShadow = true;
-      model.add(slab);
+      if (rooms.length > 0) {
+        const slab = new THREE.Mesh(
+          new THREE.BoxGeometry(house.maxx - house.minx + 0.4, 0.12, house.maxz - house.minz + 0.4),
+          new THREE.MeshStandardMaterial({ color: 0xcfc8ba, roughness: 1 }),
+        );
+        slab.position.set((house.minx + house.maxx) / 2, -0.06, (house.minz + house.maxz) / 2);
+        slab.receiveShadow = true;
+        model.add(slab);
+      }
 
       const buildWallSide = (edge: "bottom" | "top" | "left" | "right", room: Room) => {
         const x = room.x / 100, z = room.y / 100, w = room.w / 100, h = room.h / 100;
@@ -484,7 +499,18 @@ export default function Plan3D() {
       });
       const doorHinges: any[] = [];
       const edges: Array<"bottom" | "top" | "left" | "right"> = ["bottom", "top", "left", "right"];
+      const wallStartIndex = model.children.length;
       rooms.forEach((room) => edges.forEach((edge) => buildWallSide(edge, room)));
+      // Todo lo creado por buildWallSide (muros, hojas de puerta, ventanas y
+      // marcos) se marca como "wall"/"opening" para que el botón MUROS y las
+      // aristas funcionen. Antes no llevaban userData y el botón no hacía nada.
+      for (let i = wallStartIndex; i < model.children.length; i++) {
+        const obj: any = model.children[i];
+        obj.userData = { ...(obj.userData || {}), type: "wall" };
+        obj.traverse?.((m: any) => {
+          if (m !== obj && m.isMesh) m.userData = { ...(m.userData || {}), type: "wall" };
+        });
+      }
       doorHingesRef.current = doorHinges;
 
       (doc.pieces || [])
@@ -690,34 +716,49 @@ export default function Plan3D() {
       const roofCanvas = document.createElement("canvas"); roofCanvas.width = 256; roofCanvas.height = 256; const rc = roofCanvas.getContext("2d")!; rc.fillStyle = "#9e3e22"; rc.fillRect(0,0,256,256); rc.strokeStyle = "#7f2f19"; rc.lineWidth = 2; for(let y=0;y<256;y+=14){rc.beginPath();rc.moveTo(0,y);rc.lineTo(256,y);rc.stroke();} rc.strokeStyle="rgba(0,0,0,0.15)"; for(let x=0;x<256;x+=28){rc.beginPath();rc.moveTo(x,0);rc.lineTo(x,256);rc.stroke();}
       const roofTexture = new THREE.CanvasTexture(roofCanvas); roofTexture.wrapS=THREE.RepeatWrapping; roofTexture.wrapT=THREE.RepeatWrapping; roofTexture.repeat.set(4,2);
       const roofMaterial = new THREE.MeshStandardMaterial({ map: roofTexture, color: 0xffffff, roughness: 0.85 });
-      const roofDepth = Math.max(span, 3);
-      const roofWidth = Math.max((bounds.maxx - bounds.minx) + 0.8, 3);
-      const rise = roofDepth * 0.35;
-      const roofShape = new THREE.Shape();
-      roofShape.moveTo(-roofDepth / 2, 0);
-      roofShape.lineTo(0, rise);
-      roofShape.lineTo(roofDepth / 2, 0);
-      roofShape.closePath();
-      const roofGeometry = new THREE.ExtrudeGeometry(roofShape, { depth: roofWidth, bevelEnabled: false });
-      const roof = new THREE.Mesh(roofGeometry, roofMaterial);
-      roof.position.set(cosX, wallHeight, cosZ);
-      roof.rotation.y = -Math.PI / 2;
-      roof.userData = { type: "roof" };
-      model.add(roof);
-      const ridge = new THREE.Mesh(new THREE.BoxGeometry(roofWidth, 0.12, 0.18), new THREE.MeshStandardMaterial({ color: 0x7f2f19, roughness: 0.8 }));
-      ridge.position.set(cosX, wallHeight + rise + 0.06, cosZ);
-      ridge.rotation.y = Math.PI / 2;
-      ridge.userData = { type: "roof" };
-      model.add(ridge);
+      // Tejado a dos aguas ajustado al ancho y fondo REALES de la vivienda.
+      // (Antes usaba el lado mayor para ambos ejes y sobresalía mucho.)
+      const houseW = Math.max(house.maxx - house.minx, 1);
+      const houseD = Math.max(house.maxz - house.minz, 1);
+      const roofWidth = houseW + 0.8; // eje X (cumbrera)
+      const roofDepth = houseD + 0.8; // eje Z (faldón)
+      const rise = Math.min(roofDepth * 0.35, 2.6);
+      if (rooms.length > 0) {
+        const roofShape = new THREE.Shape();
+        roofShape.moveTo(-roofDepth / 2, 0);
+        roofShape.lineTo(0, rise);
+        roofShape.lineTo(roofDepth / 2, 0);
+        roofShape.closePath();
+        const roofGeometry = new THREE.ExtrudeGeometry(roofShape, { depth: roofWidth, bevelEnabled: false });
+        // Centrar la extrusión para que el tejado quede sobre la vivienda
+        roofGeometry.translate(0, 0, -roofWidth / 2);
+        const roof = new THREE.Mesh(roofGeometry, roofMaterial);
+        roof.position.set(cosX, wallHeight, cosZ);
+        roof.rotation.y = -Math.PI / 2;
+        roof.userData = { type: "roof" };
+        roof.visible = layersStateRef.current.roof;
+        model.add(roof);
+        // Cumbrera: recorre el eje X (sin girar)
+        const ridge = new THREE.Mesh(
+          new THREE.BoxGeometry(roofWidth + 0.25, 0.14, 0.22),
+          new THREE.MeshStandardMaterial({ color: 0x7f2f19, roughness: 0.8 }),
+        );
+        ridge.position.set(cosX, wallHeight + rise + 0.05, cosZ);
+        ridge.userData = { type: "roof" };
+        ridge.visible = layersStateRef.current.roof;
+        model.add(ridge);
+      }
       const guideMat = new THREE.MeshStandardMaterial({ color: 0x2563eb, roughness: 0.6 });
-      const guideX = new THREE.Mesh(new THREE.BoxGeometry((bounds.maxx-bounds.minx)+0.4, 0.03, 0.03), guideMat);
-      guideX.position.set(cosX, 0.05, bounds.minz - 1.2);
-      guideX.userData = { type: "dimension" };
-      model.add(guideX);
-      const guideZ = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.03, (bounds.maxz-bounds.minz)+0.4), guideMat);
-      guideZ.position.set(bounds.minx - 1.2, 0.05, cosZ);
-      guideZ.userData = { type: "dimension" };
-      model.add(guideZ);
+      if (rooms.length > 0) {
+        const guideX = new THREE.Mesh(new THREE.BoxGeometry((bounds.maxx-bounds.minx)+0.4, 0.03, 0.03), guideMat);
+        guideX.position.set(cosX, 0.05, bounds.minz - 1.2);
+        guideX.userData = { type: "dimension" };
+        model.add(guideX);
+        const guideZ = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.03, (bounds.maxz-bounds.minz)+0.4), guideMat);
+        guideZ.position.set(bounds.minx - 1.2, 0.05, cosZ);
+        guideZ.userData = { type: "dimension" };
+        model.add(guideZ);
+      }
       const measureGroup = new THREE.Group();
       model.add(measureGroup);
 
@@ -837,12 +878,25 @@ export default function Plan3D() {
         line.position.copy(child.position);
         line.rotation.copy(child.rotation);
         line.scale.copy(child.scale);
+        // Hereda el tipo y la visibilidad del mesh original para que los
+        // botones MUROS/TEJADO/MUEBLES también oculten las aristas.
+        line.userData = { type: child.userData.type, isEdge: true };
+        line.visible = child.visible;
         model.add(line);
       });
       centerRef.current = [cosX, 0.5, cosZ];
 
 
-      camera.position.set(cosX + span * 0.8, span * 1.15, cosZ + span * 0.8);
+      // Distancia de cámara ajustada al tamaño real de la vivienda y al
+      // tamaño del lienzo (antes usaba el lado mayor y quedaba muy lejos).
+      const modelW = Math.max(house.maxx - house.minx, 2);
+      const modelD = Math.max(house.maxz - house.minz, 2);
+      const fovRad = (camera.fov * Math.PI) / 180;
+      const aspect = container.clientWidth / Math.max(container.clientHeight, 1);
+      const needVertical = Math.max(modelD, modelW / aspect);
+      const dist = Math.max((needVertical / 2) / Math.tan(fovRad / 2) * 1.7, 6);
+      viewDistRef.current = dist;
+      camera.position.set(cosX + dist * 0.62, dist * 0.78, cosZ + dist * 0.62);
       camera.lookAt(cosX, 0.5, cosZ);
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.target.set(cosX, 0.5, cosZ);
@@ -875,7 +929,7 @@ controls.autoRotate = false;
         tempRenderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
         tempRenderer.setClearColor(0xffffff, 1);
         tempRenderer.shadowMap.enabled = true;
-        tempRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        tempRenderer.shadowMap.type = THREE.PCFShadowMap;
         
         // Copiar la escena actual
         const scene = sceneRef.current;
@@ -915,28 +969,36 @@ controls.autoRotate = false;
         });
         const dx = dimXRef.current;
         if (dx) {
-          const vv = new THREE.Vector3(cosX, 0.08, bounds.minz - 1.2);
-          vv.project(camera);
-          if (vv.z < 1) {
-            dx.style.opacity = "1";
-            dx.style.left = `${(vv.x * 0.5 + 0.5) * container.clientWidth}px`;
-            dx.style.top = `${(vv.y * -0.5 + 0.5) * container.clientHeight}px`;
-            dx.textContent = `${(bounds.maxx-bounds.minx).toFixed(2).replace(".", ",")} m`;
-          } else {
+          if (rooms.length === 0) {
             dx.style.opacity = "0";
+          } else {
+            const vv = new THREE.Vector3(cosX, 0.08, bounds.minz - 1.2);
+            vv.project(camera);
+            if (vv.z < 1) {
+              dx.style.opacity = "1";
+              dx.style.left = `${(vv.x * 0.5 + 0.5) * container.clientWidth}px`;
+              dx.style.top = `${(vv.y * -0.5 + 0.5) * container.clientHeight}px`;
+              dx.textContent = `${(bounds.maxx-bounds.minx).toFixed(2).replace(".", ",")} m`;
+            } else {
+              dx.style.opacity = "0";
+            }
           }
         }
         const dz = dimZRef.current;
         if (dz) {
-          const vv = new THREE.Vector3(bounds.minx - 1.2, 0.08, cosZ);
-          vv.project(camera);
-          if (vv.z < 1) {
-            dz.style.opacity = "1";
-            dz.style.left = `${(vv.x * 0.5 + 0.5) * container.clientWidth}px`;
-            dz.style.top = `${(vv.y * -0.5 + 0.5) * container.clientHeight}px`;
-            dz.textContent = `${(bounds.maxz-bounds.minz).toFixed(2).replace(".", ",")} m`;
-          } else {
+          if (rooms.length === 0) {
             dz.style.opacity = "0";
+          } else {
+            const vv = new THREE.Vector3(bounds.minx - 1.2, 0.08, cosZ);
+            vv.project(camera);
+            if (vv.z < 1) {
+              dz.style.opacity = "1";
+              dz.style.left = `${(vv.x * 0.5 + 0.5) * container.clientWidth}px`;
+              dz.style.top = `${(vv.y * -0.5 + 0.5) * container.clientHeight}px`;
+              dz.textContent = `${(bounds.maxz-bounds.minz).toFixed(2).replace(".", ",")} m`;
+            } else {
+              dz.style.opacity = "0";
+            }
           }
         }
       };
@@ -981,9 +1043,14 @@ controls.autoRotate = false;
         if (renderer?.domElement?.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement);
       };
       (container as any).__threeCleanup__ = cleanup;
+      } catch (err) {
+        console.error("[Plan3D] Error inicializando la escena 3D:", err);
+        setInitError(err instanceof Error ? `${err.name}: ${err.message}` : String(err));
+      }
     })();
 
     return () => {
+      cancelled = true;
       if (container && (container as any).__threeCleanup__) (container as any).__threeCleanup__();
     };
   }, [ready, doc]);
@@ -1029,7 +1096,8 @@ controls.autoRotate = false;
         <button
           onClick={() => {
             const [cx, , cz] = centerRef.current;
-            cameraRef.current?.position.set(cx + 2.4, 2.2, cz + 2.4);
+            const d = viewDistRef.current;
+            cameraRef.current?.position.set(cx + d * 0.62, d * 0.78, cz + d * 0.62);
             controlsRef.current?.target.set(cx, 0.5, cz);
             controlsRef.current?.update();
           }}
@@ -1040,7 +1108,8 @@ controls.autoRotate = false;
         <button
           onClick={() => {
             const [cx, , cz] = centerRef.current;
-            cameraRef.current?.position.set(cx, 9, cz);
+            const d = viewDistRef.current;
+            cameraRef.current?.position.set(cx, d * 1.15, cz + 0.01);
             controlsRef.current?.target.set(cx, 0.15, cz);
             controlsRef.current?.update();
           }}
@@ -1051,7 +1120,8 @@ controls.autoRotate = false;
         <button
           onClick={() => {
             const [cx, , cz] = centerRef.current;
-            cameraRef.current?.position.set(cx, 1.5, cz + 3.5);
+            const d = viewDistRef.current;
+            cameraRef.current?.position.set(cx, d * 0.5, cz + d * 0.95);
             controlsRef.current?.target.set(cx, 0.6, cz);
             controlsRef.current?.update();
           }}
@@ -1062,7 +1132,8 @@ controls.autoRotate = false;
         <button
           onClick={() => {
             const [cx, , cz] = centerRef.current;
-            cameraRef.current?.position.set(cx + 1.8, 2.2, cz + 1.8);
+            const d = viewDistRef.current;
+            cameraRef.current?.position.set(cx + d * 0.42, d * 0.5, cz + d * 0.42);
             controlsRef.current?.target.set(cx, 0.5, cz);
             controlsRef.current?.update();
           }}
@@ -1368,6 +1439,27 @@ controls.autoRotate = false;
       </div>
       <div ref={mountRef} className="relative h-[78vh] min-h-[420px] w-full overflow-hidden border border-line bg-paper-2">
         {!ready && <div className="absolute inset-0 flex items-center justify-center text-muted">Cargando motor 3D...</div>}
+        {ready && !initError && doc.rooms.length === 0 && (
+          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center p-6">
+            <div className="max-w-md rounded-lg border border-line bg-paper/95 px-6 py-5 text-center shadow">
+              <p className="text-sm font-semibold text-ink">Todavía no hay ningún plano cargado</p>
+              <p className="mt-2 text-xs text-muted">
+                Pulsa <strong>Cargar proyecto actual (2D)</strong> para usar el plano que tengas guardado, o elige una
+                plantilla (<strong>Casa Adosada</strong>, <strong>Chalet</strong>, <strong>Piso Estudio</strong>) para ver
+                la vivienda en 3D.
+              </p>
+            </div>
+          </div>
+        )}
+        {initError && (
+          <div className="absolute inset-0 z-20 flex items-center justify-center bg-paper/95 p-6 text-center">
+            <div className="max-w-lg">
+              <p className="text-sm font-semibold text-red-700">No se pudo iniciar el motor 3D</p>
+              <p className="mt-2 break-words font-mono text-xs text-ink">{initError}</p>
+              <p className="mt-2 text-xs text-muted">Abre la consola del navegador (F12) para ver el detalle completo.</p>
+            </div>
+          </div>
+        )}
         <div ref={overlayRef} className="pointer-events-none absolute inset-0 z-10">
           {doc.rooms.map((room, index) => (
             <div
